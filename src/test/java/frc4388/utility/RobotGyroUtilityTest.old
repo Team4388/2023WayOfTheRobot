@@ -7,12 +7,13 @@
 
 package frc4388.utility;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+// import static org.junit.Assert.*;
+// import static org.mockito.Mockito.*;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import org.junit.*;
 
 import frc4388.mocks.MockPigeonIMU;
 import frc4388.robot.Constants.DriveConstants;
@@ -30,7 +31,7 @@ public class RobotGyroUtilityTest {
     public void testConstructor() {
         // Arrange
         MockPigeonIMU pigeon = new MockPigeonIMU(DriveConstants.DRIVE_PIGEON_ID);
-        AHRS navX = mock(AHRS.class);
+        AHRS navX = new AHRS();
         gyroPigeon = new RobotGyro(pigeon);
         gyroNavX = new RobotGyro(navX);
 

@@ -32,7 +32,7 @@ public class XboxTriggerButton extends Button {
 	}
 
 	/** {@inheritDoc} */
-	@Override
+	// @Override
 	public boolean get() {
 		if (m_trigger == RIGHT_TRIGGER) {
 			return m_controller.getRightTrigger();
