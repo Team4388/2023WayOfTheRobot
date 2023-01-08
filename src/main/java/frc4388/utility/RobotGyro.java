@@ -11,13 +11,14 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.GyroBase;
+// import edu.wpi.first.wpilibj.GyroBase;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.MathUtil;
 
 /**
  * Gyro class that allows for interchangeable use between a pigeon and a navX
  */
-public class RobotGyro extends GyroBase {
+public class RobotGyro implements Gyro {
     private RobotTime m_robotTime = RobotTime.getInstance();
 
     private PigeonIMU m_pigeon = null;
