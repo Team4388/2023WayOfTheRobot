@@ -28,10 +28,9 @@ public class RobotGyro implements Gyro {
     private double m_lastPigeonAngle;
     private double m_deltaPigeonAngle;
 
-    private double diff_Yaw = 0;
-    private double diff_Pitch = 0;
-    private double diff_Roll = 0;
-
+    private double yawZero = 0;
+    private double pitchZero = 0;
+    private double rollZero = 0;
 
     /**
      * Creates a Gyro based on a pigeon
@@ -51,12 +50,15 @@ public class RobotGyro implements Gyro {
         m_isGyroAPigeon = false;
     }
 
-    // Sets a 
-    // 
-    public void ResetAng() {
-        diff_Yaw = m_pigeon.getYaw();
-        diff_Pitch = m_pigeon.getPitch();
-        diff_Roll =  m_pigeon.getRoll();
+    /**
+     * Resets yaw, pitch, and roll.
+     */
+    public void resetAllAngles() {
+        if (!m_isGyroAPigeon) return;
+
+        yawZero = m_pigeon.getYaw();
+        pitchZero = m_pigeon.getPitch();
+        rollZero =  m_pigeon.getRoll();
     }
 
     /**
@@ -112,10 +114,10 @@ public class RobotGyro implements Gyro {
 	 *					Roll is within [-90,+90] degrees.
      */
     private double[] getPigeonAngles() {
-        double yaw = m_pigeon.getYaw();
-        double pitch = m_pigeon.getPitch();
-        double roll = m_pigeon.getRoll();
-        return double[(yaw - diff_Yaw), (pitch - diff_Pitch), (roll - diff_Roll)];
+        double[] ypr = new double[3];
+        m_pigeon.getYawPitchRoll(ypr);
+
+        return new double[] {(ypr[0] - yawZero), (ypr[1] - pitchZero), (ypr[2] - rollZero)};
     }
 
     @Override
