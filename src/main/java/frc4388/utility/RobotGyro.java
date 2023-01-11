@@ -28,6 +28,11 @@ public class RobotGyro implements Gyro {
     private double m_lastPigeonAngle;
     private double m_deltaPigeonAngle;
 
+    private double diff_Pitch = 0;
+    private double diff_Yaw = 0;
+    private double diff_Roll = 0;
+
+
     /**
      * Creates a Gyro based on a pigeon
      * @param gyro the gyroscope to use for Gyro
@@ -44,6 +49,12 @@ public class RobotGyro implements Gyro {
     public RobotGyro(AHRS gyro){
         m_navX = gyro;
         m_isGyroAPigeon = false;
+    }
+
+    // Sets a 
+    // 
+    public void ResetAng() {
+        
     }
 
     /**
@@ -100,7 +111,9 @@ public class RobotGyro implements Gyro {
      */
     private double[] getPigeonAngles() {
         double[] angles = new double[3];
-        m_pigeon.getYawPitchRoll(angles);
+        m_pigeon.getPitch(angles);
+        m_pigeon.getYaw(angles);
+        m_pigeon.getRoll(angles);
         return angles;
     }
 
