@@ -7,9 +7,13 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotTime;
 
 /**
@@ -24,6 +28,9 @@ public class Robot extends TimedRobot {
   
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
+
+  private WPI_Pigeon2 pigeon = new WPI_Pigeon2(14);
+  private RobotGyro gyro = new RobotGyro(pigeon);
 
   /**
    * This function is run when the robot is first started up and should be
@@ -113,7 +120,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    
+    SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
+    SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
+    SmartDashboard.putNumber("Gyro Roll", gyro.getRoll());
   }
 
   /**
