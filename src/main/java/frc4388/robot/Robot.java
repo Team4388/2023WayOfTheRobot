@@ -113,6 +113,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     m_robotTime.startMatchTime();
+
+    m_robotContainer.gyroRef.reset();
   }
 
   /**
@@ -123,6 +125,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
     SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
     SmartDashboard.putNumber("Gyro Roll", gyro.getRoll());
+    SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
+    SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
+    SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
   }
 
   /**

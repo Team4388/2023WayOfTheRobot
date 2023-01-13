@@ -8,6 +8,9 @@
 package frc4388.utility;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
 import com.kauailabs.navx.frc.AHRS;
 
 // import edu.wpi.first.wpilibj.GyroBase;
@@ -27,7 +30,6 @@ public class RobotGyro implements Gyro {
     private double m_lastPigeonAngle;
     private double m_deltaPigeonAngle;
 
-    private double yawZero = 0;
     private double pitchZero = 0;
     private double rollZero = 0;
 
@@ -52,10 +54,9 @@ public class RobotGyro implements Gyro {
     /**
      * Resets yaw, pitch, and roll.
      */
-    public void resetAllAngles() {
+    public void resetZeroValues() {
         if (!m_isGyroAPigeon) return;
 
-        yawZero = m_pigeon.getYaw();
         pitchZero = m_pigeon.getPitch();
         rollZero =  m_pigeon.getRoll();
     }
@@ -97,6 +98,8 @@ public class RobotGyro implements Gyro {
 
     @Override
     public void reset() {
+        resetZeroValues();
+
         if (m_isGyroAPigeon) {
             m_pigeon.setYaw(0);
         } else {
@@ -116,7 +119,7 @@ public class RobotGyro implements Gyro {
         double[] ypr = new double[3];
         m_pigeon.getYawPitchRoll(ypr);
 
-        return new double[] {(ypr[0] - yawZero), (ypr[1] - pitchZero), (ypr[2] - rollZero)};
+        return new double[] {ypr[0], (ypr[1] - pitchZero), (ypr[2] - rollZero)};
     }
 
     @Override
