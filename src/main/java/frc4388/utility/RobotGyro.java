@@ -7,8 +7,7 @@
 
 package frc4388.utility;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.sensors.PigeonIMU.CalibrationMode;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 // import edu.wpi.first.wpilibj.GyroBase;
@@ -21,7 +20,7 @@ import edu.wpi.first.math.MathUtil;
 public class RobotGyro implements Gyro {
     private RobotTime m_robotTime = RobotTime.getInstance();
 
-    private PigeonIMU m_pigeon = null;
+    private WPI_Pigeon2 m_pigeon = null;
     private AHRS m_navX = null;
     public boolean m_isGyroAPigeon; //true if pigeon, false if navX
 
@@ -36,7 +35,7 @@ public class RobotGyro implements Gyro {
      * Creates a Gyro based on a pigeon
      * @param gyro the gyroscope to use for Gyro
      */
-    public RobotGyro(PigeonIMU gyro) {
+    public RobotGyro(WPI_Pigeon2 gyro) {
         m_pigeon = gyro;
         m_isGyroAPigeon = true;
     }
@@ -90,7 +89,7 @@ public class RobotGyro implements Gyro {
     @Override
     public void calibrate() {
         if (m_isGyroAPigeon) {
-            m_pigeon.enterCalibrationMode(CalibrationMode.Temperature);
+            m_pigeon.calibrate();
         } else {
             m_navX.calibrate();
         }
@@ -127,6 +126,10 @@ public class RobotGyro implements Gyro {
         } else {
             return m_navX.getAngle();
         }
+    }
+
+    public double getYaw() {
+       return this.getAngle();
     }
 
     /**
@@ -182,7 +185,7 @@ public class RobotGyro implements Gyro {
         }
     }
 
-    public PigeonIMU getPigeon(){
+    public WPI_Pigeon2 getPigeon(){
         return m_pigeon;
     }
 
