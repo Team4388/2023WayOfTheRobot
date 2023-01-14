@@ -12,11 +12,14 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import frc4388.robot.Constants.GyroConstants;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
+import frc4388.robot.subsystems.SwerveModule;
 import frc4388.utility.RobotGyro;
 
 /**
@@ -25,9 +28,18 @@ import frc4388.utility.RobotGyro;
  */
 public class RobotMap {
 
+  public SwerveModule leftFront;
+  public SwerveModule rightFront;
+  public SwerveModule leftBack;
+  public SwerveModule rightBack;
+
+  public WPI_Pigeon2 gyro;
+
   public RobotMap() {
     configureLEDMotorControllers();
     configureDriveMotors();
+
+    gyro = new WPI_Pigeon2(GyroConstants.ID);
   }
 
   /* LED Subsystem */
@@ -113,6 +125,12 @@ public class RobotMap {
     rightFrontEncoder.configMagnetOffset(SwerveDriveConstants.Configurations.RIGHT_FRONT_ENCODER_OFFSET);
     leftBackEncoder.configMagnetOffset(SwerveDriveConstants.Configurations.LEFT_BACK_ENCODER_OFFSET);
     rightBackEncoder.configMagnetOffset(SwerveDriveConstants.Configurations.RIGHT_BACK_ENCODER_OFFSET);
+
+    // initialize SwerveModules
+    this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, SwerveDriveConstants.Configurations.LEFT_FRONT_ENCODER_OFFSET);
+    this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, SwerveDriveConstants.Configurations.RIGHT_FRONT_ENCODER_OFFSET);
+    this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, SwerveDriveConstants.Configurations.LEFT_BACK_ENCODER_OFFSET);
+    this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, SwerveDriveConstants.Configurations.RIGHT_BACK_ENCODER_OFFSET);
 
   }
 }
