@@ -50,14 +50,27 @@ public final class Constants {
             public static final double JOYSTICK_TO_METERS_PER_SECOND = 5.0;
         }
 
+        public static final class Configurations {
+            public static final double OPEN_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
+            public static final double CLOSED_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
+            public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
+
+            public static final double LEFT_FRONT_ENCODER_OFFSET = -1.0; // TODO: find the actual value
+            public static final double RIGHT_FRONT_ENCODER_OFFSET = -1.0; // TODO: find the actual value
+            public static final double LEFT_BACK_ENCODER_OFFSET = -1.0; // TODO: find the actual value
+            public static final double RIGHT_BACK_ENCODER_OFFSET = -1.0; // TODO: find the actual value
+        }
+
         public static final double MAX_SPEED_FEET_PER_SECOND = -1; // TODO: find the actual value
 
+        // dimensions
         public static final double WIDTH = -1; // TODO: find the actual value
         public static final double HEIGHT = -1; // TODO: find the actual value
         public static final double HALF_WIDTH = WIDTH / 2.d;
         public static final double HALF_HEIGHT = HEIGHT / 2.d;
 
-        public static final int SWERVE_TIMEOUT_MS = 30;
+        // misc
+        public static final int TIMEOUT_MS = 30;
         public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
     }
     

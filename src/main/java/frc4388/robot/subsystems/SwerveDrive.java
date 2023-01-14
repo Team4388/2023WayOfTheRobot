@@ -60,7 +60,6 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * Set each module of the swerve drive to the corresponding desired state.
-   * 
    * @param desiredStates Array of module states to set.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
