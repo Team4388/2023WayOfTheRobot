@@ -7,6 +7,7 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -81,6 +82,26 @@ public class SwerveModule extends SubsystemBase {
         return Rotation2d.fromDegrees(canCoder.getAbsolutePosition());
     }
 
+    public void stop() {
+        driveMotor.set(0);
+        angleMotor.set(0);
+    }
+
+    public void rotateToAngle(double angle){
+        angleMotor.set(TalonFXControlMode.Position, angle);
+    }
+
+    /**
+     * Get state of swerve module
+     * @return speed in m/s and angle in degrees
+     */
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(
+            Units.inchesToMeters(driveMotor.getSelectedSensorVelocity() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS, 
+            getAngle()
+        );
+    }
+
     /**
      * Set the speed and rotation of the SwerveModule from a SwerveModuleState object
      * @param desiredState a SwerveModuleState representing the desired new state of the module
@@ -103,5 +124,7 @@ public class SwerveModule extends SubsystemBase {
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
         driveMotor.set(angleMotor.get() + feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND);
     }
+
+    
 
 }
