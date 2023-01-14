@@ -33,7 +33,6 @@ public class RobotContainer {
     /* Subsystems */
     private final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack, m_robotMap.gyro);
     private final LED m_robotLED = new LED(m_robotMap.LEDController);
-    
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
@@ -70,8 +69,8 @@ public class RobotContainer {
         /* Operator Buttons */
         // activates "Lit Mode"
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW)))
-            .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN)));
+            .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW), m_robotLED))
+            .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN), m_robotLED));
     }
 
     /**
