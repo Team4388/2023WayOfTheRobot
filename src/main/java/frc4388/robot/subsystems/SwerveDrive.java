@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems;
 
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -31,10 +33,10 @@ public class SwerveDrive extends SubsystemBase {
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontLocation, rightFrontLocation, leftBackLocation, rightBackLocation); 
   
-  private RobotGyro gyro;
+  private WPI_Pigeon2 gyro;
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
+  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, WPI_Pigeon2 gyro) {
     this.leftFront = leftFront;
     this.rightFront = rightFront;
     this.leftBack = leftBack;
