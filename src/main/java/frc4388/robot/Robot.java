@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.commands.AutoBalanceTF2;
+import frc4388.robot.commands.AutoBalance;
 import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotTime;
 
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    bot.setDefaultCommand(new AutoBalanceTF2(bot));
+    bot.setDefaultCommand(new AutoBalance(bot));
   }
 
   /**
