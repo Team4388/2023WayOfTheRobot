@@ -26,7 +26,6 @@ public class SwerveModule extends SubsystemBase {
 
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
   
-  
     /** Creates a new SwerveModule. */
     public SwerveModule(WPI_TalonFX driveMotor, WPI_TalonFX angleMotor, CANCoder canCoder, double offset) {
         this.driveMotor = driveMotor;
@@ -47,6 +46,30 @@ public class SwerveModule extends SubsystemBase {
         CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
         canCoderConfig.magnetOffsetDegrees = offset;
         canCoder.configAllSettings(canCoderConfig);
+    }
+
+    /**
+     * Get the drive motor of the SwerveModule
+     * @return the drive motor of the SwerveModule
+     */
+    public WPI_TalonFX getDriveMotor() {
+        return this.driveMotor;
+    }
+
+    /**
+     * Get the angle motor of the SwerveModule
+     * @return the angle motor of the SwerveModule
+     */
+    public WPI_TalonFX getAngleMotor() {
+        return this.angleMotor;
+    }
+
+    /**
+     * Get the CANcoder of the SwerveModule
+     * @return the CANcoder of the SwerveModule
+     */
+    public CANCoder getEncoder() {
+        return this.canCoder;
     }
 
     /**
