@@ -16,6 +16,7 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.LEDPatterns;
+import frc4388.utility.RobotGyro;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
@@ -38,6 +39,8 @@ public class RobotContainer {
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+
+    public RobotGyro gyroRef = m_robotMap.gyro;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
