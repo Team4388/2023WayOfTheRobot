@@ -36,7 +36,7 @@ public abstract class PelvicInflamitoryDisease extends CommandBase {
 	@Override
 	public void execute() {
 		double error = getError();
-		cumError += error;
+		cumError += error * .02; // 20 ms
 		double delta = error - prevError;
 
 		output = error * gains.kP;
