@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import frc4388.utility.Gains;
 import frc4388.utility.LEDPatterns;
 
 /**
@@ -18,12 +19,6 @@ import frc4388.utility.LEDPatterns;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-    public static final class DriveConstants {
-        public static final int DRIVE_PIGEON_ID = 6;
-
-        public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
-    }
-
     public static final class SwerveDriveConstants {
         public static final class IDs {
             public static final int DRIVE_PIGEON_ID = -1;
@@ -44,7 +39,21 @@ public final class Constants {
             public static final int RIGHT_BACK_ENCODER_ID = -1;
         }
 
-        
+        public static final class PIDConstants {
+            public static final int SWERVE_SLOT_IDX = 0;
+            public static final int SWERVE_PID_LOOP_IDX = 1;
+            public static final Gains SWERVE_GAINS = new Gains(1.0, 0.0, 0.0, 0.0, 0, 1.0);
+        }
+
+        public static final class Conversions {
+            public static final int CANCODER_TICKS_PER_ROTATION = 4096;
+        }
+
+
+        public static final double MAX_SPEED_FEET_PER_SECOND = 16; // TODO: find the actual value
+
+        public static final int SWERVE_TIMEOUT_MS = 30;
+        public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
     }
     
     public static final class LEDConstants {
