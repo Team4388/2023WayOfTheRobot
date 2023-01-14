@@ -23,6 +23,29 @@ public final class Constants {
 
         public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
     }
+
+    public static final class SwerveDriveConstants {
+        public static final class IDs {
+            public static final int DRIVE_PIGEON_ID = -1;
+
+            public static final int LEFT_FRONT_WHEEL_ID = -1;
+            public static final int RIGHT_FRONT_WHEEL_ID = -1;
+            public static final int LEFT_BACK_WHEEL_ID = -1;
+            public static final int RIGHT_BACK_STEER_ID = -1;
+            
+            public static final int LEFT_FRONT_STEER_ID = -1;
+            public static final int RIGHT_FRONT_STEER_ID = -1;
+            public static final int LEFT_BACK_STEER_ID = -1;
+            public static final int RIGHT_BACK_WHEEL_ID = -1;
+            
+            public static final int LEFT_FRONT_ENCODER_ID = -1;
+            public static final int RIGHT_FRONT_ENCODER_ID = -1;
+            public static final int LEFT_BACK_ENCODER_ID = -1;
+            public static final int RIGHT_BACK_ENCODER_ID = -1;
+        }
+
+        
+    }
     
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
