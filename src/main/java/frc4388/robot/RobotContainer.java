@@ -49,6 +49,12 @@ public class RobotContainer {
         // drives the robot with a two-axis input from the driver controller
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+
+        m_robotSwerveDrive.setDefaultCommand(
+            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(-getDriverController().getLeftXAxis(), 
+                                                                    getDriverController().getLeftYAxis(), 
+                                                                   -getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
+        );
     }
 
     /**
@@ -64,8 +70,8 @@ public class RobotContainer {
         /* Operator Buttons */
         // activates "Lit Mode"
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-                .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-                .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+            .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW)))
+            .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN)));
     }
 
     /**
