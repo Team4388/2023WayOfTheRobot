@@ -33,10 +33,10 @@ public class SwerveDrive extends SubsystemBase {
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontLocation, rightFrontLocation, leftBackLocation, rightBackLocation); 
   
-  private WPI_Pigeon2 gyro;
+  private RobotGyro gyro;
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, WPI_Pigeon2 gyro) {
+  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
     this.leftFront = leftFront;
     this.rightFront = rightFront;
     this.leftBack = leftBack;

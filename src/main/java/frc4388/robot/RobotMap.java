@@ -38,13 +38,10 @@ public class RobotMap {
   public SwerveModule leftBack;
   public SwerveModule rightBack;
 
-  public WPI_Pigeon2 gyro;
 
   public RobotMap() {
     configureLEDMotorControllers();
     configureDriveMotors();
-
-    gyro = new WPI_Pigeon2(GyroConstants.ID);
   }
 
   /* LED Subsystem */
