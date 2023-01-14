@@ -72,8 +72,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    bot.setDefaultCommand(new AutoBalanceTF2(bot.frontLeft,
-      bot.frontRight, bot.backLeft, bot.backRight, bot.gyro, bot));
+    bot.setDefaultCommand(new AutoBalanceTF2(bot));
   }
 
   /**
