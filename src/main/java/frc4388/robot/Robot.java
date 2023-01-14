@@ -7,12 +7,16 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.commands.AutoBalanceTF2;
 import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotTime;
 
@@ -29,8 +33,34 @@ public class Robot extends TimedRobot {
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
 
-  private WPI_Pigeon2 pigeon = new WPI_Pigeon2(14);
-  private RobotGyro gyro = new RobotGyro(pigeon);
+  public static class MicroBot extends SubsystemBase {
+    public WPI_Pigeon2 pigeon = new WPI_Pigeon2(14);
+    public RobotGyro gyro = new RobotGyro(pigeon);
+
+    public TalonSRX frontLeft = new TalonSRX(2);
+    public TalonSRX backLeft = new TalonSRX(3);
+    public TalonSRX backRight = new TalonSRX(5);
+    public TalonSRX frontRight = new TalonSRX(4);
+
+    public MicroBot() {
+      frontRight.configFactoryDefault();
+      frontLeft.configFactoryDefault();
+      backLeft.configFactoryDefault();
+      backRight.configFactoryDefault();
+  
+      frontLeft.setInverted(true);
+      backLeft.setInverted(true);
+    }
+
+    public void setOutput(double output) {
+      frontRight.set(ControlMode.PercentOutput, output);
+      frontLeft.set(ControlMode.PercentOutput, output);
+      backLeft.set(ControlMode.PercentOutput, output);
+      backRight.set(ControlMode.PercentOutput, output);
+    }
+  }
+
+  private MicroBot bot = new MicroBot();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -41,6 +71,9 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    bot.setDefaultCommand(new AutoBalanceTF2(bot.frontLeft,
+      bot.frontRight, bot.backLeft, bot.backRight, bot.gyro, bot));
   }
 
   /**
@@ -122,9 +155,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("Gyro Yaw", gyro.getYaw());
-    SmartDashboard.putNumber("Gyro Pitch", gyro.getPitch());
-    SmartDashboard.putNumber("Gyro Roll", gyro.getRoll());
     SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
     SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
     SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
