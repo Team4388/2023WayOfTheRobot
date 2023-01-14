@@ -21,22 +21,22 @@ import frc4388.utility.LEDPatterns;
 public final class Constants {
     public static final class SwerveDriveConstants {
         public static final class IDs {
-            public static final int DRIVE_PIGEON_ID = -1;
+            public static final int DRIVE_PIGEON_ID = -1; // TODO: find actual ID
 
-            public static final int LEFT_FRONT_WHEEL_ID = -1;
-            public static final int RIGHT_FRONT_WHEEL_ID = -1;
-            public static final int LEFT_BACK_WHEEL_ID = -1;
-            public static final int RIGHT_BACK_STEER_ID = -1;
-            
-            public static final int LEFT_FRONT_STEER_ID = -1;
-            public static final int RIGHT_FRONT_STEER_ID = -1;
-            public static final int LEFT_BACK_STEER_ID = -1;
-            public static final int RIGHT_BACK_WHEEL_ID = -1;
-            
-            public static final int LEFT_FRONT_ENCODER_ID = -1;
-            public static final int RIGHT_FRONT_ENCODER_ID = -1;
-            public static final int LEFT_BACK_ENCODER_ID = -1;
-            public static final int RIGHT_BACK_ENCODER_ID = -1;
+            public static final int LEFT_FRONT_WHEEL_ID = -1; // TODO: find actual ID
+            public static final int RIGHT_FRONT_WHEEL_ID = -1; // TODO: find actual ID
+            public static final int LEFT_BACK_WHEEL_ID = -1; // TODO: find actual ID
+            public static final int RIGHT_BACK_STEER_ID = -1; // TODO: find actual ID
+
+            public static final int LEFT_FRONT_STEER_ID = -1; // TODO: find actual ID
+            public static final int RIGHT_FRONT_STEER_ID = -1; // TODO: find actual ID
+            public static final int LEFT_BACK_STEER_ID = -1; // TODO: find actual ID
+            public static final int RIGHT_BACK_WHEEL_ID = -1; // TODO: find actual ID
+
+            public static final int LEFT_FRONT_ENCODER_ID = -1; // TODO: find actual ID
+            public static final int RIGHT_FRONT_ENCODER_ID = -1; // TODO: find actual ID
+            public static final int LEFT_BACK_ENCODER_ID = -1; // TODO: find actual ID
+            public static final int RIGHT_BACK_ENCODER_ID = -1; // TODO: find actual ID
         }
 
         public static final class PIDConstants {
@@ -47,10 +47,15 @@ public final class Constants {
 
         public static final class Conversions {
             public static final int CANCODER_TICKS_PER_ROTATION = 4096;
+            public static final double JOYSTICK_TO_METERS_PER_SECOND = 5.0;
         }
 
+        public static final double MAX_SPEED_FEET_PER_SECOND = -1; // TODO: find the actual value
 
-        public static final double MAX_SPEED_FEET_PER_SECOND = 16; // TODO: find the actual value
+        public static final double WIDTH = -1; // TODO: find the actual value
+        public static final double HEIGHT = -1; // TODO: find the actual value
+        public static final double HALF_WIDTH = WIDTH / 2.d;
+        public static final double HALF_HEIGHT = HEIGHT / 2.d;
 
         public static final int SWERVE_TIMEOUT_MS = 30;
         public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
