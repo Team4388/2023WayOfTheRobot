@@ -9,6 +9,7 @@ package frc4388.robot;
 
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.PigeonIMU;
@@ -27,19 +28,20 @@ import frc4388.utility.RobotGyro;
  * testing and modularization.
  */
 public class RobotMap {
+    private WPI_Pigeon2 m_pigeon2 = new WPI_Pigeon2(14);
+    public RobotGyro gyro = new RobotGyro(m_pigeon2);
+
+    private TalonSRX backleft = new TalonSRX(-1);
 
   public SwerveModule leftFront;
   public SwerveModule rightFront;
   public SwerveModule leftBack;
   public SwerveModule rightBack;
 
-  public WPI_Pigeon2 gyro;
 
   public RobotMap() {
     configureLEDMotorControllers();
     configureDriveMotors();
-
-    gyro = new WPI_Pigeon2(GyroConstants.ID);
   }
 
   /* LED Subsystem */
