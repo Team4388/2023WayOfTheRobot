@@ -31,6 +31,8 @@ public class SwerveDrive extends SubsystemBase {
   
   private RobotGyro gyro;
 
+  public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
+
   /** Creates a new SwerveDrive. */
   public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
     this.leftFront = leftFront;
@@ -44,8 +46,8 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void driveWithInput(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    double xSpeedMetersPerSecond = xSpeed * SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND;
-    double ySpeedMetersPerSecond = ySpeed * SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND;
+    double xSpeedMetersPerSecond = xSpeed * SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
+    double ySpeedMetersPerSecond = ySpeed * SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
 
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(
       fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot, gyro.getRotation2d()) 
@@ -72,4 +74,9 @@ public class SwerveDrive extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
+  public void highSpeed(boolean shift) {
+    this.speedAdjust = shift ? SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST : SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
+  }
+
 }
