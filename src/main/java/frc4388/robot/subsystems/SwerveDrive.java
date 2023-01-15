@@ -42,7 +42,7 @@ public class SwerveDrive extends SubsystemBase {
     this.leftBack = leftBack;
     this.rightBack = rightBack;
 
-    this.modules = new SwerveModule[] {leftFront, rightFront, leftBack, rightBack};
+    this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
 
     this.gyro = gyro;
   }
