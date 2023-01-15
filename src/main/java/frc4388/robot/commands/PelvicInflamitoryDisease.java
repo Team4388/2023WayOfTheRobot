@@ -25,29 +25,34 @@ public abstract class PelvicInflamitoryDisease extends CommandBase {
 	/** figure it out bitch */
 	public abstract void runWithOutput(double output);
 
-// Called when the command is initially scheduled.
-@Override public void initialize() {
-output = 0;
-}
+	// Called when the command is initially scheduled.
+	@Override 
+	public void initialize() {
+		output = 0;
+	}
 
-private double prevError, cumError = 0;
-// Called every time the scheduler runs while the command is scheduled.
-@Override public void execute() {
-double error = getError();
-cumError += error * .02; // 20 ms
-double delta = error - prevError;
+	private double prevError, cumError = 0;
+	
+	// Called every time the scheduler runs while the command is scheduled.
+	@Override 
+	public void execute() {
+		double error = getError();
+		cumError += error * .02; // 20 ms
+		double delta = error - prevError;
 
-output = error * gains.kP;
-output += cumError * gains.kI;
-output += delta * gains.kD;
-output += gains.kF;
+		output = error * gains.kP;
+		output += cumError * gains.kI;
+		output += delta * gains.kD;
+		output += gains.kF;
 
 		runWithOutput(output);
 	}
 
 	// Called once the command ends or is interrupted.
-	@Override public void end(boolean interrupted) {}
+	@Override
+	public void end(boolean interrupted) {}
 
 	// Returns true when the command should end.
-	@Override public boolean isFinished() { return false; }
+	@Override
+	public boolean isFinished() { return false; }
 }
