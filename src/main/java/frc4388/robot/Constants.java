@@ -59,7 +59,9 @@ public final class Constants {
 
     public static final class Conversions {
       public static final int CANCODER_TICKS_PER_ROTATION = 4096;
-      public static final double JOYSTICK_TO_METERS_PER_SECOND = 5.0; // 2022's robot: 11 m/s for fast, 2 m/s for slow
+
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 2.0; // TODO: find the actual value
 
       public static final double MOTOR_REV_PER_WHEEL_REV = -1; // TODO: find the actual value
       public static final double TICKS_PER_MOTOR_REV = 2048;
