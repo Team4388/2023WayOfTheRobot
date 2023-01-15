@@ -125,6 +125,15 @@ public class SwerveModule extends SubsystemBase {
         driveMotor.set(angleMotor.get() + feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND);
     }
 
-    
+    public void reset() {
+        canCoder.setPositionToAbsolute();
+    }
 
+    public double getCurrent() {
+        return angleMotor.getSupplyCurrent() + driveMotor.getSupplyCurrent();
+    }
+
+    public double getVoltage() {
+        return (Math.abs(angleMotor.getMotorOutputVoltage()) + Math.abs(driveMotor.getMotorOutputVoltage()));
+    }
 }
