@@ -7,16 +7,16 @@ package frc4388.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.utility.Gains;
 
-public abstract class PelvicInflamitoryDisease extends CommandBase {
+public abstract class PelvicInflammatoryDisease extends CommandBase {
 	protected Gains gains;
 	private double output = 0;
 
 	/** Creates a new PelvicInflamitoryDisease. */
-	public PelvicInflamitoryDisease(double kp, double ki, double kd, double kf) {
+	public PelvicInflammatoryDisease(double kp, double ki, double kd, double kf) {
 		gains = new Gains(kp, ki, kd, kf, 0);
 	}
 
-	public PelvicInflamitoryDisease(Gains gains) {
+	public PelvicInflammatoryDisease(Gains gains) {
 		this.gains = gains;
 	}
 

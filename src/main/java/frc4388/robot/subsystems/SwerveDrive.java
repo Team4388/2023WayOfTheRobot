@@ -4,9 +4,12 @@
 
 package frc4388.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -22,14 +25,25 @@ public class SwerveDrive extends SubsystemBase {
 
   private SwerveModule[] modules;
 
+  private RobotGyro gyro;
+
   private Translation2d leftFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   private Translation2d rightFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   private Translation2d leftBackLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   private Translation2d rightBackLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontLocation, rightFrontLocation, leftBackLocation, rightBackLocation); 
-  
-  private RobotGyro gyro;
+
+  private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+    kinematics, 
+    gyro.getRotation2d(),
+    new SwerveModulePosition[] {
+      leftFront.getPosition(),
+      rightFront.getPosition(),
+      leftBack.getPosition(),
+      rightBack.getPosition()
+    }
+  );
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
 
@@ -70,11 +84,71 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
+  /**
+   * Updates the odometry of the SwerveDrive.
+   */
+  public void updateOdometry() {
+    odometry.update(
+      gyro.getRotation2d(), 
+      new SwerveModulePosition[] {
+        leftFront.getPosition(),
+        rightFront.getPosition(),
+        leftBack.getPosition(),
+        rightBack.getPosition()
+      }
+    );
+  }
+
+  /**
+   * Gets the odometry of the SwerveDrive.
+   * @return The odometry of the SwerveDrive as a Pose2d object (xMeters, yMeters, theta).
+   */
+  public Pose2d getOdometry() {
+    return odometry.getPoseMeters();
+  }
+
+  /**
+   * Sets the odometry of the SwerveDrive.
+   * @param pose Pose to set the odometry to.
+   */
+  public void setOdometry(Pose2d pose) {
+    odometry.resetPosition(
+      gyro.getRotation2d(), 
+      new SwerveModulePosition[] {
+        leftFront.getPosition(),
+        rightFront.getPosition(),
+        leftBack.getPosition(),
+        rightBack.getPosition()
+      },
+      pose
+    );
+  }
+
+  /**
+   * Resets the odometry of the SwerveDrive to 0.
+   */
+  public void resetOdometry() {
+    odometry.resetPosition(
+      gyro.getRotation2d(), 
+      new SwerveModulePosition[] {
+        leftFront.getPosition(),
+        rightFront.getPosition(),
+        leftBack.getPosition(),
+        rightBack.getPosition()
+      },
+      new Pose2d()
+    );
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
 
+  /**
+   * Shifts gear from high to low, or vice versa.
+   * @param shift true to shift to high, false to shift to low
+   */
   public void highSpeed(boolean shift) {
     this.speedAdjust = shift ? SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST : SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
   }
