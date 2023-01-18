@@ -1,6 +1,7 @@
 package frc4388.utility.controller;
 
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.utility.controller.XboxController;
 
 /**
@@ -8,7 +9,7 @@ import frc4388.utility.controller.XboxController;
  * buttons in {@link frc4388.robot.OI}. Checks to see if the given trigger 
  * exceeds a tolerance defined in {@link XboxController}.
  */
-public class XboxTriggerButton extends Button {
+public class XboxTriggerButton extends Trigger {
 	public static final int RIGHT_TRIGGER = 0;
 	public static final int LEFT_TRIGGER = 1;
 	public static final int RIGHT_AXIS_UP_TRIGGER = 2;
@@ -20,49 +21,48 @@ public class XboxTriggerButton extends Button {
 	public static final int LEFT_AXIS_RIGHT_TRIGGER = 8;
 	public static final int LEFT_AXIS_LEFT_TRIGGER = 9;
 
-	private XboxController m_controller;
-	private int m_trigger;
+	// private XboxController m_controller;
+	// private int m_trigger;
 
 	/**
 	 * Creates a Trigger-Button mapped to a specific Xbox controller and trigger
 	 */
 	public XboxTriggerButton(XboxController controller, int trigger) {
-		m_controller = controller;
-		m_trigger = trigger;
+		super(() -> get(trigger, controller));
+		// m_controller = controller;
+		// m_trigger = trigger;
 	}
 
-	/** {@inheritDoc} */
-	// @Override
-	public boolean get() {
-		if (m_trigger == RIGHT_TRIGGER) {
-			return m_controller.getRightTrigger();
+	public static boolean get(int trigger, XboxController controller) {
+		if (trigger == RIGHT_TRIGGER) {
+			return controller.getRightTrigger();
 		}
-		else if (m_trigger == LEFT_TRIGGER) {
-			return m_controller.getLeftTrigger();
+		else if (trigger == LEFT_TRIGGER) {
+			return controller.getLeftTrigger();
 		}
-		else if (m_trigger == RIGHT_AXIS_UP_TRIGGER) {
-			return m_controller.getRightAxisUpTrigger();
+		else if (trigger == RIGHT_AXIS_UP_TRIGGER) {
+			return controller.getRightAxisUpTrigger();
 		}
-		else if (m_trigger == RIGHT_AXIS_DOWN_TRIGGER) {
-			return m_controller.getRightAxisDownTrigger();
+		else if (trigger == RIGHT_AXIS_DOWN_TRIGGER) {
+			return controller.getRightAxisDownTrigger();
 		}
-		else if (m_trigger == RIGHT_AXIS_RIGHT_TRIGGER) {
-			return m_controller.getRightAxisRightTrigger();
+		else if (trigger == RIGHT_AXIS_RIGHT_TRIGGER) {
+			return controller.getRightAxisRightTrigger();
 		}
-		else if (m_trigger == RIGHT_AXIS_LEFT_TRIGGER) {
-			return m_controller.getRightAxisLeftTrigger();
+		else if (trigger == RIGHT_AXIS_LEFT_TRIGGER) {
+			return controller.getRightAxisLeftTrigger();
 		}
-		else if (m_trigger == LEFT_AXIS_UP_TRIGGER) {
-			return m_controller.getLeftAxisUpTrigger();
+		else if (trigger == LEFT_AXIS_UP_TRIGGER) {
+			return controller.getLeftAxisUpTrigger();
 		}
-		else if (m_trigger == LEFT_AXIS_DOWN_TRIGGER) {
-			return m_controller.getLeftAxisDownTrigger();
+		else if (trigger == LEFT_AXIS_DOWN_TRIGGER) {
+			return controller.getLeftAxisDownTrigger();
 		}
-		else if (m_trigger == LEFT_AXIS_RIGHT_TRIGGER) {
-			return m_controller.getLeftAxisRightTrigger();
+		else if (trigger == LEFT_AXIS_RIGHT_TRIGGER) {
+			return controller.getLeftAxisRightTrigger();
 		}
-		else if (m_trigger == LEFT_AXIS_LEFT_TRIGGER) {
-			return m_controller.getLeftAxisLeftTrigger();
+		else if (trigger == LEFT_AXIS_LEFT_TRIGGER) {
+			return controller.getLeftAxisLeftTrigger();
 		}
 		return false;
 	}

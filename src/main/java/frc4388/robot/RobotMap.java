@@ -7,13 +7,11 @@
 
 package frc4388.robot;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.PigeonIMU;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.utility.RobotGyro;
 
@@ -22,19 +20,19 @@ import frc4388.utility.RobotGyro;
  * testing and modularization.
  */
 public class RobotMap {
+  public RobotMap() {
+    configureLEDMotorControllers();
+    configureDriveMotors();
+  }
 
-    public RobotMap() {
-        configureLEDMotorControllers();
-        configureDriveMotorControllers();
-    }
+  /* LED Subsystem */
+  public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
 
-    /* LED Subsystem */
-    public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
-
-    void configureLEDMotorControllers() {
+  void configureLEDMotorControllers() {
         
-    }
+  }
 
-    void configureDriveMotorControllers() {
-    }
+  void configureDriveMotors() {
+    // config factory default
+  }
 }
