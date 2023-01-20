@@ -126,6 +126,7 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * Resets the odometry of the SwerveDrive to 0.
+   * *NOTE: If you reset your gyroscope or wheel encoders, this method MUST be called with the new gyro angle and wheel encoder positions.
    */
   public void resetOdometry() {
     odometry.resetPosition(
