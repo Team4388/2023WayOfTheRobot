@@ -4,17 +4,8 @@
 
 package frc4388.robot.commands;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
-
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc4388.robot.Robot;
-import frc4388.utility.RobotGyro;
 
 // NOTE:	Consider using this command inline, rather than writing a subclass.	For more
 // information, see:
@@ -23,9 +14,8 @@ public class AutoBalanceTF2 extends PelvicInflamitoryDisease {
 	Robot.MicroBot bot;
 
 	/** Creates a new AutoBalanceTF2. */
-	// ! finish integrating PelvicInflamatoryDisease
 	public AutoBalanceTF2(Robot.MicroBot bot) {
-		super(.7, .02, .1, 0);
+		super(.7, .1, 15, 0);
 		addRequirements(bot);
 		this.bot = bot;
 	}
@@ -37,9 +27,15 @@ public class AutoBalanceTF2 extends PelvicInflamitoryDisease {
 
 	@Override
 	public void runWithOutput(double output) {
-		double out2 = -MathUtil.clamp(output / 20, -1, 1);
+		double out2 = MathUtil.clamp(output / 40, -.5, .5);
 		if (Math.abs(bot.gyro.getPitch()) < 3) out2 = 0;
 		bot.setOutput(out2);
+	}
+
+	@Override
+	public void initialize() {
+		super.initialize();
+		this.bot.gyro.reset();
 	}
 
 	// Returns true when the command should end.
