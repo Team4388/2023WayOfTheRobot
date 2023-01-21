@@ -22,8 +22,21 @@ public class Arm extends SubsystemBase {
     pivot.set(output);
   }
 
-  public void runTelescope(double output) {
+  public void runTele(double output) {
     tele.set(output);
+  }
+
+  public void runPivotAndTele(double pOutput, double tOutput) {
+    pivot.set(pOutput);
+    tele.set(tOutput);
+  }
+
+  public double getPivotPos() {
+    return pivot.getSelectedSensorPosition();
+  }
+
+  public double getTelePos() {
+    return tele.getSelectedSensorPosition();
   }
 
   @Override

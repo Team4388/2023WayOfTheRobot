@@ -7,11 +7,13 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
@@ -145,5 +147,20 @@ public class RobotMap {
     // config closed loop ramp
     pivot.configClosedloopRamp(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
     tele.configClosedloopRamp(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+
+    // config neutral mode to brake
+    pivot.setNeutralMode(NeutralMode.Brake);
+    tele.setNeutralMode(NeutralMode.Brake);
+
+    // soft limits
+    pivot.configForwardSoftLimitThreshold(ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
+    pivot.configReverseSoftLimitThreshold(ArmConstants.PIVOT_REVERSE_SOFT_LIMIT);
+    pivot.configForwardSoftLimitEnable(false);
+    pivot.configReverseSoftLimitEnable(false);
+
+    tele.configForwardSoftLimitThreshold(ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+    tele.configReverseSoftLimitThreshold(ArmConstants.TELE_REVERSE_SOFT_LIMIT);
+    tele.configForwardSoftLimitEnable(false);
+    tele.configReverseSoftLimitEnable(false);
   }
 }
