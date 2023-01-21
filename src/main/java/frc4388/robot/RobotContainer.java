@@ -53,18 +53,26 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
-        m_robotSwerveDrive.setDefaultCommand(
-            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(-0.3*getDriverController().getLeftXAxis(), 
-                                                                    0.3*getDriverController().getLeftYAxis(), 
-                                                                   -0.3*getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
-        );
+        // m_robotSwerveDrive.setDefaultCommand(
+        //     new RunCommand(() -> m_robotSwerveDrive.driveWithInput(-0.3*getDriverController().getLeftXAxis(), 
+        //                                                             0.3*getDriverController().getLeftYAxis(), 
+        //                                                            -0.3*getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
+        // );
 
         // m_robotSwerveDrive.setDefaultCommand(
-        //     new RunCommand(() -> m_robotSwerveDrive.runAllSteerMotors(0.2*getDriverController().getLeftYAxis()), m_robotSwerveDrive)
+        //     new RunCommand(() -> m_robotSwerveDrive.driveWithInput(0, 
+        //                                                             -0.1, 
+        //                                                            0, false), m_robotSwerveDrive)
         // );
-        // m_robotSwerveDrive.setDefaultCommand(
-        //     new RunCommand(() -> m_robotSwerveDrive.leftBack.angleMotor.set(0.2*getDriverController().getRightYAxis()), m_robotSwerveDrive)
-        // );
+
+        m_robotSwerveDrive.setDefaultCommand(
+            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(
+                -0.3 * getDriverController().getLeftXAxis(),
+                0.3 * getDriverController().getLeftYAxis(),
+                0.3 * getDriverController().getRightXAxis(),
+                0.3 * getDriverController().getRightYAxis(),
+                true),
+                m_robotSwerveDrive).withName("Swerve driveWithInput defaultCommand"));
     }
 
     /**
@@ -84,6 +92,12 @@ public class RobotContainer {
         // new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
         //     .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW), m_robotLED))
         //     .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN), m_robotLED));
+
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .whileTrue(new RunCommand(() -> m_robotSwerveDrive.rotateCANCodersToAngle(0), m_robotSwerveDrive));
+        
+        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetCANCoders(0), m_robotSwerveDrive));
 
         //New interupt button
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
