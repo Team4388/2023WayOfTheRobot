@@ -18,14 +18,14 @@ import frc4388.utility.RobotGyro;
 
 public class SwerveDrive extends SubsystemBase {
   
-  private SwerveModule leftFront;
-  private SwerveModule rightFront;
-  private SwerveModule leftBack;
-  private SwerveModule rightBack;
+  public SwerveModule leftFront;
+  public SwerveModule rightFront;
+  public SwerveModule leftBack;
+  public SwerveModule rightBack;
 
   private SwerveModule[] modules;
 
-  private RobotGyro gyro;
+  // private RobotGyro gyro;
 
   private Translation2d leftFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   private Translation2d rightFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
@@ -34,21 +34,21 @@ public class SwerveDrive extends SubsystemBase {
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontLocation, rightFrontLocation, leftBackLocation, rightBackLocation); 
 
-  private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
-    kinematics, 
-    gyro.getRotation2d(),
-    new SwerveModulePosition[] {
-      leftFront.getPosition(),
-      rightFront.getPosition(),
-      leftBack.getPosition(),
-      rightBack.getPosition()
-    }
-  );
+  // private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+  //   kinematics, 
+  //   gyro.getRotation2d(),
+  //   new SwerveModulePosition[] {
+  //     leftFront.getPosition(),
+  //     rightFront.getPosition(),
+  //     leftBack.getPosition(),
+  //     rightBack.getPosition()
+  //   }
+  // );
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
+  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack) {//, RobotGyro gyro) {
     this.leftFront = leftFront;
     this.rightFront = rightFront;
     this.leftBack = leftBack;
@@ -56,17 +56,23 @@ public class SwerveDrive extends SubsystemBase {
 
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
 
-    this.gyro = gyro;
+    for (SwerveModule m : this.modules) {
+      m.reset();
+    }
+
+    // this.gyro = gyro;
   }
 
   public void driveWithInput(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    double xSpeedMetersPerSecond = xSpeed * SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
-    double ySpeedMetersPerSecond = ySpeed * SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
+    double xSpeedMetersPerSecond = xSpeed * this.speedAdjust; //SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
+    double ySpeedMetersPerSecond = ySpeed * this.speedAdjust; //SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
 
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-      fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot, gyro.getRotation2d()) 
-                    : new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot)
-    );
+    // SwerveModuleState[] states = kinematics.toSwerveModuleStates(
+    //   fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot, gyro.getRotation2d()) 
+    //                 : new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot)
+    //);
+
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot));
 
     SwerveDriveKinematics.desaturateWheelSpeeds(states, Units.metersToFeet(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
     setModuleStates(states);
@@ -87,64 +93,78 @@ public class SwerveDrive extends SubsystemBase {
   /**
    * Updates the odometry of the SwerveDrive.
    */
-  public void updateOdometry() {
-    odometry.update(
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        leftFront.getPosition(),
-        rightFront.getPosition(),
-        leftBack.getPosition(),
-        rightBack.getPosition()
-      }
-    );
-  }
+  // public void updateOdometry() {
+  //   odometry.update(
+  //     gyro.getRotation2d(), 
+  //     new SwerveModulePosition[] {
+  //       leftFront.getPosition(),
+  //       rightFront.getPosition(),
+  //       leftBack.getPosition(),
+  //       rightBack.getPosition()
+  //     }
+  //   );
+  // }
 
   /**
    * Gets the odometry of the SwerveDrive.
    * @return The odometry of the SwerveDrive as a Pose2d object (xMeters, yMeters, theta).
    */
-  public Pose2d getOdometry() {
-    return odometry.getPoseMeters();
-  }
+  // public Pose2d getOdometry() {
+  //   return odometry.getPoseMeters();
+  // }
 
   /**
    * Sets the odometry of the SwerveDrive.
    * @param pose Pose to set the odometry to.
    */
-  public void setOdometry(Pose2d pose) {
-    odometry.resetPosition(
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        leftFront.getPosition(),
-        rightFront.getPosition(),
-        leftBack.getPosition(),
-        rightBack.getPosition()
-      },
-      pose
-    );
-  }
+  // public void setOdometry(Pose2d pose) {
+  //   odometry.resetPosition(
+  //     gyro.getRotation2d(), 
+  //     new SwerveModulePosition[] {
+  //       leftFront.getPosition(),
+  //       rightFront.getPosition(),
+  //       leftBack.getPosition(),
+  //       rightBack.getPosition()
+  //     },
+  //     pose
+  //   );
+  // }
 
   /**
    * Resets the odometry of the SwerveDrive to 0.
    * *NOTE: If you reset your gyroscope or wheel encoders, this method MUST be called with the new gyro angle and wheel encoder positions.
    */
-  public void resetOdometry() {
-    odometry.resetPosition(
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        leftFront.getPosition(),
-        rightFront.getPosition(),
-        leftBack.getPosition(),
-        rightBack.getPosition()
-      },
-      new Pose2d()
-    );
+  // public void resetOdometry() {
+  //   odometry.resetPosition(
+  //     gyro.getRotation2d(), 
+  //     new SwerveModulePosition[] {
+  //       leftFront.getPosition(),
+  //       rightFront.getPosition(),
+  //       leftBack.getPosition(),
+  //       rightBack.getPosition()
+  //     },
+  //     new Pose2d()
+  //   );
+  // }
+
+  public void runAllDriveMotors(double output) {
+    this.leftFront.driveMotor.set(output);
+    this.rightFront.driveMotor.set(output);
+    this.leftBack.driveMotor.set(output);
+    this.rightBack.driveMotor.set(output);
+  }
+
+  public void runAllSteerMotors(double output) {
+    this.leftFront.angleMotor.set(output);
+    this.rightFront.angleMotor.set(output);
+    this.leftBack.angleMotor.set(output);
+    this.rightBack.angleMotor.set(output);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    updateOdometry();
+    // updateOdometry();
   }
 
   /**

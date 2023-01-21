@@ -60,7 +60,7 @@ public class Robot extends TimedRobot {
     }
   }
 
-  private MicroBot bot = new MicroBot();
+  // private MicroBot bot = new MicroBot();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -72,7 +72,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    bot.setDefaultCommand(new AutoBalance(bot));
+    // bot.setDefaultCommand(new AutoBalance(bot));
   }
 
   /**
@@ -146,7 +146,7 @@ public class Robot extends TimedRobot {
     }
     m_robotTime.startMatchTime();
 
-    m_robotContainer.gyroRef.reset();
+    // m_robotContainer.gyroRef.reset();
   }
 
   /**
@@ -154,9 +154,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
-    SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
-    SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
+    // SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
+    // SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
+    // SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
   }
 
   /**
