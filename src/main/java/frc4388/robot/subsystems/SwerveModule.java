@@ -21,8 +21,8 @@ import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
 
 public class SwerveModule extends SubsystemBase {
-    private WPI_TalonFX driveMotor;
-    private WPI_TalonFX angleMotor;
+    public WPI_TalonFX driveMotor;
+    public WPI_TalonFX angleMotor;
     private CANCoder canCoder;
 
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
@@ -78,7 +78,7 @@ public class SwerveModule extends SubsystemBase {
      * @return the angle of a SwerveModule as a Rotation2d
      */
     public Rotation2d getAngle() {
-        // Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees. 
+        // Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         return Rotation2d.fromDegrees(canCoder.getAbsolutePosition());
     }
 

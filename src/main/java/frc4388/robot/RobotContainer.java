@@ -32,15 +32,15 @@ public class RobotContainer {
     private final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
-    private final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack, m_robotMap.gyro);
-    private final LED m_robotLED = new LED(m_robotMap.LEDController);
+    private final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack);//, m_robotMap.gyro);
+    // private final LED m_robotLED = new LED(m_robotMap.LEDController);
     
 
     /* Controllers */
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
-    public RobotGyro gyroRef = m_robotMap.gyro;
+    // public RobotGyro gyroRef = m_robotMap.gyro;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -51,13 +51,20 @@ public class RobotContainer {
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
         // continually sends updates to the Blinkin LED controller to keep the lights on
-        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+        // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
         m_robotSwerveDrive.setDefaultCommand(
-            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(-getDriverController().getLeftXAxis(), 
-                                                                    getDriverController().getLeftYAxis(), 
-                                                                   -getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
+            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(-0.3*getDriverController().getLeftXAxis(), 
+                                                                    0.3*getDriverController().getLeftYAxis(), 
+                                                                   -0.3*getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
         );
+
+        // m_robotSwerveDrive.setDefaultCommand(
+        //     new RunCommand(() -> m_robotSwerveDrive.runAllSteerMotors(0.2*getDriverController().getLeftYAxis()), m_robotSwerveDrive)
+        // );
+        // m_robotSwerveDrive.setDefaultCommand(
+        //     new RunCommand(() -> m_robotSwerveDrive.leftBack.angleMotor.set(0.2*getDriverController().getRightYAxis()), m_robotSwerveDrive)
+        // );
     }
 
     /**
@@ -69,14 +76,14 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> gyroRef.reset()));
+        // new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        //     .onTrue(new InstantCommand(() -> gyroRef.reset()));
 
         /* Operator Buttons */
         // activates "Lit Mode"
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW), m_robotLED))
-            .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN), m_robotLED));
+        // new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
+        //     .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW), m_robotLED))
+        //     .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN), m_robotLED));
 
         //New interupt button
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)

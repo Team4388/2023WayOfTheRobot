@@ -24,20 +24,21 @@ import frc4388.utility.LEDPatterns;
 public final class Constants {
   public static final class SwerveDriveConstants {
     public static final class IDs {
-      public static final int LEFT_FRONT_WHEEL_ID = -1; // TODO: find the actual ID
-      public static final int RIGHT_FRONT_WHEEL_ID = -1; // TODO: find the actual ID
-      public static final int LEFT_BACK_WHEEL_ID = -1; // TODO: find the actual ID
-      public static final int RIGHT_BACK_STEER_ID = -1; // TODO: find the actual ID
+      public static final int LEFT_FRONT_WHEEL_ID = 2;
+      public static final int LEFT_FRONT_STEER_ID = 3;
+      public static final int LEFT_FRONT_ENCODER_ID = 10;
 
-      public static final int LEFT_FRONT_STEER_ID = -1; // TODO: find the actual ID
-      public static final int RIGHT_FRONT_STEER_ID = -1; // TODO: find the actual ID
-      public static final int LEFT_BACK_STEER_ID = -1; // TODO: find the actual ID
-      public static final int RIGHT_BACK_WHEEL_ID = -1; // TODO: find the actual ID
+      public static final int RIGHT_FRONT_WHEEL_ID = 4;
+      public static final int RIGHT_FRONT_STEER_ID = 5;
+      public static final int RIGHT_FRONT_ENCODER_ID = 11;
 
-      public static final int LEFT_FRONT_ENCODER_ID = -1; // TODO: find the actual ID
-      public static final int RIGHT_FRONT_ENCODER_ID = -1; // TODO: find the actual ID
-      public static final int LEFT_BACK_ENCODER_ID = -1; // TODO: find the actual ID
-      public static final int RIGHT_BACK_ENCODER_ID = -1; // TODO: find the actual ID
+      public static final int LEFT_BACK_WHEEL_ID = 6;
+      public static final int LEFT_BACK_STEER_ID = 7;
+      public static final int LEFT_BACK_ENCODER_ID = 12;
+      
+      public static final int RIGHT_BACK_WHEEL_ID = 8;
+      public static final int RIGHT_BACK_STEER_ID = 9;
+      public static final int RIGHT_BACK_ENCODER_ID = 13;
     }
 
     public static final class PIDConstants {
@@ -63,7 +64,9 @@ public final class Constants {
       public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
       public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 2.0; // TODO: find the actual value
 
-      public static final double MOTOR_REV_PER_WHEEL_REV = -1; // TODO: find the actual value
+      public static final double MOTOR_REV_PER_WHEEL_REV = 6.12; // TODO: find the actual value
+      public static final double MOTOR_REV_PER_STEER_REV = 12.8; // TODO: find the actual value
+
       public static final double TICKS_PER_MOTOR_REV = 2048;
       public static final double WHEEL_DIAMETER_INCHES = 4.0; // TODO: the actual value
       public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
@@ -82,17 +85,22 @@ public final class Constants {
       public static final double CLOSED_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
       public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
 
-      public static final double LEFT_FRONT_ENCODER_OFFSET = -1.0; // TODO: find the actual value
-      public static final double RIGHT_FRONT_ENCODER_OFFSET = -1.0; // TODO: find the actual value
-      public static final double LEFT_BACK_ENCODER_OFFSET = -1.0; // TODO: find the actual value
-      public static final double RIGHT_BACK_ENCODER_OFFSET = -1.0; // TODO: find the actual value
+      // public static final double LEFT_FRONT_ENCODER_OFFSET = (4 * 360. - 232.6466 + 180 - 90) % 360.; // TODO: find the actual value
+      // public static final double RIGHT_FRONT_ENCODER_OFFSET = (4 * 360. - 152.1265 - 180 - 90) % 360.; // TODO: find the actual value
+      // public static final double LEFT_BACK_ENCODER_OFFSET = (4 * 360. - 189.4834 - 90) % 360.; // TODO: find the actual value
+      // public static final double RIGHT_BACK_ENCODER_OFFSET = (4 * 360. - 9.3156 - 180 - 90) % 360.; // TODO: find the actual value
+      
+      public static final double LEFT_FRONT_ENCODER_OFFSET = (4 * 360. - 232.6466 + 180 - 90) % 360.; // TODO: find the actual value
+      public static final double RIGHT_FRONT_ENCODER_OFFSET = (4 * 360. - 9.3156 - 180 - 90) % 360.; // TODO: find the actual value
+      public static final double LEFT_BACK_ENCODER_OFFSET = (4 * 360. - 152.1265 - 180 - 90) % 360.; // TODO: find the actual value
+      public static final double RIGHT_BACK_ENCODER_OFFSET = (4 * 360. - 189.4834 - 90) % 360.; // TODO: find the actual value
     }
 
-    public static final double MAX_SPEED_FEET_PER_SECOND = -1; // TODO: find the actual value
+    public static final double MAX_SPEED_FEET_PER_SECOND = 10; // TODO: find the actual value
 
     // dimensions
-    public static final double WIDTH = -1; // TODO: find the actual value
-    public static final double HEIGHT = -1; // TODO: find the actual value
+    public static final double WIDTH = 18.5; // TODO: find the actual value
+    public static final double HEIGHT = 18.5; // TODO: find the actual value
     public static final double HALF_WIDTH = WIDTH / 2.d;
     public static final double HALF_HEIGHT = HEIGHT / 2.d;
 
@@ -102,11 +110,11 @@ public final class Constants {
   }
 
   public static final class GyroConstants {
-    public static final int ID = -1; // TODO: find the actual ID
+    public static final int ID = 14; // TODO: find the actual ID
   }
     
   public static final class LEDConstants {
-    public static final int LED_SPARK_ID = 0;
+    // public static final int LED_SPARK_ID = 0;
 
     public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_WAVES;
   }
