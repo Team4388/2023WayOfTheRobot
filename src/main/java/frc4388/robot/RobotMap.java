@@ -31,10 +31,10 @@ public class RobotMap {
   public SwerveModule leftBack;
   public SwerveModule rightBack;
 
-
   public RobotMap() {
     configureLEDMotorControllers();
     configureDriveMotors();
+    configArmMotors();
   }
 
   /* LED Subsystem */
@@ -127,5 +127,23 @@ public class RobotMap {
     this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, SwerveDriveConstants.Configurations.LEFT_BACK_ENCODER_OFFSET);
     this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, SwerveDriveConstants.Configurations.RIGHT_BACK_ENCODER_OFFSET);
 
+  }
+
+  // arm stuff
+  public WPI_TalonFX pivot = new WPI_TalonFX(-1); // TODO: Add real id
+  public WPI_TalonFX tele =  new WPI_TalonFX(-1); // TODO: Add real id
+
+  public void configArmMotors() {
+    // config factory default
+    pivot.configFactoryDefault();
+    tele.configFactoryDefault();
+
+    // config open loop ramp
+    pivot.configOpenloopRamp(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+    tele.configOpenloopRamp(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+
+    // config closed loop ramp
+    pivot.configClosedloopRamp(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+    tele.configClosedloopRamp(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
   }
 }
