@@ -63,6 +63,9 @@ public class RobotContainer {
         new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
                 .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
                 .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+        
+        new JoystickButton(getOperatorJoystick(), XboxController.B_BUTTON)
+                .onTrue(() -> {});
     }
 
     /**
