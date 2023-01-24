@@ -13,6 +13,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.utility.RobotGyro;
@@ -22,7 +24,6 @@ import frc4388.utility.RobotGyro;
  * testing and modularization.
  */
 public class RobotMap {
-
     public RobotMap() {
         configureLEDMotorControllers();
         configureDriveMotorControllers();
@@ -30,6 +31,7 @@ public class RobotMap {
 
     /* LED Subsystem */
     public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
+    public final Solenoid clawSolenoid = new Solenoid(PneumaticsModuleType.CTREPCM, -1);
 
     void configureLEDMotorControllers() {
         
