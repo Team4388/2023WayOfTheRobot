@@ -32,7 +32,7 @@ public class RobotContainer {
     private final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
-    private final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack);//, m_robotMap.gyro);
+    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack);//, m_robotMap.gyro);
     // private final LED m_robotLED = new LED(m_robotMap.LEDController);
     
 
@@ -65,15 +65,17 @@ public class RobotContainer {
         //                                                            0, false), m_robotSwerveDrive)
         // );
 
-        m_robotSwerveDrive.setDefaultCommand(
-            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(
-                -0.3 * getDriverController().getLeftXAxis(),
-                0.3 * getDriverController().getLeftYAxis(),
-                0.3 * getDriverController().getRightXAxis(),
-                0.3 * getDriverController().getRightYAxis(),
-                true),
-                m_robotSwerveDrive).withName("Swerve driveWithInput defaultCommand"));
+    //     m_robotSwerveDrive.setDefaultCommand(
+    //         new RunCommand(() -> m_robotSwerveDrive.driveWithInput(
+    //             -0.3 * getDriverController().getLeftXAxis(),
+    //             0.3 * getDriverController().getLeftYAxis(),
+    //             0.3 * getDriverController().getRightXAxis(),
+    //             0.3 * getDriverController().getRightYAxis(),
+    //             true),
+    //             m_robotSwerveDrive).withName("Swerve driveWithInput defaultCommand"));
     }
+
+    
 
     /**
      * Use this method to define your button->command mappings. Buttons can be

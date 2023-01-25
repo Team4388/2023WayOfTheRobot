@@ -11,11 +11,15 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotTime;
@@ -59,6 +63,10 @@ public class Robot extends TimedRobot {
       backRight.set(ControlMode.PercentOutput, output);
     }
   }
+
+  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
+  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
   // private MicroBot bot = new MicroBot();
 
@@ -157,6 +165,15 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
     // SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
     // SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
+    this.drive(false);
+  }
+
+  private void drive(boolean fieldRelative) {
+    final double xSpeed = -xLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftYAxis(), 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    final double ySpeed = -yLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftXAxis(), 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    final double rot = -rotLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getRightXAxis(), 0.02) * Units.feetToMeters(Math.PI));
+
+    m_robotContainer.m_robotSwerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
   }
 
   /**
