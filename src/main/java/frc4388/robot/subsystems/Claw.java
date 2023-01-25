@@ -1,17 +1,23 @@
-public class claw {
+package frc4388.robot.subsystems;
+import edu.wpi.first.wpilibj.PWM;
+
+public class Claw {
+	private PWM m_clawMotor;
+	private boolean m_open = false;
+
     // Opens claw
-    public void funtion openClaw() {
+	public Claw(PWM m_clawMotor) {
+		 this.m_clawMotor = m_clawMotor;
+		 setClaw(true);
+	}
+
+    public void setClaw(boolean open) {
         // Open claw
+		m_open = open;
+		m_clawMotor.setRaw(open ? 0 : 2000);
     }
 
-    // Closes claw
-    public void function closeClaw() {
-        //Close claw
-    }
-
-    // Rotate wrist
-    public int function rotClaw(int rot) {
-        //Rotate wrist to ROT
-        return newRot;
-    }
+	public boolean isClawOpen() {
+		return m_open;
+	}
 }

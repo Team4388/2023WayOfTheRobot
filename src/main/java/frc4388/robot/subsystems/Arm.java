@@ -1,7 +1,9 @@
+package frc4388.robot.subsystems;
+
 public class Arm {
     // Moves arm to distence [dist] then returns new ang
-    public int funtion moveArm(int dist) {
+    public int moveArm(int dist) {
         // Move arm code
-        return newDist;
+        return 0;
     }
 }
