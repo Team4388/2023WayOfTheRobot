@@ -22,13 +22,13 @@ public class Arm extends SubsystemBase {
     public void armSetLength(double len) {
         if (len > 1 || len < 0) return;
         // Move arm code
-        m_armmotor.set(ControlMode.Position, len * (ArmConstants.maxArmLen - ArmConstants.minArmLen) +
-            ArmConstants.minArmLen);
+        m_armmotor.set(ControlMode.Position, len * (ArmConstants.MAX_ARM_LEN - ArmConstants.MIN_ARM_LEN) +
+            ArmConstants.MIN_ARM_LEN);
     }
 
     public double getArmLength() {
-        return (m_armmotor.getSelectedSensorPosition() - ArmConstants.minArmLen) /
-            (ArmConstants.maxArmLen - ArmConstants.minArmLen);
+        return (m_armmotor.getSelectedSensorPosition() - ArmConstants.MIN_ARM_LEN) /
+            (ArmConstants.MAX_ARM_LEN - ArmConstants.MIN_ARM_LEN);
     }
 
     @Override
