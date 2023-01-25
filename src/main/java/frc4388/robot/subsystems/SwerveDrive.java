@@ -4,6 +4,7 @@
 
 package frc4388.robot.subsystems;
 
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -28,7 +29,9 @@ public class SwerveDrive extends SubsystemBase {
 
   private SwerveModule[] modules;
 
-  // private RobotGyro gyro;
+ 
+
+  // private RobotGyro gyro3
 
   private Translation2d leftFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   private Translation2d rightFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
@@ -95,6 +98,16 @@ public class SwerveDrive extends SubsystemBase {
     ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rightX * SwerveDriveConstants.ROTATION_SPEED);
     
     SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
+    setModuleStates(states);
+  }
+
+  // ! experimental WPILib swerve drive example
+  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+    // SwerveModuleState[] states = kinematics.toSwerveModuleStates(
+    //   fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, gyro.getRotation2d()) 
+    //                 : new ChassisSpeeds(xSpeed, ySpeed, rot)
+    // );
+    SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot * SwerveDriveConstants.ROTATION_SPEED));
     setModuleStates(states);
   }
 
