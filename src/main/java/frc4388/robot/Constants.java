@@ -23,7 +23,11 @@ public final class Constants {
 
         public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
     }
-    
+    public static final class ArmConstants {
+        public static final int MIN_ARM_LEN = 0;
+        public static final int MAX_ARM_LEN = 1;
+        public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
+    }
     public static final class LEDConstants {
         public static final int LED_SPARK_ID = 0;
 
