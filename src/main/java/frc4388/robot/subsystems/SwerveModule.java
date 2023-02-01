@@ -16,6 +16,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
@@ -30,7 +31,7 @@ public class SwerveModule extends SubsystemBase {
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
   
     /** Creates a new SwerveModule. */
-    public SwerveModule(WPI_TalonFX driveMotor, WPI_TalonFX angleMotor, /*CANCoder canCoder*/CANCoder encoder, double offset) {
+    public SwerveModule(WPI_TalonFX driveMotor, WPI_TalonFX angleMotor, CANCoder encoder) {//, double offset) {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
@@ -47,8 +48,10 @@ public class SwerveModule extends SubsystemBase {
         angleMotor.configAllSettings(angleConfig);
 
         CANCoderConfiguration canCoderConfig = new CANCoderConfiguration();
-        canCoderConfig.magnetOffsetDegrees = offset;
+        // canCoderConfig.magnetOffsetDegrees = offset;
         encoder.configAllSettings(canCoderConfig);
+
+        // driveMotor.config_kP(0, 0.4);
 
         // canCoderConfig.magnetOffsetDegrees = 270;
     }
@@ -134,7 +137,10 @@ public class SwerveModule extends SubsystemBase {
         angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
+        double inchesPerSecond = Units.metersToInches(state.speedMetersPerSecond);
+
         driveMotor.set(/*angleMotor.get() + */feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND);
+        // driveMotor.set(TalonFXControlMode.Velocity, inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);
     }
 
     public void reset(double position) {

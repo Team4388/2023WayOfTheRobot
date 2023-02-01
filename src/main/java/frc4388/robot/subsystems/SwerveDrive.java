@@ -29,8 +29,6 @@ public class SwerveDrive extends SubsystemBase {
 
   private SwerveModule[] modules;
 
- 
-
   // private RobotGyro gyro3
 
   private Translation2d leftFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
@@ -205,6 +203,10 @@ public class SwerveDrive extends SubsystemBase {
     for (SwerveModule module : this.modules) {
       module.reset(position);
     }
+  }
+
+  public SwerveDriveKinematics getKinematics() {
+    return this.kinematics;
   }
 
   @Override
