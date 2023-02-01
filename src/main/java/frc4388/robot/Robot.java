@@ -169,9 +169,9 @@ public class Robot extends TimedRobot {
   }
 
   private void drive(boolean fieldRelative) {
-    final double xSpeed = -xLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftYAxis(), 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-    final double ySpeed = -yLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftXAxis(), 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-    final double rot = -rotLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getRightXAxis(), 0.02) * Units.feetToMeters(Math.PI));
+    final double xSpeed = -xLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftXAxis() * -0.3, 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    final double ySpeed = -yLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftYAxis() * 0.3, 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    final double rot = -rotLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getRightXAxis() * 0.3, 0.02) * Units.feetToMeters(Math.PI));
 
     m_robotContainer.m_robotSwerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
   }

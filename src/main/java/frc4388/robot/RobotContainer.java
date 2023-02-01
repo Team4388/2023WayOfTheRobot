@@ -7,6 +7,11 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -75,7 +80,6 @@ public class RobotContainer {
     //             m_robotSwerveDrive).withName("Swerve driveWithInput defaultCommand"));
     }
 
-    
 
     /**
      * Use this method to define your button->command mappings. Buttons can be
@@ -95,11 +99,14 @@ public class RobotContainer {
         //     .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW), m_robotLED))
         //     .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN), m_robotLED));
 
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .whileTrue(new RunCommand(() -> m_robotSwerveDrive.rotateCANCodersToAngle(0), m_robotSwerveDrive));
+        // new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+        //     .whileTrue(new RunCommand(() -> m_robotSwerveDrive.rotateCANCodersToAngle(0), m_robotSwerveDrive));
         
-        new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetCANCoders(0), m_robotSwerveDrive));
+        // new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetCANCoders(0), m_robotSwerveDrive));
+
+        // new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+        //     .onTrue()
 
         //New interupt button
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
@@ -113,6 +120,11 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // no auto
+        // TrajectoryConfig trajConfig = new TrajectoryConfig(1, 1).setKinematics(m_robotSwerveDrive.getKinematics()); // TODO: make these AutoConstants
+
+        // Trajectory traj = TrajectoryGenerator.generateTrajectory(
+        //     new Pose2d(0, 0, new Rotation2d(0)), null, null, trajConfig);
+
         return new InstantCommand();
     }
 
