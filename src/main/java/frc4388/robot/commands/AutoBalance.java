@@ -6,13 +6,9 @@ package frc4388.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc4388.robot.Robot;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.RobotGyro;
 
-// NOTE:	Consider using this command inline, rather than writing a subclass.	For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoBalance extends PelvicInflammatoryDisease {
 	RobotGyro gyro;
 	SwerveDrive drive;

@@ -11,11 +11,8 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
-import frc4388.utility.RobotEncoder;
 import frc4388.utility.RobotGyro;
 
 /**
@@ -49,22 +46,18 @@ public class RobotMap {
   public final WPI_TalonFX leftFrontWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_FRONT_WHEEL_ID);
   public final WPI_TalonFX leftFrontSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_FRONT_STEER_ID);
   public final CANCoder leftFrontEncoder = new CANCoder(SwerveDriveConstants.IDs.LEFT_FRONT_ENCODER_ID);
-  //public final RobotEncoder leftFrontEncoder = new RobotEncoder(SwerveDriveConstants.IDs.LEFT_FRONT_ENCODER_ID, 268.900);
 
   public final WPI_TalonFX rightFrontWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_FRONT_WHEEL_ID);
   public final WPI_TalonFX rightFrontSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_FRONT_STEER_ID);
   public final CANCoder rightFrontEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_FRONT_ENCODER_ID);
-  //public final RobotEncoder rightFrontEncoder = new RobotEncoder(SwerveDriveConstants.IDs.RIGHT_FRONT_ENCODER_ID, 266.700);
     
   public final WPI_TalonFX leftBackWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_BACK_WHEEL_ID);
   public final WPI_TalonFX leftBackSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_BACK_STEER_ID);
   public final CANCoder leftBackEncoder = new CANCoder(SwerveDriveConstants.IDs.LEFT_BACK_ENCODER_ID);
-  //public final RobotEncoder leftBackEncoder = new RobotEncoder(SwerveDriveConstants.IDs.LEFT_BACK_ENCODER_ID, 268.285);
 
   public final WPI_TalonFX rightBackWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_WHEEL_ID);
   public final WPI_TalonFX rightBackSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_STEER_ID);
   public final CANCoder rightBackEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
-  //public final RobotEncoder rightBackEncoder = new RobotEncoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID, 86.965);
 
 
   void configureDriveMotors() {
@@ -120,21 +113,10 @@ public class RobotMap {
     rightBackWheel.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
     rightBackSteer.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
 
-    // config magnet offset
-    // leftFrontEncoder.configMagnetOffset(90.0); //180.0); //270);//271.58203125);//SwerveDriveConstants.Configurations.LEFT_FRONT_ENCODER_OFFSET);
-    // rightFrontEncoder.configMagnetOffset(0.0); //180.0); //270);//271.58203125);//SwerveDriveConstants.Configurations.RIGHT_FRONT_ENCODER_OFFSET);
-    // leftBackEncoder.configMagnetOffset(23.99414); //0.0); //90.0);//92.98828125);//SwerveDriveConstants.Configurations.LEFT_BACK_ENCODER_OFFSET);
-    // rightBackEncoder.configMagnetOffset(225.0); //180.0); //270.0);//267.01171875);//SwerveDriveConstants.Configurations.RIGHT_BACK_ENCODER_OFFSET);
-
     // initialize SwerveModules
     this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, -181.230469);
     this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, -270.615234);
     this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, -240.029297);
     this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, -40.869142);
-
-    // LEFT FRONT: -181.230469
-    // RIGHT FRONT: -270.615234
-    // LEFT BACK: -240.029297
-    // RIGHT BACK: -40.869142
   }
 }
