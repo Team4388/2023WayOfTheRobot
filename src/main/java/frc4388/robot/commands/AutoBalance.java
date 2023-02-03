@@ -19,7 +19,11 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 
 	/** Creates a new AutoBalanceTF2. */
 	public AutoBalance(RobotGyro gyro, SwerveDrive drive) {
-		super(.7, .1, 15, 0);
+		super(1.0, 0, 0, 0);
+
+		this.gyro = gyro;
+		this.drive = drive;
+
 		addRequirements(drive);
 	}
 
@@ -40,7 +44,7 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 	@Override
 	public void initialize() {
 		super.initialize();
-		this.gyro.reset();
+		// this.gyro.reset();
 	}
 
 	// Returns true when the command should end.

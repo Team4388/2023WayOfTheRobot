@@ -140,7 +140,7 @@ public class SwerveModule extends SubsystemBase {
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
         double inchesPerSecond = Units.metersToInches(state.speedMetersPerSecond);
 
-        driveMotor.set(/*angleMotor.get() + */feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND);
+        driveMotor.set(-1 * angleMotor.get() + feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND);
         // driveMotor.set(TalonFXControlMode.Velocity, inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);
     }
 

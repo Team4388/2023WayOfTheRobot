@@ -158,9 +158,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    // SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
-    // SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
-    // SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
+    // SmartDashboard.putNumber("yaw", m_robotContainer.m_robotMap.gyro.getAngle());
+    SmartDashboard.putNumber("Robot.java Pitch", m_robotContainer.m_robotMap.gyro.getPitch());
+    // SmartDashboard.putNumber("roll", m_robotContainer.m_robotMap.gyro.getRoll());
   }
 
   /**
