@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.commands.DriveWithInput;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.SwerveDrive;
@@ -115,6 +116,8 @@ public class RobotContainer {
 
         // new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
         //     .onTrue()
+        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+            .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
         //New interupt button
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
