@@ -64,10 +64,6 @@ public class Robot extends TimedRobot {
     }
   }
 
-  private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
-  private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
-
   // private MicroBot bot = new MicroBot();
 
   /**
@@ -165,15 +161,6 @@ public class Robot extends TimedRobot {
     // SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
     // SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
     // SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
-    this.drive(false);
-  }
-
-  private void drive(boolean fieldRelative) {
-    final double xSpeed = -xLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftXAxis() * -0.3, 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-    final double ySpeed = -yLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getLeftYAxis() * 0.3, 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-    final double rot = -rotLimiter.calculate(MathUtil.applyDeadband(m_robotContainer.getDriverController().getRightXAxis() * 0.3, 0.02) * Units.feetToMeters(Math.PI));
-
-    m_robotContainer.m_robotSwerveDrive.drive(xSpeed, ySpeed, rot, fieldRelative);
   }
 
   /**

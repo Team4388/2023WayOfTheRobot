@@ -61,43 +61,43 @@ public class SwerveDrive extends SubsystemBase {
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
   }
 
-  public void driveWithInput(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
+  // public void driveWithInput(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     
-    Translation2d speed = new Translation2d(-xSpeed, ySpeed);
-    double mag = speed.getNorm();
-    speed = speed.times(mag * speedAdjust);
+  //   Translation2d speed = new Translation2d(-xSpeed, ySpeed);
+  //   double mag = speed.getNorm();
+  //   speed = speed.times(mag * speedAdjust);
     
-    double xSpeedMetersPerSecond = -speed.getX(); //SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
-    double ySpeedMetersPerSecond = speed.getY(); //SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
-    // SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-    //   fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot, gyro.getRotation2d()) 
-    //                 : new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot)
-    //);
+    // double xSpeedMetersPerSecond = -speed.getX(); //SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
+  //   double ySpeedMetersPerSecond = speed.getY(); //SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
+  //   // SwerveModuleState[] states = kinematics.toSwerveModuleStates(
+  //   //   fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot, gyro.getRotation2d()) 
+  //   //                 : new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot)
+  //   //);
 
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot * SwerveDriveConstants.ROTATION_SPEED));
+  //   SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rot * SwerveDriveConstants.ROTATION_SPEED));
 
-    setModuleStates(states);
-  }
+  //   setModuleStates(states);
+  // }
 
-  public void driveWithInput(double leftX, double leftY, double rightX, double rightY, boolean fieldRelative) {
-    // ignoreAngles = leftX == 0 && leftY == 0 && rightX == 0 && rightY == 0;
-    Translation2d speed = new Translation2d(-leftX, leftY);
-    speed = speed.times(speed.getNorm() * speedAdjust);
-    // if (Math.abs(rightX) > SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND || Math.abs(rightY) > SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND)
-    //   rotTarget = new Rotation2d(rightX, -rightY).minus(new Rotation2d(0, 1));
-    // double rot = rotTarget.minus(gyro.getRotation2d()).getRadians();
-    double xSpeedMetersPerSecond = -speed.getX();
-    double ySpeedMetersPerSecond = speed.getY();
-    // chassisSpeeds = fieldRelative
-    //     ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond,
-    //         rot * SwerveDriveConstants.ROTATION_SPEED, m_gyro.getRotation2d())
-    //     : new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rightX * SwerveDriveConstants.ROTATION_SPEED);
+  // public void driveWithInput(double leftX, double leftY, double rightX, double rightY, boolean fieldRelative) {
+  //   // ignoreAngles = leftX == 0 && leftY == 0 && rightX == 0 && rightY == 0;
+  //   Translation2d speed = new Translation2d(-leftX, leftY);
+  //   speed = speed.times(speed.getNorm() * speedAdjust);
+  //   // if (Math.abs(rightX) > SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND || Math.abs(rightY) > SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND)
+  //   //   rotTarget = new Rotation2d(rightX, -rightY).minus(new Rotation2d(0, 1));
+  //   // double rot = rotTarget.minus(gyro.getRotation2d()).getRadians();
+  //   double xSpeedMetersPerSecond = -speed.getX();
+  //   double ySpeedMetersPerSecond = speed.getY();
+  //   // chassisSpeeds = fieldRelative
+  //   //     ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond,
+  //   //         rot * SwerveDriveConstants.ROTATION_SPEED, m_gyro.getRotation2d())
+  //   //     : new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rightX * SwerveDriveConstants.ROTATION_SPEED);
 
-    ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rightX * SwerveDriveConstants.ROTATION_SPEED);
+  //   ChassisSpeeds chassisSpeeds = new ChassisSpeeds(xSpeedMetersPerSecond, ySpeedMetersPerSecond, rightX * SwerveDriveConstants.ROTATION_SPEED);
     
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
-    setModuleStates(states);
-  }
+  //   SwerveModuleState[] states = kinematics.toSwerveModuleStates(chassisSpeeds);
+  //   setModuleStates(states);
+  // }
 
   // ! experimental WPILib swerve drive example
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
