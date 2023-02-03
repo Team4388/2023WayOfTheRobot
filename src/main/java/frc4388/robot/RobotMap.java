@@ -127,14 +127,11 @@ public class RobotMap {
     // rightBackEncoder.configMagnetOffset(225.0); //180.0); //270.0);//267.01171875);//SwerveDriveConstants.Configurations.RIGHT_BACK_ENCODER_OFFSET);
 
     // initialize SwerveModules
-    this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder);
-    this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder);
-    this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder);
-    this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder);
+    this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, -181.230469);
+    this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, -270.615234);
+    this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, -240.029297);
+    this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, -40.869142);
 
-
-
-    // FINAL OFFSETS (I THINK)
     // LEFT FRONT: -181.230469
     // RIGHT FRONT: -270.615234
     // LEFT BACK: -240.029297

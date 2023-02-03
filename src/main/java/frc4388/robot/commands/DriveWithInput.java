@@ -57,7 +57,7 @@ public class DriveWithInput extends CommandBase {
 
     x = -xLimiter.calculate(MathUtil.applyDeadband(x * -0.3, 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
     y = -yLimiter.calculate(MathUtil.applyDeadband(y * 0.3, 0.02) * Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-    r = -rotLimiter.calculate(MathUtil.applyDeadband(r * 0.3, 0.02) * Units.feetToMeters(Math.PI));
+    r = -rotLimiter.calculate(MathUtil.applyDeadband(r * 0.3, 0.02) * Units.feetToMeters(5*Math.PI));
   
     swerve.drive(x, y, r, fieldRelative);
   }
