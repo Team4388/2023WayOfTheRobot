@@ -1,0 +1,47 @@
+{
+  "Configs": [
+    {
+      "Name": "Integrated Sensor",
+      "Type": "IntegratedSensor",
+      "Description": "Configures how the sensor is processed.",
+      "Ordinal": 0,
+      "Values": {
+        "Absolute Sensor Range": 0,
+        "Magnet Offset (deg)": -181.230469,
+        "Sensor Direction": false,
+        "Sensor Initialization Strategy": 0
+      }
+    },
+    {
+      "Name": "Unit Coefficient And String",
+      "Type": "UnitCoeffGroup",
+      "Description": "Describes the units to report in API and Self-Test.",
+      "Ordinal": 0,
+      "Values": {
+        "Sensor Coefficient": 0.087890625,
+        "Sensor Time Base": 1,
+        "Unit String": "deg"
+      }
+    },
+    {
+      "Name": "Custom Params",
+      "Type": "CustomParams",
+      "Description": "These are arbitrary values not used by the firmware.",
+      "Ordinal": 0,
+      "Values": {
+        "Custom Param 0": 0,
+        "Custom Param 1": 0
+      }
+    },
+    {
+      "Name": "Advanced Sensor and Meas",
+      "Type": "AdvancedSensorMeas",
+      "Description": "Group of configs relating to advanced sensor features and filters",
+      "Ordinal": 0,
+      "Values": {
+        "Velocity Period": 100,
+        "Velocity Window": 64
+      }
+    }
+  ]
+}
