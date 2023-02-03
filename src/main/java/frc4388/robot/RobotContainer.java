@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.commands.DriveWithInput;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.LEDPatterns;
@@ -53,6 +54,12 @@ public class RobotContainer {
     public RobotContainer() {
         configureButtonBindings();
 
+        m_robotSwerveDrive.setDefaultCommand(new DriveWithInput(m_robotSwerveDrive, 
+                                                                () -> getDriverController().getLeftXAxis(), 
+                                                                () -> getDriverController().getLeftYAxis(), 
+                                                                () -> getDriverController().getRightXAxis(),
+                                                                false));
+
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
         // continually sends updates to the Blinkin LED controller to keep the lights on
@@ -78,6 +85,7 @@ public class RobotContainer {
     //             0.3 * getDriverController().getRightYAxis(),
     //             true),
     //             m_robotSwerveDrive).withName("Swerve driveWithInput defaultCommand"));
+    
     }
 
 
