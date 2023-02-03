@@ -4,19 +4,17 @@
 
 package frc4388.robot.commands;
 
-import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveDrive;
 
 public class DriveWithInput extends CommandBase {
-  /** Creates a new DriveWithInput. */
+
   private final SwerveDrive swerve;
 
   private final Supplier<Double> xSpeed;
@@ -26,9 +24,7 @@ public class DriveWithInput extends CommandBase {
 
   private final SlewRateLimiter xLimiter, yLimiter, rotLimiter;
 
-
-
-  
+  /** Creates a new DriveWithInput. */
   public DriveWithInput(SwerveDrive swerve, Supplier<Double> xSpeed, Supplier<Double> ySpeed, Supplier<Double> rot, boolean fieldRelative) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;

@@ -11,7 +11,7 @@ public abstract class PelvicInflammatoryDisease extends CommandBase {
 	protected Gains gains;
 	private double output = 0;
 
-	/** Creates a new PelvicInflamitoryDisease. */
+	/** Creates a new PelvicInflammatoryDisease. */
 	public PelvicInflammatoryDisease(double kp, double ki, double kd, double kf) {
 		gains = new Gains(kp, ki, kd, kf, 0);
 	}

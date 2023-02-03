@@ -7,23 +7,14 @@
 
 package frc4388.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.commands.DriveWithInput;
-import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.LEDPatterns;
-import frc4388.utility.RobotGyro;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
@@ -47,45 +38,22 @@ public class RobotContainer {
     private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
-    // public RobotGyro gyroRef = m_robotMap.gyro;
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         configureButtonBindings();
 
+        /* Default Commands */
+
         m_robotSwerveDrive.setDefaultCommand(new DriveWithInput(m_robotSwerveDrive, 
                                                                 () -> getDriverController().getLeftXAxis(), 
                                                                 () -> getDriverController().getLeftYAxis(), 
                                                                 () -> getDriverController().getRightXAxis(),
                                                                 false));
-
-        /* Default Commands */
-        // drives the robot with a two-axis input from the driver controller
-        // continually sends updates to the Blinkin LED controller to keep the lights on
+        
         // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
-        // m_robotSwerveDrive.setDefaultCommand(
-        //     new RunCommand(() -> m_robotSwerveDrive.driveWithInput(-0.3*getDriverController().getLeftXAxis(), 
-        //                                                             0.3*getDriverController().getLeftYAxis(), 
-        //                                                            -0.3*getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
-        // );
-
-        // m_robotSwerveDrive.setDefaultCommand(
-        //     new RunCommand(() -> m_robotSwerveDrive.driveWithInput(0, 
-        //                                                             -0.1, 
-        //                                                            0, false), m_robotSwerveDrive)
-        // );
-
-    //     m_robotSwerveDrive.setDefaultCommand(
-    //         new RunCommand(() -> m_robotSwerveDrive.driveWithInput(
-    //             -0.3 * getDriverController().getLeftXAxis(),
-    //             0.3 * getDriverController().getLeftYAxis(),
-    //             0.3 * getDriverController().getRightXAxis(),
-    //             0.3 * getDriverController().getRightYAxis(),
-    //             true),
-    //             m_robotSwerveDrive).withName("Swerve driveWithInput defaultCommand"));
     
     }
 
@@ -104,23 +72,11 @@ public class RobotContainer {
             // .onFalse()
 
         /* Operator Buttons */
-        // activates "Lit Mode"
-        // new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-        //     .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW), m_robotLED))
-        //     .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN), m_robotLED));
 
-        // new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-        //     .whileTrue(new RunCommand(() -> m_robotSwerveDrive.rotateCANCodersToAngle(0), m_robotSwerveDrive));
-        
-        // new JoystickButton(getDriverJoystick(), XboxController.B_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetCANCoders(0), m_robotSwerveDrive));
-
-        // new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
-        //     .onTrue()
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
-        //New interupt button
+        // interrupt button
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand());
     }
@@ -131,11 +87,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // no auto
-        // TrajectoryConfig trajConfig = new TrajectoryConfig(1, 1).setKinematics(m_robotSwerveDrive.getKinematics()); // TODO: make these AutoConstants
-
-        // Trajectory traj = TrajectoryGenerator.generateTrajectory(
-        //     new Pose2d(0, 0, new Rotation2d(0)), null, null, trajConfig);
 
         return new InstantCommand();
     }
