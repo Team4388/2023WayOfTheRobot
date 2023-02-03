@@ -5,37 +5,42 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc4388.robot.Robot;
+import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.utility.RobotGyro;
 
 // NOTE:	Consider using this command inline, rather than writing a subclass.	For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoBalance extends PelvicInflammatoryDisease {
-	Robot.MicroBot bot;
+	RobotGyro gyro;
+	SwerveDrive drive;
 
 	/** Creates a new AutoBalanceTF2. */
-	public AutoBalance(Robot.MicroBot bot) {
+	public AutoBalance(RobotGyro gyro, SwerveDrive drive) {
 		super(.7, .1, 15, 0);
-		addRequirements(bot);
-		this.bot = bot;
+		addRequirements(drive);
 	}
 
 	@Override
 	public double getError() {
-		return bot.gyro.getPitch();
+		var pitch = gyro.getPitch();
+		SmartDashboard.putNumber("pitch", pitch);
+		return pitch;
 	}
 
 	@Override
 	public void runWithOutput(double output) {
 		double out2 = MathUtil.clamp(output / 40, -.5, .5);
-		if (Math.abs(bot.gyro.getPitch()) < 3) out2 = 0;
-		bot.setOutput(out2);
+		if (Math.abs(gyro.getPitch()) < 3) out2 = 0;
+		drive.drive(out2, 0, 0, false);
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
-		this.bot.gyro.reset();
+		this.gyro.reset();
 	}
 
 	// Returns true when the command should end.

@@ -23,8 +23,8 @@ import frc4388.utility.RobotGyro;
  * testing and modularization.
  */
 public class RobotMap {
-  // private WPI_Pigeon2 m_pigeon2 = new WPI_Pigeon2(14);
-  // public RobotGyro gyro = new RobotGyro(m_pigeon2);
+  private WPI_Pigeon2 m_pigeon2 = new WPI_Pigeon2(14);
+  public RobotGyro gyro = new RobotGyro(m_pigeon2);
 
 
   public SwerveModule leftFront;
