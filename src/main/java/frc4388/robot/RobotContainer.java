@@ -36,7 +36,7 @@ import frc4388.utility.controller.XboxController;
  */
 public class RobotContainer {
     /* RobotMap */
-    private final RobotMap m_robotMap = new RobotMap();
+    public final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack);//, m_robotMap.gyro);
@@ -99,8 +99,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         
-        // new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-        //     .onTrue(new InstantCommand(() -> gyroRef.reset()));
+        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotMap.gyro.reset()));
+            // .onFalse()
 
         /* Operator Buttons */
         // activates "Lit Mode"
