@@ -4,7 +4,6 @@
 
 package frc4388.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -41,6 +40,8 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveDriveOdometry odometry;
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
+  public Rotation2d rotTarget = new Rotation2d();
+  public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
@@ -64,26 +65,31 @@ public class SwerveDrive extends SubsystemBase {
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
   }
 
-  // WPILib swerve drive example
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
-    // SwerveModuleState[] states = kinematics.toSwerveModuleStates(
-    //   fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(-gyro.getRotation2d().getDegrees())) 
-    //                 : new ChassisSpeeds(xSpeed, ySpeed, rot)
-    // );
 
-    SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(0.3, 0, 0));
+  public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
+    if (fieldRelative) {
 
-    // // SwerveModuleState[] states = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot * SwerveDriveConstants.ROTATION_SPEED));
-    setModuleStates(states);
-    // modules[0].getDriveMotor().set(0.2);
-    // modules[1].getDriveMotor().set(0.2);
-    // modules[2].getDriveMotor().set(0.2);
-    // modules[3].getDriveMotor().set(0.2);
+      if (rightStick.getNorm() > 0.1) {
+        rotTarget = new Rotation2d(rightStick.getX(), -rightStick.getY()).minus(new Rotation2d(0, 1));
+      }
 
-    // modules[0].getAngleMotor().set(TalonFXControlMode.Position, 1017);
-    // modules[1].getAngleMotor().set(TalonFXControlMode.Position, 509);
-    // modules[2].getAngleMotor().set(TalonFXControlMode.Position, 683);
-    // modules[3].getAngleMotor().set(TalonFXControlMode.Position, 1816);
+      double rot = rotTarget.minus(gyro.getRotation2d()).getRadians();
+
+
+      // Use the left joystick to set speed. Apply a quadratic curve and the set max speed.
+      Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
+
+      if (rightStick.getNorm() < 0.1) {
+        rot = 0;
+      }
+
+      // Convert field-relative speeds to robot-relative speeds.
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), speed.getY(), rot * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d().times(-1));
+
+      // Create robot-relative speeds.
+      chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), leftStick.getY(), rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
+    }
+    setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
   }
 
   /**
@@ -91,11 +97,11 @@ public class SwerveDrive extends SubsystemBase {
    * @param desiredStates Array of module states to set.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Units.metersToFeet(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
     for (int i = 0; i < desiredStates.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = desiredStates[i];
-      module.setDesiredState(state);
+      module.setDesiredState(state, false);
     }
   }
 
@@ -106,6 +112,7 @@ public class SwerveDrive extends SubsystemBase {
   public void resetGyro() {
     gyro.reset();
     setOdometry(getOdometry());
+    rotTarget = new Rotation2d(0);
   }
 
   /**
@@ -166,24 +173,8 @@ public class SwerveDrive extends SubsystemBase {
     updateOdometry();
 
     // SmartDashboard.putNumberArray("Odometry", new double[] {getOdometry().getX(), getOdometry().getY(), getOdometry().getRotation().getDegrees()});
-    
-    // SmartDashboard.putNumber("LF CC Angle", modules[0].getAngle().getDegrees());
-    // SmartDashboard.putNumber("RF CC Angle", modules[1].getAngle().getDegrees());
-    // SmartDashboard.putNumber("LB CC Angle", modules[2].getAngle().getDegrees());
-    // SmartDashboard.putNumber("RB CC Angle", modules[3].getAngle().getDegrees());
-    
-    SmartDashboard.putNumber("LF Vel", modules[0].getDriveVel());
-    SmartDashboard.putNumber("RF Vel", modules[1].getDriveVel());
-    SmartDashboard.putNumber("LB Vel", modules[2].getDriveVel());
-    SmartDashboard.putNumber("RB Vel", modules[3].getDriveVel());
 
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
-
-    SmartDashboard.putNumber("LF Pos", modules[0].getDrivePos());
-    SmartDashboard.putNumber("RF Pos", modules[1].getDrivePos());
-    SmartDashboard.putNumber("LB Pos", modules[2].getDrivePos());
-    SmartDashboard.putNumber("RB Pos", modules[3].getDrivePos());
-    
   }
 
   /**
