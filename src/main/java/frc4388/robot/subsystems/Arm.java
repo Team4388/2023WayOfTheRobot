@@ -4,18 +4,30 @@
 
 package frc4388.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants;
 
 public class Arm extends SubsystemBase {
   /** Creates a new Arm. */
   private WPI_TalonFX pivot;
   private WPI_TalonFX tele;
+  
+  
 
   public Arm(WPI_TalonFX pivot, WPI_TalonFX tele) {
     this.pivot = pivot;
     this.tele = tele;
+    
+    //Limit switches
+    pivot.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    pivot.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+
+    tele.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+    tele.configForwardSoftLimitThreshold(Constants.ArmConstants.TELE_FORWARD_SOFT_LIMIT);
   }
 
   public void runPivot(double output) {
@@ -41,6 +53,8 @@ public class Arm extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if (tele.isRevLimitSwitchClosed() == 1) {
+      tele.setSelectedSensorPosition(0);
+    }
   }
 }
