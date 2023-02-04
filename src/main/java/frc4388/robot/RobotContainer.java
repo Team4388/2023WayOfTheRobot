@@ -30,7 +30,7 @@ public class RobotContainer {
     public final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
-    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack);//, m_robotMap.gyro);
+    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack, m_robotMap.gyro);
     // private final LED m_robotLED = new LED(m_robotMap.LEDController);
     
 
@@ -50,7 +50,7 @@ public class RobotContainer {
                                                                 () -> getDriverController().getLeftXAxis(), 
                                                                 () -> getDriverController().getLeftYAxis(), 
                                                                 () -> getDriverController().getRightXAxis(),
-                                                                false));
+                                                                true));
         
         // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
@@ -68,14 +68,16 @@ public class RobotContainer {
         /* Driver Buttons */
         
         new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotMap.gyro.reset()));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
+        
+        new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
             // .onFalse()
-
-        /* Operator Buttons */
 
         new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
-
+            
+        /* Operator Buttons */
         // interrupt button
         new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand());
