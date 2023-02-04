@@ -5,6 +5,7 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.RobotGyro;
@@ -15,7 +16,7 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 
 	/** Creates a new AutoBalanceTF2. */
 	public AutoBalance(RobotGyro gyro, SwerveDrive drive) {
-		super(1.0, 0, 0, 0);
+		super(0.6, 0, 0, 0);
 
 		this.gyro = gyro;
 		this.drive = drive;
@@ -34,7 +35,7 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 	public void runWithOutput(double output) {
 		double out2 = MathUtil.clamp(output / 40, -.5, .5);
 		if (Math.abs(gyro.getPitch()) < 3) out2 = 0;
-		drive.drive(out2, 0, 0, false);
+		drive.driveWithInput(new Translation2d(0, out2), new Translation2d(), false);
 	}
 
 	@Override

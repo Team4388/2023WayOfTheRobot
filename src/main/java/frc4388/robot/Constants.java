@@ -24,7 +24,7 @@ import frc4388.utility.LEDPatterns;
 public final class Constants {
   public static final class SwerveDriveConstants {
 
-    public static final double ROTATION_SPEED = 2.0;
+    public static final double ROTATION_SPEED = -0.7;
 
     public static final class IDs {
       public static final int LEFT_FRONT_WHEEL_ID = 2;
@@ -65,7 +65,7 @@ public final class Constants {
       public static final int CANCODER_TICKS_PER_ROTATION = 4096;
 
       public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
-      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 2.0; // TODO: find the actual value
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 1.0; // TODO: find the actual value
 
       public static final double MOTOR_REV_PER_WHEEL_REV = 6.12; // TODO: find the actual value
       public static final double MOTOR_REV_PER_STEER_REV = 12.8; // TODO: find the actual value
@@ -105,7 +105,7 @@ public final class Constants {
       
     }
 
-    public static final double MAX_SPEED_FEET_PER_SECOND = 10; // TODO: find the actual value
+    public static final double MAX_SPEED_FEET_PER_SECOND = 5; // TODO: find the actual value
 
     // dimensions
     public static final double WIDTH = 18.5; // TODO: find the actual value
@@ -137,5 +137,10 @@ public final class Constants {
   public static final class OIConstants {
     public static final int XBOX_DRIVER_ID = 0;
     public static final int XBOX_OPERATOR_ID = 1;
+    
+    public static final double LEFT_AXIS_DEADBAND = 0.1;
+    public static final double RIGHT_AXIS_DEADBAND = 0.6;
+
+    public static final boolean SKEW_STICKS = true; 
   }
 }
