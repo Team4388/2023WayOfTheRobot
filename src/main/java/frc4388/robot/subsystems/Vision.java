@@ -24,7 +24,7 @@ public class Vision {
 
     public AprilTag[] getAprilTags() {
         if (!m_isTags.getBoolean(false)) return new AprilTag[0];
-        
+
         double xarr[] = m_xPoses.getDoubleArray(new double[] {});
         double yarr[] = m_yPoses.getDoubleArray(new double[] {});
         double zarr[] = m_zPoses.getDoubleArray(new double[] {});
