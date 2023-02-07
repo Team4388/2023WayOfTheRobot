@@ -5,6 +5,11 @@
     }
   },
   "NetworkTables": {
+    "retained": {
+      "apriltag": {
+        "open": true
+      }
+    },
     "transitory": {
       "LiveWindow": {
         ".status": {
