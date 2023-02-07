@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.utility.controller.DeadbandedNunchuks;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.IHandController;
+import frc4388.utility.controller.Nunchuks;
 import frc4388.utility.controller.XboxController;
 
 /**
@@ -39,8 +41,10 @@ public class RobotContainer {
     // private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
     // private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
 
-    private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
-    private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
+    // private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
+    // private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
+
+    private final DeadbandedNunchuks nunchuks = new DeadbandedNunchuks(OIConstants.NUNCHUKS_ID);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -50,8 +54,12 @@ public class RobotContainer {
 
         /* Default Commands */
 
+        // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() ->
+        //     m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(), getDeadbandedDriverController().getRight(), true)
+        //   , m_robotSwerveDrive).withName("SwerveDrive DefaultCommand"));
+        
         m_robotSwerveDrive.setDefaultCommand(new RunCommand(() ->
-            m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(), getDeadbandedDriverController().getRight(), true)
+            m_robotSwerveDrive.driveWithInput(getDeadbandedNunchuks().getLeft(), getDeadbandedNunchuks().getRight(), true)
           , m_robotSwerveDrive).withName("SwerveDrive DefaultCommand"));
         
         // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
@@ -69,15 +77,15 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+        new JoystickButton(getDeadbandedNunchuks(), Nunchuks.Button.kLeftZ.value)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
         // new JoystickButton(getDriverJoystick(), XboxController.X_BUTTON)
         //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
         //     // .onFalse()
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-            .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+        //     .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
             
         // /* Operator Buttons */
         // // interrupt button
@@ -102,13 +110,19 @@ public class RobotContainer {
     //     return m_driverXbox;
     // }
 
-    public DeadbandedXboxController getDeadbandedDriverController() {
-        return this.m_driverXbox;
+    // public DeadbandedXboxController getDeadbandedDriverController() {
+    //     return this.m_driverXbox;
+    // }
+
+    // public DeadbandedXboxController getDeadbandedOperatorController() {
+    //     return this.m_operatorXbox;
+    // }
+
+    public DeadbandedNunchuks getDeadbandedNunchuks() {
+        return this.nunchuks;
     }
 
-    public DeadbandedXboxController getDeadbandedOperatorController() {
-        return this.m_operatorXbox;
-    }
+
 
     /**
      * Add your docs here.
