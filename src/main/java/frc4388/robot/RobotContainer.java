@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -91,6 +92,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(SwerveDriveConstants.AutoConstants.PATH_MAX_VEL, SwerveDriveConstants.AutoConstants.PATH_MAX_ACC).setKinematics(m_robotSwerveDrive.getKinematics());
 
         return new InstantCommand();
     }

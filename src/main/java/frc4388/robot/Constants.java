@@ -57,8 +57,8 @@ public final class Constants {
         new TrapezoidProfile.Constraints(0.0, 0.0)
       );
 
-      public static final double PATH_MAX_VEL = -1; // TODO: find the actual value
-      public static final double PATH_MAX_ACC = -1; // TODO: find the actual value
+      public static final double PATH_MAX_VEL = SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND / 4; // TODO: find the actual value
+      public static final double PATH_MAX_ACC = 3; // TODO: find the actual value
     }
 
     public static final class Conversions {
@@ -106,6 +106,7 @@ public final class Constants {
     }
 
     public static final double MAX_SPEED_FEET_PER_SECOND = 5; // TODO: find the actual value
+    public static final double MAX_ANGULAR_SPEED_FEET_PER_SECOND = 2 * 2 * Math.PI; // TODO: find the actual value
 
     // dimensions
     public static final double WIDTH = 18.5; // TODO: find the actual value
