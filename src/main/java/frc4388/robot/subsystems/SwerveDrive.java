@@ -86,6 +86,7 @@ public class SwerveDrive extends SubsystemBase {
       // Convert field-relative speeds to robot-relative speeds.
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), speed.getY(), rot * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d().times(-1));
 
+    } else {
       // Create robot-relative speeds.
       chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), leftStick.getY(), rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
     }
@@ -172,9 +173,9 @@ public class SwerveDrive extends SubsystemBase {
     // This method will be called once per scheduler run
     updateOdometry();
 
-    // SmartDashboard.putNumberArray("Odometry", new double[] {getOdometry().getX(), getOdometry().getY(), getOdometry().getRotation().getDegrees()});
-
-    SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
+    SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
+    SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
+    SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
   }
 
   /**
