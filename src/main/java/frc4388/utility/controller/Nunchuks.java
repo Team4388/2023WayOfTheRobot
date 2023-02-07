@@ -39,7 +39,7 @@ public class Nunchuks extends GenericHID {
         }
       }
     
-     /** Represents an axis on an XboxController. */
+  /** Represents an axis on an XboxController. */
   public enum Axis {
     kLeftX(0),
     kLeftY(1),
@@ -70,17 +70,6 @@ public class Nunchuks extends GenericHID {
     }
   }
 
-    // public static final int LEFT_X_AXIS = 0;
-	// public static final int LEFT_Y_AXIS = 1;
-	// public static final int RIGHT_Y_AXIS = 2;
-	// public static final int RIGHT_X_AXIS = 3;
-
-    // public static final int LEFT_Z_BUTTON = 2;
-
-    // private static final double DEADZONE = 0.1;
-
-    // private Joystick stick;
-
     /**
    * Construct an instance of a controller.
    *
@@ -92,14 +81,7 @@ public class Nunchuks extends GenericHID {
     HAL.report(tResourceType.kResourceType_XboxController, port + 1);
   }
 
-	// /**
-    //  * Add your docs here.
-    //  */
-	// public Nunchuks(int portNumber){
-	// 	stick = new Joystick(portNumber);
-	// }
-
-     /**
+  /**
    * Get the X axis value of left side of the controller.
    *
    * @return The axis value.
@@ -135,7 +117,7 @@ public class Nunchuks extends GenericHID {
     return getRawAxis(Axis.kRightY.value);
   }
 
-    /**
+  /**
    * Read the value of the B button on the controller.
    *
    * @return The state of the button.
