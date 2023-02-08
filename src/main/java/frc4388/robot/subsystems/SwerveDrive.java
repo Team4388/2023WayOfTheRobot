@@ -79,9 +79,9 @@ public class SwerveDrive extends SubsystemBase {
       // Use the left joystick to set speed. Apply a quadratic curve and the set max speed.
       Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
 
-      if (rightStick.getNorm() < 0.1) {
-        rot = 0;
-      }
+      // if (rightStick.getNorm() < .1) {
+      //   rot = 0;
+      // }
 
       // Convert field-relative speeds to robot-relative speeds.
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), speed.getY(), rot * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d().times(-1));
@@ -176,7 +176,9 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
     SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
     SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
+
     SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
+    SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
   }
 
   /**
