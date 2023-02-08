@@ -68,13 +68,11 @@ public class SwerveDrive extends SubsystemBase {
 
   public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
     if (fieldRelative) {
-
       if (rightStick.getNorm() > 0.1) {
         rotTarget = new Rotation2d(rightStick.getX(), -rightStick.getY()).minus(new Rotation2d(0, 1));
       }
 
       double rot = rotTarget.minus(gyro.getRotation2d()).getRadians();
-
 
       // Use the left joystick to set speed. Apply a quadratic curve and the set max speed.
       Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
@@ -103,6 +101,13 @@ public class SwerveDrive extends SubsystemBase {
       SwerveModuleState state = desiredStates[i];
       module.setDesiredState(state, false);
     }
+  }
+
+  public void stopModules() {
+    leftFront.stop();
+    rightFront.stop();
+    leftBack.stop();
+    rightBack.stop();
   }
 
   public double getGyroAngle() {
