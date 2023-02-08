@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -17,6 +18,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -105,20 +107,32 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+
         //Create Trajectory Settings
         TrajectoryConfig trajectoryConfig = new TrajectoryConfig(SwerveDriveConstants.AutoConstants.PATH_MAX_VEL, 
             SwerveDriveConstants.AutoConstants.PATH_MAX_ACC).setKinematics(m_robotSwerveDrive.getKinematics());
-        //Generate Trajactory
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(new Pose2d(0, 0, new Rotation2d(0)), 
-            List.of(new Translation2d(1, 0), new Translation2d(1, -1)), 
-            new Pose2d(0, 0, Rotation2d.fromDegrees(180)), 
+
+        // generate trajectory
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+            
+            new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(
+                    new Translation2d(0, 1)),
+            new Pose2d(0, 2, Rotation2d.fromDegrees(0)),
+            
             trajectoryConfig);
 
+        // ArrayList<Pose2d> simplePath = new ArrayList<Pose2d>();
+        // simplePath.add(new Pose2d(0, 0, new Rotation2d(0)));
+        // simplePath.add(new Pose2d(0, 1, new Rotation2d(0)));
+
+        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
+
         //Defining PID Controller for tracking trajectory
-        PIDController xController = new PIDController(SwerveDriveConstants.AutoConstants.kPX_CONTROLLER, 0, 0);
-        PIDController yController = new PIDController(SwerveDriveConstants.AutoConstants.kPY_CONTROLLER, 0, 0);
+        PIDController xController = new PIDController(SwerveDriveConstants.AutoConstants.X_CONTROLLER.kP, 0, 0);
+        PIDController yController = new PIDController(SwerveDriveConstants.AutoConstants.Y_CONTROLLER.kP, 0, 0);
         ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.THETA_CONTROLLER.kP,
-        AutoConstants.THETA_CONTROLLER.kI, AutoConstants.THETA_CONTROLLER.kD, AutoConstants.THETA_CONSTRAINTS, 0);
+        AutoConstants.THETA_CONTROLLER.kI, AutoConstants.THETA_CONTROLLER.kD, AutoConstants.THETA_CONSTRAINTS);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
         //Command to follow trajectory

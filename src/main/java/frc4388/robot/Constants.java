@@ -51,16 +51,16 @@ public final class Constants {
     }
 
     public static final class AutoConstants {
-      public static final Gains X_CONTROLLER = new Gains(0.0, 0.0, 0.0);
-      public static final Gains Y_CONTROLLER = new Gains(0.0, 0.0, 0.0);
-      public static final Gains THETA_CONTROLLER = new Gains(0.0, 0.0, 0.0);
-      public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(0.0, 0.0);
+      public static final Gains X_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+      public static final Gains Y_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+      public static final Gains THETA_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+      public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(Math.PI/2, Math.PI/2); // TODO: tune
 
-      public static final double PATH_MAX_VEL = SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND / 4; // TODO: find the actual value
-      public static final double PATH_MAX_ACC = 3; // TODO: find the actual value
+      public static final double PATH_MAX_VEL = 0.3; // TODO: find the actual value
+      public static final double PATH_MAX_ACC = 0.3; // TODO: find the actual value
 
-      public static final double kPX_CONTROLLER = 1.5; //TODO: find actual value
-      public static final double kPY_CONTROLLER = 1.5; //TODO: find actual value
+      // public static final double kPX_CONTROLLER = 0.8; //TODO: tune
+      // public static final double kPY_CONTROLLER = 0.8; //TODO: tune
     }
 
     public static final class Conversions {
