@@ -67,11 +67,11 @@ public final class Constants {
       public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
       public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 1.0; // TODO: find the actual value
 
-      public static final double MOTOR_REV_PER_WHEEL_REV = 6.12; // TODO: find the actual value
-      public static final double MOTOR_REV_PER_STEER_REV = 12.8; // TODO: find the actual value
+      public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
+      public static final double MOTOR_REV_PER_STEER_REV = 12.8;
 
       public static final double TICKS_PER_MOTOR_REV = 2048;
-      public static final double WHEEL_DIAMETER_INCHES = 4.0; // TODO: the actual value
+      public static final double WHEEL_DIAMETER_INCHES = 3.9;
       public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
 
       public static final double WHEEL_REV_PER_MOTOR_REV = 1 / MOTOR_REV_PER_WHEEL_REV;
@@ -108,8 +108,8 @@ public final class Constants {
     public static final double MAX_SPEED_FEET_PER_SECOND = 5; // TODO: find the actual value
 
     // dimensions
-    public static final double WIDTH = 18.5; // TODO: find the actual value
-    public static final double HEIGHT = 18.5; // TODO: find the actual value
+    public static final double WIDTH = 18.5;
+    public static final double HEIGHT = 18.5;
     public static final double HALF_WIDTH = WIDTH / 2.d;
     public static final double HALF_HEIGHT = HEIGHT / 2.d;
 

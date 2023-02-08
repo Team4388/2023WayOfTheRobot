@@ -176,6 +176,7 @@ public class SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
     SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
     SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
+    SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
   }
 
   /**
