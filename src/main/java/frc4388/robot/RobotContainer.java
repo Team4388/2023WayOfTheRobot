@@ -10,11 +10,12 @@ package frc4388.robot;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
-import frc4388.robot.commands.DriveWithInput;
 import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
@@ -30,13 +31,16 @@ public class RobotContainer {
     public final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
-    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack);//, m_robotMap.gyro);
+    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack, m_robotMap.gyro);
     // private final LED m_robotLED = new LED(m_robotMap.LEDController);
     
 
     /* Controllers */
-    private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
-    private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+    // private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
+    // private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+
+    private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
+    private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -46,15 +50,11 @@ public class RobotContainer {
 
         /* Default Commands */
 
-        m_robotSwerveDrive.setDefaultCommand(new DriveWithInput(m_robotSwerveDrive, 
-                                                                () -> getDriverController().getLeftXAxis(), 
-                                                                () -> getDriverController().getLeftYAxis(), 
-                                                                () -> getDriverController().getRightXAxis(),
-                                                                false));
+        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() ->
+            m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(), getDeadbandedDriverController().getRight(), true)
+          , m_robotSwerveDrive).withName("SwerveDrive DefaultCommand"));
         
         // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
-
-    
     }
 
 
@@ -67,18 +67,20 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotMap.gyro.reset()));
-            // .onFalse()
+        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
+        
+        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+        //     // .onFalse()
 
-        /* Operator Buttons */
-
-        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
-
-        // interrupt button
-        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand());
+            
+        // /* Operator Buttons */
+        // // interrupt button
+        // new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
+        //     .onTrue(new InstantCommand());
     }
 
     /**
@@ -94,28 +96,36 @@ public class RobotContainer {
     /**
      * Add your docs here.
      */
-    public IHandController getDriverController() {
-        return m_driverXbox;
+    // public IHandController getDriverController() {
+    //     return m_driverXbox;
+    // }
+
+    public DeadbandedXboxController getDeadbandedDriverController() {
+        return this.m_driverXbox;
+    }
+
+    public DeadbandedXboxController getDeadbandedOperatorController() {
+        return this.m_operatorXbox;
     }
 
     /**
      * Add your docs here.
      */
-    public IHandController getOperatorController() {
-        return m_operatorXbox;
-    }
+    // public IHandController getOperatorController() {
+    //     return m_operatorXbox;
+    // }
 
     /**
      * Add your docs here.
      */
-    public Joystick getOperatorJoystick() {
-        return m_operatorXbox.getJoyStick();
-    }
+    // public Joystick getOperatorJoystick() {
+    //     return m_operatorXbox.getJoyStick();
+    // }
 
     /**
      * Add your docs here.
      */
-    public Joystick getDriverJoystick() {
-        return m_driverXbox.getJoyStick();
-    }
+    // public Joystick getDriverJoystick() {
+    //     return m_driverXbox.getJoyStick();
+    // }
 }
