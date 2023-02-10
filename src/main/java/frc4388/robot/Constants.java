@@ -106,13 +106,16 @@ public final class Constants {
   }
 
   public static final class ArmConstants {
+    public static final double MIN_ARM_LEN = 1;
+    public static final double MAX_ARM_LEN = 2;
+    public static final double ARM_HEIGHT  = 1;
+    public static final double CURVE_POWER = 2;
+    
     public static final double PIVOT_FORWARD_SOFT_LIMIT = -1.0; // TODO: find actual value
     public static final double PIVOT_REVERSE_SOFT_LIMIT = -1.0; // TODO: find actual value
     
-    public static final double TELE_FORWARD_SOFT_LIMIT = -1.0; // TODO: find actual value
-    public static final double TELE_REVERSE_SOFT_LIMIT = -1.0; // TODO: find actual value
-
-
+    public static final double TELE_FORWARD_SOFT_LIMIT = 0;
+    public static final double TELE_REVERSE_SOFT_LIMIT = 0;
   }
     
   public static final class LEDConstants {
