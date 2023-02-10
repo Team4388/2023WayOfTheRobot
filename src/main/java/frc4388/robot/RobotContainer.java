@@ -62,9 +62,8 @@ public class RobotContainer {
                                                                    -getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
         );
 
-        m_robotArm.setDefaultCommand(new RunCommand(() -> m_robotArm.runPivotAndTele(
-            getOperatorController().getLeftYAxis(), 
-            getOperatorController().getLeftXAxis()), m_robotArm)
+        m_robotArm.setDefaultCommand(new RunCommand(() -> m_robotArm.armSetLength(
+            getOperatorController().getLeftYAxis()), m_robotArm)
         );
     }
 

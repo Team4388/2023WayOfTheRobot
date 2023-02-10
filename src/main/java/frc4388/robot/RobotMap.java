@@ -63,7 +63,6 @@ public class RobotMap {
   public final WPI_TalonFX rightBackSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_STEER_ID);
   public final CANCoder rightBackEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
 
-
   void configureDriveMotors() {
     // config factory default
     leftFrontWheel.configFactoryDefault();
