@@ -10,6 +10,7 @@ package frc4388.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -113,20 +114,20 @@ public class RobotContainer {
             SwerveDriveConstants.AutoConstants.PATH_MAX_ACC).setKinematics(m_robotSwerveDrive.getKinematics());
 
         // generate trajectory
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                    new Translation2d(0, 1)),
-            new Pose2d(0, 2, Rotation2d.fromDegrees(0)),
+        //     new Pose2d(0, 0, new Rotation2d(0)),
+        //     List.of(
+        //             new Translation2d(0, 1)),
+        //     new Pose2d(0, 2, Rotation2d.fromDegrees(0)),
             
-            trajectoryConfig);
+        //     trajectoryConfig);
 
-        // ArrayList<Pose2d> simplePath = new ArrayList<Pose2d>();
-        // simplePath.add(new Pose2d(0, 0, new Rotation2d(0)));
-        // simplePath.add(new Pose2d(0, 1, new Rotation2d(0)));
+        ArrayList<Pose2d> simplePath = new ArrayList<Pose2d>();
+        simplePath.add(new Pose2d(0, 0, new Rotation2d(0)));
+        simplePath.add(new Pose2d(0, 1, new Rotation2d(0)));
 
-        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
 
         //Defining PID Controller for tracking trajectory
         PIDController xController = new PIDController(SwerveDriveConstants.AutoConstants.X_CONTROLLER.kP, 0, 0);
@@ -148,7 +149,8 @@ public class RobotContainer {
 
         //Init and wrap-up, return everything
         return new SequentialCommandGroup(
-                new InstantCommand(() -> m_robotSwerveDrive.setOdometry(trajectory.getInitialPose())),
+                new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive),
+                // new InstantCommand(() -> m_robotSwerveDrive.setOdometry(trajectory.getInitialPose())),
                 swerveControllerCommand,
                 new InstantCommand(() -> m_robotSwerveDrive.stopModules()));
     }
