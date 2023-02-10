@@ -117,27 +117,31 @@ public class RobotContainer {
             SwerveDriveConstants.AutoConstants.PATH_MAX_ACC).setKinematics(m_robotSwerveDrive.getKinematics());
 
         // generate trajectory
-        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
             
-        //     new Pose2d(0, 0, new Rotation2d(0)),
-        //     List.of(
-        //             new Translation2d(0, 1)),
-        //     new Pose2d(0, 2, Rotation2d.fromDegrees(0)),
+            new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(
+                    new Translation2d(0, 1)),
+            new Pose2d(0, 2, Rotation2d.fromDegrees(0)),
             
-        //     trajectoryConfig);
+            trajectoryConfig);
 
         ArrayList<Pose2d> simplePath = new ArrayList<Pose2d>();
         simplePath.add(new Pose2d(0, 0, new Rotation2d(0)));
         simplePath.add(new Pose2d(0, -1, new Rotation2d(0)));
 
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
+        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
+        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+        //     new Pose2d(0, 0, new Rotation2d(0),
+        //     List.of(new Translation2d(0, 1)),
+        //     new Pose2d(0, 2, new Rotation2d(0)),
+        //     trajectoryConfig
+        // );
 
-        ArrayList<double[]> states = new ArrayList<double[]>();
 
-        for(double i = 0; i <=5.0; i += 0.1) {
-            Trajectory.State state = trajectory.sample(i);
-            states.add(new double[] {state.velocityMetersPerSecond, state.curvatureRadPerMeter});
-        }
+        // ArrayList<double[]> states = new ArrayList<double[]>();
+
+
 
         //Defining PID Controller for tracking trajectory
         PIDController xController = new PIDController(SwerveDriveConstants.AutoConstants.X_CONTROLLER.kP, 0, 0);
