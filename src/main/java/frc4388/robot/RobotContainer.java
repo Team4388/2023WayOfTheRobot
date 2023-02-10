@@ -10,6 +10,8 @@ package frc4388.robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.opencv.objdetect.HOGDescriptor;
+
 import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -21,6 +23,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -125,9 +128,16 @@ public class RobotContainer {
 
         ArrayList<Pose2d> simplePath = new ArrayList<Pose2d>();
         simplePath.add(new Pose2d(0, 0, new Rotation2d(0)));
-        simplePath.add(new Pose2d(0, 1, new Rotation2d(0)));
+        simplePath.add(new Pose2d(0, -1, new Rotation2d(0)));
 
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
+
+        ArrayList<double[]> states = new ArrayList<double[]>();
+
+        for(double i = 0; i <=5.0; i += 0.1) {
+            Trajectory.State state = trajectory.sample(i);
+            states.add(new double[] {state.velocityMetersPerSecond, state.curvatureRadPerMeter});
+        }
 
         //Defining PID Controller for tracking trajectory
         PIDController xController = new PIDController(SwerveDriveConstants.AutoConstants.X_CONTROLLER.kP, 0, 0);
@@ -136,14 +146,14 @@ public class RobotContainer {
         AutoConstants.THETA_CONTROLLER.kI, AutoConstants.THETA_CONTROLLER.kD, AutoConstants.THETA_CONSTRAINTS);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+        HolonomicDriveController holoController = new HolonomicDriveController(xController, yController, thetaController);
+
         //Command to follow trajectory
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
             trajectory,
             m_robotSwerveDrive::getOdometry,
             m_robotSwerveDrive.getKinematics(),
-            xController,
-            yController,
-            thetaController,
+            holoController,
             m_robotSwerveDrive::setModuleStates,
             m_robotSwerveDrive);
 
