@@ -47,20 +47,17 @@ public final class Constants {
     public static final class PIDConstants {
       public static final int SWERVE_SLOT_IDX = 0;
       public static final int SWERVE_PID_LOOP_IDX = 1;
-      public static final Gains SWERVE_GAINS = new Gains(1.0, 0.0, 0.0, 0.0, 0, 1.0);
+      public static final Gains SWERVE_GAINS = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
     }
 
     public static final class AutoConstants {
       public static final Gains X_CONTROLLER = new Gains(0.8, 0.0, 0.0);
       public static final Gains Y_CONTROLLER = new Gains(0.8, 0.0, 0.0);
-      public static final Gains THETA_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+      public static final Gains THETA_CONTROLLER = new Gains(-0.8, 0.0, 0.0);
       public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(Math.PI/2, Math.PI/2); // TODO: tune
 
       public static final double PATH_MAX_VEL = 0.3; // TODO: find the actual value
       public static final double PATH_MAX_ACC = 0.3; // TODO: find the actual value
-
-      // public static final double kPX_CONTROLLER = 0.8; //TODO: tune
-      // public static final double kPY_CONTROLLER = 0.8; //TODO: tune
     }
 
     public static final class Conversions {
