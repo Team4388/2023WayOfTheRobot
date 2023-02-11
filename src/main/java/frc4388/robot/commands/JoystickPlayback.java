@@ -7,6 +7,7 @@ package frc4388.robot.commands;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Time;
@@ -27,28 +28,39 @@ public class JoystickPlayback extends CommandBase {
     public double rightX = 0d;
     public double rightY = 0d;
 
-    public long timed_offset = 0l;
+    public long timedOffset = 0;
   }
 
-  private final SwerveDrive            m_swerve;
-  private       Scanner                m_input;
-  private final ArrayList<TimedOutput> m_outputs;
-  private       long                   m_playback_time;
-  private       int                    m_last_index;
-  private       boolean                m_finished = false; // ! find a better way
+  private final SwerveDrive            swerve;
+  private       Scanner                input;
+  private final ArrayList<TimedOutput> outputs;
+  private       int                    counter      = 0;
+  private       long                   startTime    = 0;
+  private       long                   playbackTime = 0;
+  private       int                    lastIndex;
+  private       boolean                m_finished   = false; // ! find a better way
 
   /** Creates a new JoystickPlayback. */
   public JoystickPlayback(SwerveDrive swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
-    this.m_swerve = swerve;
-    m_outputs = new ArrayList<>();
+    this.swerve = swerve;
+    outputs = new ArrayList<>();
 
+    addRequirements(this.swerve);
+  }
+
+  // Called when the command is initially scheduled.
+  @Override
+  public void initialize() {
+    startTime = System.currentTimeMillis();
+    playbackTime = 0;
+    lastIndex    = 0;
     try {
-      m_input = new Scanner(new File("/home/lvuser/JoystickInputs.txt"));
+      input = new Scanner(new File("/home/lvuser/JoystickInputs.txt"));
 
       String line = "";
-      while (m_input.hasNextLine()) {
-        line = m_input.nextLine();
+      while (input.hasNextLine()) {
+        line = input.nextLine();
       
         String[] values = line.split(",");
 
@@ -58,20 +70,16 @@ public class JoystickPlayback extends CommandBase {
         out.rightX = Double.parseDouble(values[2]);
         out.rightY = Double.parseDouble(values[3]);
 
-        out.timed_offset = Long.MAX_VALUE;
+        out.timedOffset = Long.parseLong(values[4]);
 
-        m_outputs.add(out);
+        outputs.add(out);
       }
+
+      input.close();
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
 
-    addRequirements(this.m_swerve);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
     System.out.println("STARTING PLAYBACK");
     System.out.println("STARTING PLAYBACK");
     System.out.println("STARTING PLAYBACK");
@@ -81,34 +89,77 @@ public class JoystickPlayback extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (counter == 0) {
+      startTime = System.currentTimeMillis();
+      playbackTime = 0;
+    } else {
+      playbackTime = System.currentTimeMillis() - startTime;
+    }
+
     // skip to reasonable time frame
     // too tired to write comment: ask daniel thomas; it goes to the thing until it's bigger than the other thing
     {
-      int i = m_last_index + 1;
-      while (i < m_outputs.size() && m_outputs.get(i).timed_offset < m_playback_time) {
+      int i = lastIndex == 0 ? 1 : lastIndex;
+      while (i < outputs.size() && outputs.get(i).timedOffset < playbackTime) {
         i++;
       }
 
-      if (i >= m_outputs.size()) {
+      if (i >= outputs.size()) {
         m_finished = true; // ! kind of a hack
         return;
       }
-      m_last_index = i;
+      lastIndex = i;
     }
 
-    TimedOutput out = m_outputs.get(m_last_index);
+    TimedOutput lastOut = outputs.get(lastIndex - 1);
+    TimedOutput out     = outputs.get(lastIndex);
 
-    this.m_swerve.driveWithInput(new Translation2d(out.leftX,   out.leftY),
-                                 new Translation2d(-out.rightX, out.rightY),
-                                 true);
-    System.out.println("PLAYING");
+    double deltaTime     = out.timedOffset - lastOut.timedOffset;
+    double playbackDelta = playbackTime    - lastOut.timedOffset;
+
+    // System.out.println("LastOut.timedOffset: " + lastOut.timedOffset);
+    // System.out.println("PlaybackTime: " + playbackTime);
+    // System.out.println("PlaybackDelta: " + playbackDelta);
+    // System.out.println("DeltaTime: " + deltaTime);
+
+    // // double slopeLX = (out.leftX  - lastOut.leftX)  / deltaTime;
+    // // double slopeLY = (out.leftY  - lastOut.leftY)  / deltaTime;
+    // // double slopeRX = (out.rightX - lastOut.rightX) / deltaTime;
+    // // double slopeRY = (out.rightY - lastOut.rightY) / deltaTime;
+
+    double lerpLX = lastOut.leftX  + (out.leftX  - lastOut.leftX)  * (playbackDelta / deltaTime);
+    double lerpLY = lastOut.leftY  + (out.leftY  - lastOut.leftY)  * (playbackDelta / deltaTime);
+    double lerpRX = lastOut.rightX + (out.rightX - lastOut.rightX) * (playbackDelta / deltaTime);
+    double lerpRY = lastOut.rightY + (out.rightY - lastOut.rightY) * (playbackDelta / deltaTime);
+
+    // System.out.println("----------------------------");
+    // System.out.println("lerpLX: " + lerpLX);
+    // System.out.println("lerpLY: " + lerpLY);
+    // System.out.println("lerpRX: " + lerpRX);
+    // System.out.println("lerpRY: " + lerpRY);
+    // System.out.println("----------------------------");
+
+    // // double lerpLX = slopeLX * playbackTime + (lastOut.leftX  - slopeLX * lastOut.timedOffset);
+    // // double lerpLY = slopeLY * playbackTime + (lastOut.leftY  - slopeLY * lastOut.timedOffset);
+    // // double lerpRX = slopeRX * playbackTime + (lastOut.rightX - slopeRX * lastOut.timedOffset);
+    // // double lerpRY = slopeRY * playbackTime + (lastOut.rightY - slopeRY * lastOut.timedOffset);
+
+    // this.swerve.driveWithInput(new Translation2d(out.leftX,   out.leftY),
+    //                              new Translation2d(out.rightX, out.rightY),
+    //                              true);
+    
+    this.swerve.driveWithInput( new Translation2d(lerpLX, lerpLY),
+                                new Translation2d(lerpRX, lerpRY),
+                                true);
+    // System.out.println("PLAYING");
+    counter++;
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_input.close();
-    m_swerve.stopModules();
+    input.close();
+    swerve.stopModules();
   }
 
   // Returns true when the command should end.

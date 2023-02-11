@@ -28,10 +28,9 @@ public class JoystickRecorder extends CommandBase {
   Supplier<Double> rightXSupplier;
   Supplier<Double> rightYSupplier;
   
-  // HashMap<Long, double[]> timedInput;
-  ArrayList<double[]> outputs;
+  ArrayList<Object[]> outputs;
 
-  private final long startTime;
+  private long startTime;
 
 
   /** Creates a new JoystickRecorder. */
@@ -43,9 +42,7 @@ public class JoystickRecorder extends CommandBase {
     this.rightXSupplier = rightXSupplier;
     this.rightYSupplier = rightYSupplier;
 
-    this.startTime = System.currentTimeMillis();
-    // this.timedInput = new HashMap<Long, double[]>();
-    this.outputs = new ArrayList<double[]>();
+    this.outputs = new ArrayList<Object[]>();
 
     addRequirements(this.swerve);
   }
@@ -53,8 +50,10 @@ public class JoystickRecorder extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    this.startTime = System.currentTimeMillis();
+
     // timedInput.put((long) 0, new double[] {0.0, 0.0, 0.0, 0.0});
-    outputs.add(new double[] {0.0, 0.0, 0.0, 0.0});
+    outputs.add(new Object[] {(double) 0.0, (double) 0.0, (double) 0.0, (double) 0.0, (long) 0});
 
     System.out.println("STARTING RECORDING");
     System.out.println("STARTING RECORDING");
@@ -65,11 +64,10 @@ public class JoystickRecorder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double[] inputs = new double[] {leftXSupplier.get(), leftYSupplier.get(), rightXSupplier.get(), rightYSupplier.get()};
-    // timedInput.put(System.currentTimeMillis() - startTime, inputs);
+    Object[] inputs = new Object[] {(double) leftXSupplier.get(), (double) leftYSupplier.get(), (double) rightXSupplier.get(), (double) rightYSupplier.get(), (long) (System.currentTimeMillis() - startTime)};
     outputs.add(inputs);
 
-    swerve.driveWithInput(new Translation2d(inputs[0], inputs[1]), new Translation2d(-inputs[2], inputs[3]), true);
+    swerve.driveWithInput(new Translation2d((double) inputs[0], (double) inputs[1]), new Translation2d((double) inputs[2], (double) inputs[3]), true);
 
     System.out.println("RECORDING");
   }
@@ -80,9 +78,11 @@ public class JoystickRecorder extends CommandBase {
     File output = new File("/home/lvuser/JoystickInputs.txt");
 
     try(PrintWriter writer = new PrintWriter(output)) {
-      for(double[] input : outputs) {
-        writer.println(input[0] + "," + input[1] + "," + input[2] + "," + input[3]);
+      
+      for(Object[] input : outputs) {
+        writer.println(input[0] + "," + input[1] + "," + input[2] + "," + input[3] + "," + input[4]);
       }
+
       writer.close();
     } catch(IOException e) {
         e.printStackTrace();
