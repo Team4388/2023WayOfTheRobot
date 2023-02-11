@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import javax.print.attribute.standard.OrientationRequested;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -14,6 +16,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
+import frc4388.robot.commands.JoystickPlayback;
+import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.IHandController;
@@ -76,7 +80,20 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
-            
+
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+                                            () -> getDeadbandedDriverController().getLeftX(),
+                                            () -> getDeadbandedDriverController().getLeftY(),
+                                            () -> getDeadbandedDriverController().getRightX(),
+                                            () -> getDeadbandedDriverController().getRightY()
+
+            ))
+            .onFalse(new InstantCommand());
+
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new JoystickPlayback(m_robotSwerveDrive));
+
         // /* Operator Buttons */
         // // interrupt button
         // new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)

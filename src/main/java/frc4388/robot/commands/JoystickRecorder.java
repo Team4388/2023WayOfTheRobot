@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -27,9 +28,10 @@ public class JoystickRecorder extends CommandBase {
   Supplier<Double> rightXSupplier;
   Supplier<Double> rightYSupplier;
   
-  HashMap<Long, double[]> timedInput;
+  // HashMap<Long, double[]> timedInput;
+  ArrayList<double[]> outputs;
 
-  private long startTime;
+  private final long startTime;
 
 
   /** Creates a new JoystickRecorder. */
@@ -40,37 +42,56 @@ public class JoystickRecorder extends CommandBase {
     this.leftYSupplier = leftYSupplier;
     this.rightXSupplier = rightXSupplier;
     this.rightYSupplier = rightYSupplier;
+
+    this.startTime = System.currentTimeMillis();
+    // this.timedInput = new HashMap<Long, double[]>();
+    this.outputs = new ArrayList<double[]>();
+
+    addRequirements(this.swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timedInput.put((long) 0, new double[] {0.0, 0.0, 0.0, 0.0});
-    startTime = System.currentTimeMillis();
+    // timedInput.put((long) 0, new double[] {0.0, 0.0, 0.0, 0.0});
+    outputs.add(new double[] {0.0, 0.0, 0.0, 0.0});
+
+    System.out.println("STARTING RECORDING");
+    System.out.println("STARTING RECORDING");
+    System.out.println("STARTING RECORDING");
+    System.out.println("STARTING RECORDING");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double[] inputs = new double[] {leftXSupplier.get(), leftYSupplier.get(), rightXSupplier.get(), rightYSupplier.get()};
-    timedInput.put(System.currentTimeMillis() - startTime, inputs);
+    // timedInput.put(System.currentTimeMillis() - startTime, inputs);
+    outputs.add(inputs);
 
     swerve.driveWithInput(new Translation2d(inputs[0], inputs[1]), new Translation2d(-inputs[2], inputs[3]), true);
+
+    System.out.println("RECORDING");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    File output = new File("JoystickInputs.txt");
+    File output = new File("/home/lvuser/JoystickInputs.txt");
 
     try(PrintWriter writer = new PrintWriter(output)) {
-      for(long millis : timedInput.keySet()) {
-        writer.println("time: " + millis + ", leftX: " + timedInput.get(millis)[0] + ", leftY: " + timedInput.get(millis)[1] + ", rightX: " + timedInput.get(millis)[2] + ", rightY: " + timedInput.get(millis)[3]);
+      for(double[] input : outputs) {
+        writer.println(input[0] + "," + input[1] + "," + input[2] + "," + input[3]);
       }
       writer.close();
     } catch(IOException e) {
         e.printStackTrace();
     }
+
+    System.out.println("STOPPED RECORDING");
+    System.out.println("STOPPED RECORDING");
+    System.out.println("STOPPED RECORDING");
+    System.out.println("STOPPED RECORDING");
 
   }
 
