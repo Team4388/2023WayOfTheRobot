@@ -92,8 +92,8 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
         //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
@@ -153,9 +153,17 @@ public class RobotContainer {
         HolonomicDriveController holoController = new HolonomicDriveController(xController, yController, thetaController);
 
         //Command to follow trajectory
+        // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        //     trajectory,
+        //     m_robotSwerveDrive::getOdometry,
+        //     m_robotSwerveDrive.getKinematics(),
+        //     holoController,
+        //     m_robotSwerveDrive::setModuleStates,
+        //     m_robotSwerveDrive);
+
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
             trajectory,
-            m_robotSwerveDrive::getOdometry,
+            m_robotSwerveDrive::getPoseEstimator,
             m_robotSwerveDrive.getKinematics(),
             holoController,
             m_robotSwerveDrive::setModuleStates,
@@ -163,7 +171,7 @@ public class RobotContainer {
 
         //Init and wrap-up, return everything
         return new SequentialCommandGroup(
-                new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive),
+                new InstantCommand(() -> m_robotSwerveDrive.resetPoseEstimator(), m_robotSwerveDrive),
                 // new InstantCommand(() -> m_robotSwerveDrive.setOdometry(trajectory.getInitialPose())),
                 swerveControllerCommand,
                 new InstantCommand(() -> m_robotSwerveDrive.stopModules()));
