@@ -26,16 +26,23 @@ public class JoystickPlayback extends CommandBase {
   public JoystickPlayback(SwerveDrive swerve) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
+
+    addRequirements(this.swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     try {
-      input = new Scanner(new File("JoystickInput.txt"));
+      input = new Scanner(new File("/home/lvuser/JoystickInputs.txt"));
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
+
+    System.out.println("STARTING PLAYBACK");
+    System.out.println("STARTING PLAYBACK");
+    System.out.println("STARTING PLAYBACK");
+    System.out.println("STARTING PLAYBACK");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -47,17 +54,16 @@ public class JoystickPlayback extends CommandBase {
       line = input.nextLine();
     }
 
-    int ileftX = line.indexOf("leftX: ");
-    int ileftY = line.indexOf(", leftY: ");
-    int irightX = line.indexOf(", rightX: ");
-    int irightY = line.indexOf(", rightY: ");
+    String[] values = line.split(",");
 
-    double leftX = Double.parseDouble(line.substring(ileftX + 1, ileftY));
-    double leftY = Double.parseDouble(line.substring(ileftY + 1, irightX));
-    double rightX = Double.parseDouble(line.substring(irightX + 1, irightY));
-    double rightY = Double.parseDouble(line.substring(irightY + 1));
+    double leftX = Double.parseDouble(values[0]);
+    double leftY = Double.parseDouble(values[1]);
+    double rightX = Double.parseDouble(values[2]);
+    double rightY = Double.parseDouble(values[3]);
 
     this.swerve.driveWithInput(new Translation2d(leftX, leftY), new Translation2d(-rightX, rightY), true);
+
+    System.out.println("PLAYING");
   }
 
   // Called once the command ends or is interrupted.
