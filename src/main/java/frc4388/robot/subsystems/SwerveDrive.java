@@ -156,12 +156,6 @@ public class SwerveDrive extends SubsystemBase {
     );
   }
 
-  public void stopModules() {
-    for (SwerveModule module : this.modules) {
-      module.stop();
-    }
-  }
-
   /**
    * Resets the odometry of the SwerveDrive to 0.
    * *NOTE: If you reset your gyro, this method MUST be called with the new gyro angle and wheel encoder positions.
