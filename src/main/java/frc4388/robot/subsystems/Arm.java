@@ -10,12 +10,14 @@ public class Arm extends SubsystemBase {
     private WPI_TalonFX m_tele;
     private WPI_TalonFX m_pivot;
     private boolean m_debug;
-    // Moves arm to distence [dist] then returns new ang
+
+    // Moves arm to distance [dist] then returns new ang
     public Arm(WPI_TalonFX pivot, WPI_TalonFX tele, boolean debug) {
-        tele.configFactoryDefault();
         m_tele = tele;
-        pivot.configFactoryDefault();
         m_pivot = pivot;
+        
+        tele.configFactoryDefault();
+        pivot.configFactoryDefault();
     }
 
     public Arm(WPI_TalonFX pivot, WPI_TalonFX tele) {
