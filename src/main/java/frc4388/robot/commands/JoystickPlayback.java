@@ -23,10 +23,10 @@ import frc4388.utility.controller.DeadbandedXboxController;
 
 public class JoystickPlayback extends CommandBase {
   private static class TimedOutput {
-    public double leftX  = 0d;
-    public double leftY  = 0d;
-    public double rightX = 0d;
-    public double rightY = 0d;
+    public double leftX  = 0.0;
+    public double leftY  = 0.0;
+    public double rightX = 0.0;
+    public double rightY = 0.0;
 
     public long timedOffset = 0;
   }
@@ -81,9 +81,6 @@ public class JoystickPlayback extends CommandBase {
     }
 
     System.out.println("STARTING PLAYBACK");
-    System.out.println("STARTING PLAYBACK");
-    System.out.println("STARTING PLAYBACK");
-    System.out.println("STARTING PLAYBACK");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -117,32 +114,10 @@ public class JoystickPlayback extends CommandBase {
     double deltaTime     = out.timedOffset - lastOut.timedOffset;
     double playbackDelta = playbackTime    - lastOut.timedOffset;
 
-    // System.out.println("LastOut.timedOffset: " + lastOut.timedOffset);
-    // System.out.println("PlaybackTime: " + playbackTime);
-    // System.out.println("PlaybackDelta: " + playbackDelta);
-    // System.out.println("DeltaTime: " + deltaTime);
-
-    // // double slopeLX = (out.leftX  - lastOut.leftX)  / deltaTime;
-    // // double slopeLY = (out.leftY  - lastOut.leftY)  / deltaTime;
-    // // double slopeRX = (out.rightX - lastOut.rightX) / deltaTime;
-    // // double slopeRY = (out.rightY - lastOut.rightY) / deltaTime;
-
     double lerpLX = lastOut.leftX  + (out.leftX  - lastOut.leftX)  * (playbackDelta / deltaTime);
     double lerpLY = lastOut.leftY  + (out.leftY  - lastOut.leftY)  * (playbackDelta / deltaTime);
     double lerpRX = lastOut.rightX + (out.rightX - lastOut.rightX) * (playbackDelta / deltaTime);
     double lerpRY = lastOut.rightY + (out.rightY - lastOut.rightY) * (playbackDelta / deltaTime);
-
-    // System.out.println("----------------------------");
-    // System.out.println("lerpLX: " + lerpLX);
-    // System.out.println("lerpLY: " + lerpLY);
-    // System.out.println("lerpRX: " + lerpRX);
-    // System.out.println("lerpRY: " + lerpRY);
-    // System.out.println("----------------------------");
-
-    // // double lerpLX = slopeLX * playbackTime + (lastOut.leftX  - slopeLX * lastOut.timedOffset);
-    // // double lerpLY = slopeLY * playbackTime + (lastOut.leftY  - slopeLY * lastOut.timedOffset);
-    // // double lerpRX = slopeRX * playbackTime + (lastOut.rightX - slopeRX * lastOut.timedOffset);
-    // // double lerpRY = slopeRY * playbackTime + (lastOut.rightY - slopeRY * lastOut.timedOffset);
 
     // this.swerve.driveWithInput(new Translation2d(out.leftX,   out.leftY),
     //                              new Translation2d(out.rightX, out.rightY),
@@ -151,7 +126,8 @@ public class JoystickPlayback extends CommandBase {
     this.swerve.driveWithInput( new Translation2d(lerpLX, lerpLY),
                                 new Translation2d(lerpRX, lerpRY),
                                 true);
-    // System.out.println("PLAYING");
+                                
+    System.out.println("PLAYING");
     counter++;
   }
 

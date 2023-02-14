@@ -7,17 +7,12 @@ package frc4388.robot.commands;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.RobotTime;
-import frc4388.utility.controller.DeadbandedXboxController;
 
 public class JoystickRecorder extends CommandBase {
   
@@ -56,9 +51,6 @@ public class JoystickRecorder extends CommandBase {
     outputs.add(new Object[] {(double) 0.0, (double) 0.0, (double) 0.0, (double) 0.0, (long) 0});
 
     System.out.println("STARTING RECORDING");
-    System.out.println("STARTING RECORDING");
-    System.out.println("STARTING RECORDING");
-    System.out.println("STARTING RECORDING");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -89,10 +81,6 @@ public class JoystickRecorder extends CommandBase {
     }
 
     System.out.println("STOPPED RECORDING");
-    System.out.println("STOPPED RECORDING");
-    System.out.println("STOPPED RECORDING");
-    System.out.println("STOPPED RECORDING");
-
   }
 
   // Returns true when the command should end.
