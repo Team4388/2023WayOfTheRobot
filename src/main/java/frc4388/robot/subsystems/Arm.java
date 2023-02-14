@@ -27,14 +27,14 @@ public class Arm extends SubsystemBase {
     public void armSetRotation(double rot) {
         if (rot > 1 || rot < 0) return;
         // Move arm code
-        m_pivot.set(ControlMode.Position, rot * (ArmConstants.PIVOT_REVERSE_SOFT_LIMIT - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT) +
+        m_pivot.set(ControlMode.Position, rot * Math.abs(ArmConstants.PIVOT_REVERSE_SOFT_LIMIT - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT) +
             ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
     }
 
     public void armSetLength(double len) {
         if (len > 1 || len < 0) return;
         // Move arm code
-        m_tele.set(ControlMode.Position, len * (ArmConstants.TELE_REVERSE_SOFT_LIMIT - ArmConstants.TELE_FORWARD_SOFT_LIMIT) +
+        m_tele.set(ControlMode.Position, len * Math.abs(ArmConstants.TELE_REVERSE_SOFT_LIMIT - ArmConstants.TELE_FORWARD_SOFT_LIMIT) +
             ArmConstants.TELE_FORWARD_SOFT_LIMIT);
     }
 
