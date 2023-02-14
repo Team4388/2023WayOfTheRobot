@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import java.util.function.BooleanSupplier;
+
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -41,6 +43,9 @@ public class RobotContainer {
 
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
+
+    private boolean mode = true;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -77,7 +82,8 @@ public class RobotContainer {
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.highSpeed(false), m_robotSwerveDrive));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.highSpeed(mode), m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> this.toggleMode()));
             
         // /* Operator Buttons */
         // // interrupt button
@@ -108,6 +114,14 @@ public class RobotContainer {
 
     public DeadbandedXboxController getDeadbandedOperatorController() {
         return this.m_operatorXbox;
+    }
+
+    public boolean getMode() {
+        return this.mode;
+    }
+
+    public void toggleMode() {
+        mode = !mode;
     }
 
     /**
