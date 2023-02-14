@@ -78,6 +78,7 @@ public class SwerveDrive extends SubsystemBase {
 
       // Use the left joystick to set speed. Apply a quadratic curve and the set max speed.
       Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
+      speed = new Translation2d(Math.pow(speed.getX(), 3), Math.pow(speed.getY(), 3));
 
       // if (rightStick.getNorm() < .1) {
       //   rot = 0;
