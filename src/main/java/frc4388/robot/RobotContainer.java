@@ -41,7 +41,6 @@ public class RobotContainer {
 
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
-
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -76,6 +75,9 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+
+        new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.highSpeed(false), m_robotSwerveDrive));
             
         // /* Operator Buttons */
         // // interrupt button
