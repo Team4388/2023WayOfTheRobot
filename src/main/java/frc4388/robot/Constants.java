@@ -64,8 +64,8 @@ public final class Constants {
     public static final class Conversions {
       public static final int CANCODER_TICKS_PER_ROTATION = 4096;
 
-      public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
-      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 0.5; // TODO: find the actual value
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 5.8;//11.0;
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 0.8;
 
       public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
       public static final double MOTOR_REV_PER_STEER_REV = 12.8;
