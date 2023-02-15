@@ -8,6 +8,7 @@
 package frc4388.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -45,14 +46,20 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
+
+
+    PWM servo = new PWM(0);
     public RobotContainer() {
+        // servo.setBounds(.25, 0, 0, 0, 0);
         configureButtonBindings();
 
         /* Default Commands */
 
-        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() ->
-            m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(), getDeadbandedDriverController().getRight(), true)
-          , m_robotSwerveDrive).withName("SwerveDrive DefaultCommand"));
+        // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() ->
+        //     m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(), getDeadbandedDriverController().getRight(), true)
+        //   , m_robotSwerveDrive).withName("SwerveDrive DefaultCommand"));
+
+        // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> servo.setRaw((int) (getDeadbandedDriverController().getLeft().getX() * 128) - 64), m_robotSwerveDrive));
         
         // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
@@ -68,10 +75,16 @@ public class RobotContainer {
         /* Driver Buttons */
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
+            .onTrue(new InstantCommand(() -> {
+                System.out.println("Servo: 0");
+                servo.setRaw(1000);
+            }));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+            .onTrue(new InstantCommand(() -> {
+                System.out.println("Servo: 255");
+                servo.setRaw(2000);
+            }));
         //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
