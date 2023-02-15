@@ -13,31 +13,28 @@ import java.util.function.Supplier;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.utility.UtilityStructs.TimedOutput;
 
 public class JoystickRecorder extends CommandBase {
-  
-  SwerveDrive swerve;
+  public  final SwerveDrive            swerve;
 
-  Supplier<Double> leftXSupplier;
-  Supplier<Double> leftYSupplier;
-  Supplier<Double> rightXSupplier;
-  Supplier<Double> rightYSupplier;
-  
-  ArrayList<Object[]> outputs;
-
-  private long startTime;
+  public  final Supplier<Double>       leftX;
+  public  final Supplier<Double>       leftY;
+  public  final Supplier<Double>       rightX;
+  public  final Supplier<Double>       rightY;
+  public  final ArrayList<TimedOutput> outputs   = new ArrayList<>();
+  private       long                   startTime = -1;
 
 
   /** Creates a new JoystickRecorder. */
-  public JoystickRecorder(SwerveDrive swerve, Supplier<Double> leftXSupplier, Supplier<Double> leftYSupplier, Supplier<Double> rightXSupplier, Supplier<Double> rightYSupplier) {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public JoystickRecorder(SwerveDrive swerve, Supplier<Double> leftX,  Supplier<Double> leftY,
+                                              Supplier<Double> rightX, Supplier<Double> rightY)
+  {
     this.swerve = swerve;
-    this.leftXSupplier = leftXSupplier;
-    this.leftYSupplier = leftYSupplier;
-    this.rightXSupplier = rightXSupplier;
-    this.rightYSupplier = rightYSupplier;
-
-    this.outputs = new ArrayList<Object[]>();
+    this.leftX  = leftX;
+    this.leftY  = leftY;
+    this.rightX = rightX;
+    this.rightY = rightY;
 
     addRequirements(this.swerve);
   }
@@ -47,21 +44,24 @@ public class JoystickRecorder extends CommandBase {
   public void initialize() {
     this.startTime = System.currentTimeMillis();
 
-    // timedInput.put((long) 0, new double[] {0.0, 0.0, 0.0, 0.0});
-    outputs.add(new Object[] {(double) 0.0, (double) 0.0, (double) 0.0, (double) 0.0, (long) 0});
-
-    System.out.println("STARTING RECORDING");
+    outputs.add(new TimedOutput());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    Object[] inputs = new Object[] {(double) leftXSupplier.get(), (double) leftYSupplier.get(), (double) rightXSupplier.get(), (double) rightYSupplier.get(), (long) (System.currentTimeMillis() - startTime)};
+    var inputs = new TimedOutput();
+    inputs.leftX       = leftX.get();
+    inputs.leftY       = leftY.get();
+    inputs.rightX      = rightX.get();
+    inputs.rightY      = rightY.get();
+    inputs.timedOffset = System.currentTimeMillis() - startTime;
+
     outputs.add(inputs);
 
-    swerve.driveWithInput(new Translation2d((double) inputs[0], (double) inputs[1]), new Translation2d((double) inputs[2], (double) inputs[3]), true);
-
-    System.out.println("RECORDING");
+    swerve.driveWithInput(new Translation2d(inputs.leftX,  inputs.leftY),
+                          new Translation2d(inputs.rightX, inputs.rightY),
+                          true);
   }
 
   // Called once the command ends or is interrupted.
@@ -69,18 +69,17 @@ public class JoystickRecorder extends CommandBase {
   public void end(boolean interrupted) {
     File output = new File("/home/lvuser/JoystickInputs.txt");
 
-    try(PrintWriter writer = new PrintWriter(output)) {
-      
-      for(Object[] input : outputs) {
-        writer.println(input[0] + "," + input[1] + "," + input[2] + "," + input[3] + "," + input[4]);
+    try (PrintWriter writer = new PrintWriter(output)) {
+      for (var input : outputs) {
+        writer.println( input.leftX  + "," + input.leftY  + "," +
+                        input.rightX + "," + input.rightY + "," +
+                        input.timedOffset);
       }
 
       writer.close();
-    } catch(IOException e) {
+    } catch (IOException e) {
         e.printStackTrace();
     }
-
-    System.out.println("STOPPED RECORDING");
   }
 
   // Returns true when the command should end.

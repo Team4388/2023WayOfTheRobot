@@ -6,34 +6,17 @@ package frc4388.robot.commands;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.function.Supplier;
-
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.controller.DeadbandedXboxController;
+import frc4388.utility.UtilityStructs.TimedOutput;
 
 public class JoystickPlayback extends CommandBase {
-  private static class TimedOutput {
-    public double leftX  = 0.0;
-    public double leftY  = 0.0;
-    public double rightX = 0.0;
-    public double rightY = 0.0;
-
-    public long timedOffset = 0;
-  }
-
   private final SwerveDrive            swerve;
   private       Scanner                input;
-  private final ArrayList<TimedOutput> outputs;
+  private final ArrayList<TimedOutput> outputs      = new ArrayList<>();
   private       int                    counter      = 0;
   private       long                   startTime    = 0;
   private       long                   playbackTime = 0;
@@ -42,10 +25,7 @@ public class JoystickPlayback extends CommandBase {
 
   /** Creates a new JoystickPlayback. */
   public JoystickPlayback(SwerveDrive swerve) {
-    // Use addRequirements() here to declare subsystem dependencies.
     this.swerve = swerve;
-    outputs = new ArrayList<>();
-
     addRequirements(this.swerve);
   }
 
