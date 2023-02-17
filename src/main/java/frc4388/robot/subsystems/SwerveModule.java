@@ -20,8 +20,8 @@ import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
 
 public class SwerveModule extends SubsystemBase {
-    private WPI_TalonFX driveMotor;
-    private WPI_TalonFX angleMotor;
+    public WPI_TalonFX driveMotor;
+    public WPI_TalonFX angleMotor;
     private CANCoder encoder;
 
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
@@ -44,9 +44,6 @@ public class SwerveModule extends SubsystemBase {
         angleMotor.configAllSettings(angleConfig);
 
         encoder.configMagnetOffset(offset);
-        
-        driveMotor.setSelectedSensorPosition(0);
-        driveMotor.config_kP(0, 0.2);
     }
 
     /**
@@ -82,18 +79,6 @@ public class SwerveModule extends SubsystemBase {
         return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
     }
 
-    public double getAngularVel() {
-        return this.angleMotor.getSelectedSensorVelocity();
-    }
-
-    public double getDrivePos() {
-        return this.driveMotor.getSelectedSensorPosition() / SwerveDriveConstants.Conversions.TICKS_PER_MOTOR_REV;
-    }
-
-    public double getDriveVel() {
-        return this.driveMotor.getSelectedSensorVelocity(0);
-    }
-
     public void stop() {
         driveMotor.set(0);
         angleMotor.set(0);
@@ -126,32 +111,25 @@ public class SwerveModule extends SubsystemBase {
      * Set the speed and rotation of the SwerveModule from a SwerveModuleState object
      * @param desiredState a SwerveModuleState representing the desired new state of the module
      */
-    public void setDesiredState(SwerveModuleState desiredState, boolean ignoreAngle) {
+    public void setDesiredState(SwerveModuleState desiredState) {
         Rotation2d currentRotation = this.getAngle();
 
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
 
         // calculate the difference between our current rotational position and our new rotational position
-        Rotation2d rotationDelta = state.angle.minus(currentRotation); // ? might need to be negative
+        Rotation2d rotationDelta = state.angle.minus(currentRotation);
 
         // calculate the new absolute position of the SwerveModule based on the difference in rotation
         double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
 
         // convert the CANCoder from its position reading to ticks
-        double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient(); // ? why feedback coefficient
-
-        if (!ignoreAngle) {
-            angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
-        }
+        double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
+        angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-        // double inchesPerSecond = Units.metersToFeet(state.speedMetersPerSecond) * 12;
 
+        driveMotor.set(-1 * angleMotor.get() + feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND);
         // driveMotor.set(TalonFXControlMode.Velocity, inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);
-        // driveMotor.set(0.1);
-        // double angleCorrection = getAngularVel() * 2.69;
-        driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-        // driveMotor.set(TalonFXControlMode.Velocity, angleCorrection + inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);
     }
 
     public void reset(double position) {
