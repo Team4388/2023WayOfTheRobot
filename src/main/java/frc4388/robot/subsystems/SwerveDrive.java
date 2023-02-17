@@ -28,7 +28,7 @@ public class SwerveDrive extends SubsystemBase {
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontLocation, rightFrontLocation, leftBackLocation, rightBackLocation); 
 
-  // private SwerveDriveOdometry odometry = new SwerveDriveOdometry(
+  // private SwerveDriveOdometry odometry = new SwerveDrive(
   //   kinematics, 
   //   gyro.getRotation2d(),
   //   new SwerveModulePosition[] {

@@ -11,10 +11,16 @@ public class Apriltags {
     public Object[] getApriltagPosition() {
         final var tagTable = NetworkTableInstance.getDefault().getTable("apriltag");
 
+        // return new Object[] {true, 
+        //     tagTable.getEntry("TagPosX"),
+        //     tagTable.getEntry("TagPosY"),
+        //     tagTable.getEntry("TagPosZ")
+        // };
+
         return new Object[] {true, 
-            tagTable.getEntry("TagPosX"),
-            tagTable.getEntry("TagPosY"),
-            tagTable.getEntry("TagPosZ")
+            1,
+            2,
+            3
         };
     }
 
@@ -30,6 +36,7 @@ public class Apriltags {
 
     public boolean isAprilTag() {
         final var tagTable = NetworkTableInstance.getDefault().getTable("apriltag");
-        return tagTable.getEntry("IsTag").getBoolean(false);
+        // return tagTable.getEntry("IsTag").getBoolean(false);
+        return true;
     }
 }

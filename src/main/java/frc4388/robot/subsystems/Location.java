@@ -15,17 +15,13 @@ public class Location {
     }
 
     public Object[] getPosition() {
-        Object[] Position = {};
-
         if(isLimelight){
             //Return Limelight Position
         }else if(isApriltag){
             return Apriltag.getApriltagPosition();
-        }else{
-            //Return odometry Position, last resort
         }
 
-        return Position;
+        return null;
     }
 
     public Object[] getRotation() {

@@ -15,7 +15,10 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.RobotTime;
-import frc4388.robot.subsystems.Vision;
+
+import frc4388.robot.subsystems.Location;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,7 +33,7 @@ public class Robot extends TimedRobot {
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
 
-  //private Vision Apriltag = new Vision();
+  private Location location = new Location();
 
 
   /**
@@ -61,7 +64,13 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    //final Object[] apriltagPos = Apriltag.getApriltagLocation();
+    // Call position and rotation reorder
+    location.reoderPrio();
+
+    final Object[] pos = location.getPosition();
+    if (pos != null) {
+      SmartDashboard.putNumber("name", (Double) pos[0]);
+    }
 
     //ystem.out.print(apriltagPos[0]);
   }
