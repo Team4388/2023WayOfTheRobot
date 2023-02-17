@@ -5,6 +5,15 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
+    "Transitory Values": {
+      "open": false
+    },
     "retained": {
       "apriltag": {
         "open": true
@@ -50,6 +59,12 @@
       "Publishers": {
         "open": true
       },
+      "Subscribers": {
+        "open": true
+      },
+      "open": true
+    },
+    "shuffleboard": {
       "Subscribers": {
         "open": true
       },

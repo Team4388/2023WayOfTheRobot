@@ -139,6 +139,6 @@ public final class Constants {
     public static final int XBOX_DRIVER_ID = 0;
     public static final int XBOX_OPERATOR_ID = 1;
     public static final double LEFT_AXIS_DEADBAND = 0.04;
-    public static final boolean SKEW_STICKS = false;
+    public static final boolean SKEW_STICKS = false; // TODO: find the actual value
   }
 }
