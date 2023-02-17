@@ -7,7 +7,6 @@
 
 package frc4388.robot;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
@@ -113,12 +112,6 @@ public class RobotMap {
 
     rightBackWheel.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
     rightBackSteer.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
-
-    // set neutral mode
-    leftFrontSteer.setNeutralMode(NeutralMode.Brake);
-    rightFrontSteer.setNeutralMode(NeutralMode.Brake);
-    leftBackSteer.setNeutralMode(NeutralMode.Brake);
-    rightBackSteer.setNeutralMode(NeutralMode.Brake);
 
     // initialize SwerveModules
     this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, -181.230469);
