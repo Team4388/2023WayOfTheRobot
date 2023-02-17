@@ -45,8 +45,6 @@ public class JoystickRecorder extends CommandBase {
     this.startTime = System.currentTimeMillis();
 
     outputs.add(new TimedOutput());
-
-    System.out.println("STARTING RECORDING");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -64,15 +62,11 @@ public class JoystickRecorder extends CommandBase {
     swerve.driveWithInput(new Translation2d(inputs.leftX,  inputs.leftY),
                           new Translation2d(inputs.rightX, inputs.rightY),
                           true);
-    
-    System.out.println("RECORDING IN PROGRESS");
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("RECORDING ENDED");
-
     File output = new File("/home/lvuser/JoystickInputs.txt");
 
     try (PrintWriter writer = new PrintWriter(output)) {
@@ -91,6 +85,6 @@ public class JoystickRecorder extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ((System.currentTimeMillis() - this.startTime) > 15000);
+    return false;
   }
 }
