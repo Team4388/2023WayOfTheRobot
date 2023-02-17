@@ -10,7 +10,6 @@ package frc4388.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc4388.robot.commands.JoystickRecorder;
 import frc4388.utility.RobotTime;
 
 /**
@@ -26,8 +25,6 @@ public class Robot extends TimedRobot {
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
 
-  private JoystickRecorder m_joystickRecorder;
-  Runnable recorder;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -96,9 +93,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
-
-    System.out.println("TELEOP INIT STARTING");
-
     m_robotContainer.m_robotSwerveDrive.resetGyro();
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -109,30 +103,14 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.m_robotSwerveDrive.resetGyro();
     m_robotTime.startMatchTime();
-
-    m_joystickRecorder = new JoystickRecorder(m_robotContainer.m_robotSwerveDrive,
-                                              () -> m_robotContainer.getDeadbandedDriverController().getLeftX(),
-                                              () -> m_robotContainer.getDeadbandedDriverController().getLeftY(),
-                                              () -> m_robotContainer.getDeadbandedDriverController().getRightX(),
-                                              () -> m_robotContainer.getDeadbandedDriverController().getRightY()
-                                            );
-
-    m_joystickRecorder.initialize();
-
-    // recorder = () -> {
-    //   m_joystickRecorder.execute();
-    // };
-
-    addPeriodic(() -> {
-      m_joystickRecorder.execute();
-    }, 0.1);
   }
 
   /**
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+  }
 
   /**
    * This function is called periodically during test mode.
