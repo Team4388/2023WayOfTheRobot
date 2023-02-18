@@ -116,13 +116,6 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
-  public void stopModules() {
-    leftFront.stop();
-    rightFront.stop();
-    leftBack.stop();
-    rightBack.stop();
-  }
-
   public double getGyroAngle() {
     return gyro.getAngle();
   }
@@ -231,12 +224,12 @@ public class SwerveDrive extends SubsystemBase {
     // updateOdometry();
     updatePoseEstimator();
 
-    SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
-    SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
-    SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
+    // SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
+    // SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
+    // SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
 
-    SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
-    SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
+    // SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
+    // SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
 
   }
 
