@@ -12,19 +12,25 @@ public final class RobotUnits {
   // variables
   private static boolean isSwerve;
 
-  // constants
+  // measurement constants
   private static final double INCHES_PER_FOOT = 12.0;
   private static final double METERS_PER_INCH = 0.0254;
   private static final double SECONDS_PER_MINUTE = 60;
   private static final double MILLISECONDS_PER_SECONDS = 1000;
 
-  private static final int FALCON_TICKS_PER_MOTOR_REV = 2048;
+  // robot constants
+  private static final int TICKS_PER_MOTOR_REV = 2048;
   private static double WHEEL_DIAMETER_INCHES;
   private static double MOTOR_REV_PER_WHEEL_REV;
   private static double MOTOR_REV_PER_STEER_REV;
+  private static double INCHES_PER_WHEEL_REV;
+  private static double TICKS_PER_WHEEL_REV;
+
+  // final conversions
+  private static final double TICK_TIME_TO_SECONDS = 0.1;
+  private static double TICKS_PER_INCH;
+
   
-
-
   // private constructor
   private RobotUnits(final double WHEEL_DIAMETER_INCHES, final double[] gearRatios) throws IllegalArgumentException {
     if (gearRatios.length == 1) {
@@ -43,15 +49,23 @@ public final class RobotUnits {
     }
 
     RobotUnits.WHEEL_DIAMETER_INCHES = WHEEL_DIAMETER_INCHES;
+    RobotUnits.initVar();
   }
 
   private static RobotUnits instance = null;
 
-  public static RobotUnits getInstance() {
+  public static RobotUnits getInstance(final double WHEEL_DIAMETER_INCHES, final double[] gearRatios) {
     if (instance == null) {
-      instance = new RobotUnits(0, new double[] {0.0, 0.0});
+      instance = new RobotUnits(WHEEL_DIAMETER_INCHES, gearRatios);
     }
     return instance;
+  }
+
+  private static void initVar() {
+    INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
+    TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_REV_PER_WHEEL_REV;
+
+    TICKS_PER_INCH = TICKS_PER_WHEEL_REV / INCHES_PER_WHEEL_REV;
   }
 
   // angle conversions
@@ -78,11 +92,17 @@ public final class RobotUnits {
   public static double secondsToMilliseconds(final double seconds) {return seconds * MILLISECONDS_PER_SECONDS;}
 
   // falcon conversions
-  public static double falconTicksToMotorRotations(final double ticks) {return ticks / FALCON_TICKS_PER_MOTOR_REV;}
+  public static double falconTicksToMotorRotations(final double ticks) {return ticks / TICKS_PER_MOTOR_REV;}
 
-  public static double falconMotorRotationsToTicks(final double rotations) {return rotations * FALCON_TICKS_PER_MOTOR_REV;}
+  public static double falconMotorRotationsToTicks(final double rotations) {return rotations * TICKS_PER_MOTOR_REV;}
+  
+  public static double inchesToTicks(final double inches) {return inches * TICKS_PER_INCH;}
+  
+  public static double ticksToInches(final double ticks) {return ticks / TICKS_PER_INCH;}
 
-  // TODO: Implement later
+  public static double secondsToTickTime(final double seconds) {return seconds * TICK_TIME_TO_SECONDS;}
+  
+  public static double tickTimeToSeconds(final double tickTime) {return tickTime / TICK_TIME_TO_SECONDS;}
 
   // distance conversions
   public static double metersToInches(final double meters) {return meters / METERS_PER_INCH;}

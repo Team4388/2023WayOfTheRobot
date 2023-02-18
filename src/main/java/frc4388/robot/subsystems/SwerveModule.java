@@ -14,10 +14,10 @@ import com.ctre.phoenix.sensors.CANCoder;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
+import frc4388.utility.RobotUnits;
 
 public class SwerveModule extends SubsystemBase {
     private WPI_TalonFX driveMotor;
@@ -87,7 +87,7 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public double getDrivePos() {
-        return this.driveMotor.getSelectedSensorPosition() / SwerveDriveConstants.Conversions.TICKS_PER_MOTOR_REV;
+        return this.driveMotor.getSelectedSensorPosition();
     }
 
     public double getDriveVel() {
@@ -109,7 +109,7 @@ public class SwerveModule extends SubsystemBase {
      */
     public SwerveModuleState getState() {
         return new SwerveModuleState(
-            Units.inchesToMeters(driveMotor.getSelectedSensorVelocity() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS, 
+            RobotUnits.tickTimeToSeconds(RobotUnits.inchesToMeters(RobotUnits.ticksToInches(driveMotor.getSelectedSensorVelocity()))), 
             getAngle()
         );
     }
@@ -119,7 +119,7 @@ public class SwerveModule extends SubsystemBase {
      * @return The current position of the SwerveModule in meters traveled by the driveMotor and the angle of the angleMotor.
      */
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(Units.inchesToMeters(driveMotor.getSelectedSensorPosition() * SwerveDriveConstants.Conversions.INCHES_PER_TICK), getAngle());
+        return new SwerveModulePosition(RobotUnits.inchesToMeters(RobotUnits.ticksToInches(driveMotor.getSelectedSensorPosition())), getAngle());
     }
 
     /**
@@ -144,7 +144,7 @@ public class SwerveModule extends SubsystemBase {
             angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
         }
 
-        double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
+        double feetPerSecond = RobotUnits.metersToFeet(state.speedMetersPerSecond);
         // double inchesPerSecond = Units.metersToFeet(state.speedMetersPerSecond) * 12;
 
         // driveMotor.set(TalonFXControlMode.Velocity, inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);

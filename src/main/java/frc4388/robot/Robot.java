@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
   
   private RobotTime m_robotTime = RobotTime.getInstance();
-  private RobotUnits m_robotUnits = RobotUnits.getInstance();
+  private RobotUnits m_robotUnits = RobotUnits.getInstance(3.9, new double[] {5.12, 12.8});
   
   private RobotContainer m_robotContainer;
 

@@ -14,11 +14,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.RobotGyro;
+import frc4388.utility.RobotUnits;
 
 public class SwerveDrive extends SubsystemBase {
   
@@ -29,10 +29,10 @@ public class SwerveDrive extends SubsystemBase {
 
   private SwerveModule[] modules;
 
-  private Translation2d leftFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
-  private Translation2d rightFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
-  private Translation2d leftBackLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
-  private Translation2d rightBackLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
+  private Translation2d leftFrontLocation = new Translation2d(RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
+  private Translation2d rightFrontLocation = new Translation2d(RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
+  private Translation2d leftBackLocation = new Translation2d(-RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
+  private Translation2d rightBackLocation = new Translation2d(-RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -RobotUnits.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontLocation, rightFrontLocation, leftBackLocation, rightBackLocation);
 
@@ -108,7 +108,7 @@ public class SwerveDrive extends SubsystemBase {
    * @param desiredStates Array of module states to set.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, RobotUnits.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
     for (int i = 0; i < desiredStates.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = desiredStates[i];

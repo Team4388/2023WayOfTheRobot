@@ -66,20 +66,6 @@ public final class Constants {
       public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
       public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 1.0; // TODO: find the actual value
 
-      public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
-      public static final double MOTOR_REV_PER_STEER_REV = 12.8;
-
-      public static final double TICKS_PER_MOTOR_REV = 2048;
-      public static final double WHEEL_DIAMETER_INCHES = 3.9;
-      public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
-
-      public static final double WHEEL_REV_PER_MOTOR_REV = 1 / MOTOR_REV_PER_WHEEL_REV;
-      public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_REV_PER_WHEEL_REV;
-      public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV / INCHES_PER_WHEEL_REV;
-      public static final double INCHES_PER_TICK = 1 / TICKS_PER_INCH;
-
-      public static final double TICK_TIME_TO_SECONDS = 10;
-      public static final double SECONDS_TO_TICK_TIME = 1 / TICK_TIME_TO_SECONDS;
     }
 
     public static final class Configurations {
