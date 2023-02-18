@@ -24,7 +24,7 @@ import frc4388.utility.LEDPatterns;
 public final class Constants {
   public static final class SwerveDriveConstants {
 
-    public static final double ROTATION_SPEED = 2.0;
+    public static final double ROTATION_SPEED = -0.7;
 
     public static final class IDs {
       public static final int LEFT_FRONT_WHEEL_ID = 2;
@@ -64,14 +64,14 @@ public final class Constants {
     public static final class Conversions {
       public static final int CANCODER_TICKS_PER_ROTATION = 4096;
 
-      public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
-      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 2.0; // TODO: find the actual value
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 5.8;
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 0.8;
 
-      public static final double MOTOR_REV_PER_WHEEL_REV = 6.12; // TODO: find the actual value
-      public static final double MOTOR_REV_PER_STEER_REV = 12.8; // TODO: find the actual value
+      public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
+      public static final double MOTOR_REV_PER_STEER_REV = 12.8;
 
       public static final double TICKS_PER_MOTOR_REV = 2048;
-      public static final double WHEEL_DIAMETER_INCHES = 4.0; // TODO: the actual value
+      public static final double WHEEL_DIAMETER_INCHES = 3.9;
       public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
 
       public static final double WHEEL_REV_PER_MOTOR_REV = 1 / MOTOR_REV_PER_WHEEL_REV;
@@ -87,30 +87,13 @@ public final class Constants {
       public static final double OPEN_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
       public static final double CLOSED_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
       public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
-
-
-      // public static final double LEFT_FRONT_ENCODER_OFFSET = (4 * 360. - 232.6466 + 180 - 90) % 360.; // * 2022 SwerveDrive values
-      // public static final double RIGHT_FRONT_ENCODER_OFFSET = (4 * 360. - 152.1265 - 180 - 90) % 360.; // * 2022 SwerveDrive values
-      // public static final double LEFT_BACK_ENCODER_OFFSET = (4 * 360. - 189.4834 - 90) % 360.; // * 2022 SwerveDrive values
-      // public static final double RIGHT_BACK_ENCODER_OFFSET = (4 * 360. - 9.3156 - 180 - 90) % 360.; // * 2022 SwerveDrive values
-      
-      // public static final double LEFT_FRONT_ENCODER_OFFSET = (4 * 360. - 152.1265 - 180 - 90) % 360.; // * 2023 translated values (don't work)
-      // public static final double RIGHT_FRONT_ENCODER_OFFSET = (4 * 360. - 9.3156 - 180 - 90) % 360.; // * 2023 translated values (don't work)
-      // public static final double LEFT_BACK_ENCODER_OFFSET = (4 * 360. - 232.6466 + 180 - 90) % 360.; // * 2023 translated values (don't work)
-      // public static final double RIGHT_BACK_ENCODER_OFFSET = (4 * 360. - 189.4834 - 90) % 360.; // * 2023 translated values (don't work)
-      
-      // public static final double LEFT_FRONT_ENCODER_OFFSET = 0.0 + 90.0; // * 2023 experimentally-derived values (mostly work) 
-      // public static final double RIGHT_FRONT_ENCODER_OFFSET = 0.0; // * 2023 experimentally-derived values (mostly work) 
-      // public static final double LEFT_BACK_ENCODER_OFFSET = 0.0 + 24.0; // * 2023 experimentally-derived values (mostly work) 
-      // public static final double RIGHT_BACK_ENCODER_OFFSET = 0.0 + 45.0 + 180.0; // * 2023 experimentally-derived values (mostly work)  
-      
     }
 
     public static final double MAX_SPEED_FEET_PER_SECOND = 10; // TODO: find the actual value
 
     // dimensions
-    public static final double WIDTH = 18.5; // TODO: find the actual value
-    public static final double HEIGHT = 18.5; // TODO: find the actual value
+    public static final double WIDTH = 18.5;
+    public static final double HEIGHT = 18.5;
     public static final double HALF_WIDTH = WIDTH / 2.d;
     public static final double HALF_HEIGHT = HEIGHT / 2.d;
 
@@ -138,7 +121,8 @@ public final class Constants {
   public static final class OIConstants {
     public static final int XBOX_DRIVER_ID = 0;
     public static final int XBOX_OPERATOR_ID = 1;
-    public static final double LEFT_AXIS_DEADBAND = 0.04;
-    public static final boolean SKEW_STICKS = false; // TODO: find the actual value
+    public static final double LEFT_AXIS_DEADBAND = 0.1;
+    public static final double RIGHT_AXIS_DEADBAND = 0.6;
+    public static final boolean SKEW_STICKS = true; // ! this might have to actually be false, merge conflicts are confusing
   }
 }
