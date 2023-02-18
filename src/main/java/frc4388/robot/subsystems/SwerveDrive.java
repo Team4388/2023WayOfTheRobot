@@ -5,6 +5,7 @@
 package frc4388.robot.subsystems;
 
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -37,7 +38,9 @@ public class SwerveDrive extends SubsystemBase {
 
   private RobotGyro gyro;
 
-  private SwerveDriveOdometry odometry;
+  // private SwerveDriveOdometry odometry;
+
+  private SwerveDrivePoseEstimator poseEstimator;
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
   public Rotation2d rotTarget = new Rotation2d();
@@ -51,15 +54,28 @@ public class SwerveDrive extends SubsystemBase {
     this.rightBack = rightBack;
     this.gyro = gyro;
 
-    this.odometry = new SwerveDriveOdometry(
+    // this.odometry = new SwerveDriveOdometry(
+    //   kinematics, 
+    //   gyro.getRotation2d(),
+    //   new SwerveModulePosition[] {
+    //     leftFront.getPosition(),
+    //     rightFront.getPosition(),
+    //     leftBack.getPosition(),
+    //     rightBack.getPosition()
+    //   },
+    //   getOdometry()
+    // );
+
+    this.poseEstimator = new SwerveDrivePoseEstimator(
       kinematics, 
-      gyro.getRotation2d(),
+      gyro.getRotation2d(), 
       new SwerveModulePosition[] {
         leftFront.getPosition(),
         rightFront.getPosition(),
         leftBack.getPosition(),
         rightBack.getPosition()
-      }
+      },
+      new Pose2d(0,0, new Rotation2d(0))
     );
 
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
@@ -68,20 +84,14 @@ public class SwerveDrive extends SubsystemBase {
 
   public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
     if (fieldRelative) {
-
       if (rightStick.getNorm() > 0.1) {
         rotTarget = new Rotation2d(rightStick.getX(), -rightStick.getY()).minus(new Rotation2d(0, 1));
       }
 
       double rot = rotTarget.minus(gyro.getRotation2d()).getRadians();
 
-
       // Use the left joystick to set speed. Apply a quadratic curve and the set max speed.
       Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
-
-      // if (rightStick.getNorm() < .1) {
-      //   rot = 0;
-      // }
 
       // Convert field-relative speeds to robot-relative speeds.
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), speed.getY(), rot * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d().times(-1));
@@ -112,15 +122,27 @@ public class SwerveDrive extends SubsystemBase {
 
   public void resetGyro() {
     gyro.reset();
-    setOdometry(getOdometry());
+    // setOdometry(getOdometry());
     rotTarget = new Rotation2d(0);
   }
 
   /**
    * Updates the odometry of the SwerveDrive.
    */
-  public void updateOdometry() {
-    odometry.update(
+  // public void updateOdometry() {
+  //   odometry.update(
+  //     gyro.getRotation2d(), 
+  //     new SwerveModulePosition[] {
+  //       leftFront.getPosition(),
+  //       rightFront.getPosition(),
+  //       leftBack.getPosition(),
+  //       rightBack.getPosition()
+  //     }
+  //   );
+  // }
+
+  public void updatePoseEstimator() {
+    poseEstimator.update(
       gyro.getRotation2d(), 
       new SwerveModulePosition[] {
         leftFront.getPosition(),
@@ -135,16 +157,33 @@ public class SwerveDrive extends SubsystemBase {
    * Gets the odometry of the SwerveDrive.
    * @return The odometry of the SwerveDrive as a Pose2d object (xMeters, yMeters, theta).
    */
-  public Pose2d getOdometry() {
-    return odometry.getPoseMeters();
+  // public Pose2d getOdometry() {
+  //   return odometry.getPoseMeters();
+  // }
+
+  public Pose2d getPoseEstimator() {
+    return poseEstimator.getEstimatedPosition();
   }
 
   /**
    * Sets the odometry of the SwerveDrive.
    * @param pose Pose to set the odometry to.
    */
-  public void setOdometry(Pose2d pose) {
-    odometry.resetPosition(
+  // public void setOdometry(Pose2d pose) {
+  //   odometry.resetPosition(
+  //     gyro.getRotation2d(), 
+  //     new SwerveModulePosition[] {
+  //       leftFront.getPosition(),
+  //       rightFront.getPosition(),
+  //       leftBack.getPosition(),
+  //       rightBack.getPosition()
+  //     },
+  //     pose
+  //   );
+  // }
+
+  public void setPoseEstimator(Pose2d pose) {
+    poseEstimator.resetPosition(
       gyro.getRotation2d(), 
       new SwerveModulePosition[] {
         leftFront.getPosition(),
@@ -156,6 +195,10 @@ public class SwerveDrive extends SubsystemBase {
     );
   }
 
+  public void resetPoseEstimator() {
+    setPoseEstimator(new Pose2d());
+  }
+  
   public void stopModules() {
     for (SwerveModule module : this.modules) {
       module.stop();
@@ -166,9 +209,9 @@ public class SwerveDrive extends SubsystemBase {
    * Resets the odometry of the SwerveDrive to 0.
    * *NOTE: If you reset your gyro, this method MUST be called with the new gyro angle and wheel encoder positions.
    */
-  public void resetOdometry() {
-    setOdometry(new Pose2d());
-  }
+  // public void resetOdometry() {
+  //   setOdometry(new Pose2d());
+  // }
 
   public SwerveDriveKinematics getKinematics() {
     return this.kinematics;
@@ -177,14 +220,17 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    updateOdometry();
 
-    SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
-    SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
-    SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
+    // updateOdometry();
+    updatePoseEstimator();
 
-    SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
-    SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
+    // SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
+    // SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
+    // SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
+
+    // SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
+    // SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
+
   }
 
   /**

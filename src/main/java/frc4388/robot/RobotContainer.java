@@ -7,11 +7,32 @@
 
 package frc4388.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.opencv.objdetect.HOGDescriptor;
+
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.Trajectory.State;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
+import frc4388.robot.Constants.SwerveDriveConstants.AutoConstants;
+import frc4388.robot.Constants.SwerveDriveConstants.PIDConstants;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.commands.JoystickRecorder;
@@ -68,8 +89,9 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+        //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
@@ -94,7 +116,70 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new InstantCommand();
+
+        //Create Trajectory Settings
+        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(SwerveDriveConstants.AutoConstants.PATH_MAX_VEL, 
+            SwerveDriveConstants.AutoConstants.PATH_MAX_ACC).setKinematics(m_robotSwerveDrive.getKinematics());
+
+        // generate trajectory
+        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+            
+            new Pose2d(0, 0, new Rotation2d(0)),
+            List.of(
+                    new Translation2d(0, 1)),
+            new Pose2d(0, 2, Rotation2d.fromDegrees(0)),
+            
+            trajectoryConfig);
+
+        ArrayList<Pose2d> simplePath = new ArrayList<Pose2d>();
+        simplePath.add(new Pose2d(0, 0, new Rotation2d(0)));
+        simplePath.add(new Pose2d(0, -1, new Rotation2d(0)));
+
+        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
+        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
+        //     new Pose2d(0, 0, new Rotation2d(0),
+        //     List.of(new Translation2d(0, 1)),
+        //     new Pose2d(0, 2, new Rotation2d(0)),
+        //     trajectoryConfig
+        // );
+
+
+        // ArrayList<double[]> states = new ArrayList<double[]>();
+
+
+
+        //Defining PID Controller for tracking trajectory
+        PIDController xController = new PIDController(SwerveDriveConstants.AutoConstants.X_CONTROLLER.kP, 0, 0);
+        PIDController yController = new PIDController(SwerveDriveConstants.AutoConstants.Y_CONTROLLER.kP, 0, 0);
+        ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.THETA_CONTROLLER.kP,
+        AutoConstants.THETA_CONTROLLER.kI, AutoConstants.THETA_CONTROLLER.kD, AutoConstants.THETA_CONSTRAINTS);
+        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+        HolonomicDriveController holoController = new HolonomicDriveController(xController, yController, thetaController);
+
+        //Command to follow trajectory
+        // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        //     trajectory,
+        //     m_robotSwerveDrive::getOdometry,
+        //     m_robotSwerveDrive.getKinematics(),
+        //     holoController,
+        //     m_robotSwerveDrive::setModuleStates,
+        //     m_robotSwerveDrive);
+
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+            trajectory,
+            m_robotSwerveDrive::getPoseEstimator,
+            m_robotSwerveDrive.getKinematics(),
+            holoController,
+            m_robotSwerveDrive::setModuleStates,
+            m_robotSwerveDrive);
+
+        //Init and wrap-up, return everything
+        return new SequentialCommandGroup(
+                new InstantCommand(() -> m_robotSwerveDrive.resetPoseEstimator(), m_robotSwerveDrive),
+                // new InstantCommand(() -> m_robotSwerveDrive.setOdometry(trajectory.getInitialPose())),
+                swerveControllerCommand,
+                new InstantCommand(() -> m_robotSwerveDrive.stopModules()));
     }
 
     public DeadbandedXboxController getDeadbandedDriverController() {
