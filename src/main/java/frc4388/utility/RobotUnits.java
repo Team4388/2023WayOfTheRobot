@@ -9,11 +9,50 @@ package frc4388.utility;
  * @author Aarav Shah */
 
 public final class RobotUnits {
+  // variables
+  private static boolean isSwerve;
+
   // constants
   private static final double INCHES_PER_FOOT = 12.0;
   private static final double METERS_PER_INCH = 0.0254;
   private static final double SECONDS_PER_MINUTE = 60;
   private static final double MILLISECONDS_PER_SECONDS = 1000;
+
+  private static final int FALCON_TICKS_PER_MOTOR_REV = 2048;
+  private static double WHEEL_DIAMETER_INCHES;
+  private static double MOTOR_REV_PER_WHEEL_REV;
+  private static double MOTOR_REV_PER_STEER_REV;
+  
+
+
+  // private constructor
+  private RobotUnits(final double WHEEL_DIAMETER_INCHES, final double[] gearRatios) throws IllegalArgumentException {
+    if (gearRatios.length == 1) {
+      RobotUnits.isSwerve = false;
+
+      RobotUnits.MOTOR_REV_PER_WHEEL_REV = gearRatios[0];
+
+    } else if (gearRatios.length == 2) {
+      RobotUnits.isSwerve = true;
+
+      RobotUnits.MOTOR_REV_PER_WHEEL_REV = gearRatios[0];
+      RobotUnits.MOTOR_REV_PER_STEER_REV = gearRatios[1];
+
+    } else {
+      throw new IllegalArgumentException();
+    }
+
+    RobotUnits.WHEEL_DIAMETER_INCHES = WHEEL_DIAMETER_INCHES;
+  }
+
+  private static RobotUnits instance = null;
+
+  public static RobotUnits getInstance() {
+    if (instance == null) {
+      instance = new RobotUnits(0, new double[] {0.0, 0.0});
+    }
+    return instance;
+  }
 
   // angle conversions
   public static double degreesToRadians(final double degrees) {return Math.toRadians(degrees);}
@@ -39,9 +78,11 @@ public final class RobotUnits {
   public static double secondsToMilliseconds(final double seconds) {return seconds * MILLISECONDS_PER_SECONDS;}
 
   // falcon conversions
-  public static double falconTicksToRotations(final double ticks) {return ticks / 2048;}
+  public static double falconTicksToMotorRotations(final double ticks) {return ticks / FALCON_TICKS_PER_MOTOR_REV;}
 
-  public static double falconRotationsToTicks(final double rotations) {return rotations * 2048;}
+  public static double falconMotorRotationsToTicks(final double rotations) {return rotations * FALCON_TICKS_PER_MOTOR_REV;}
+
+  // TODO: Implement later
 
   // distance conversions
   public static double metersToInches(final double meters) {return meters / METERS_PER_INCH;}
