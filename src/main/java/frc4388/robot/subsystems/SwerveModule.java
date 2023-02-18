@@ -132,13 +132,13 @@ public class SwerveModule extends SubsystemBase {
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
 
         // calculate the difference between our current rotational position and our new rotational position
-        Rotation2d rotationDelta = state.angle.minus(currentRotation); // ? might need to be negative
+        Rotation2d rotationDelta = state.angle.minus(currentRotation);
 
         // calculate the new absolute position of the SwerveModule based on the difference in rotation
         double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
 
         // convert the CANCoder from its position reading to ticks
-        double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient(); // ? why feedback coefficient
+        double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
 
         if (!ignoreAngle) {
             angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
