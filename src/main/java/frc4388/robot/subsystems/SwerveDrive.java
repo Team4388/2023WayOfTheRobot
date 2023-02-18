@@ -205,6 +205,12 @@ public class SwerveDrive extends SubsystemBase {
   public void resetPoseEstimator() {
     setPoseEstimator(new Pose2d());
   }
+  
+  public void stopModules() {
+    for (SwerveModule module : this.modules) {
+      module.stop();
+    }
+  }
 
   /**
    * Resets the odometry of the SwerveDrive to 0.
@@ -221,14 +227,17 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
     // updateOdometry();
     updatePoseEstimator();
 
-    // SmartDashboard.putNumber("Odo X", getOdometry().getX());
-    // SmartDashboard.putNumber("Odo Y", getOdometry().getY());
-    // SmartDashboard.putNumber("Odo Theta", getOdometry().getRotation().getDegrees());
-    
-    // SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
+    SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
+    SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
+    SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
+
+    SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
+    SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
+
   }
 
   /**
