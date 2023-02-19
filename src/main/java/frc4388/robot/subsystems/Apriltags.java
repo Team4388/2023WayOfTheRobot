@@ -8,9 +8,16 @@ package frc4388.robot.subsystems;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class Apriltags {
+    public static class Tag {
+        boolean visible = true;
+        double x, y, z = 0;
+    }
+    
     public Object[] getApriltagPosition() {
         final var tagTable = NetworkTableInstance.getDefault().getTable("apriltag");
-
+        final var tag = new Tag();
+        // integrate the tag system
+        
         // return new Object[] {true, 
         //     tagTable.getEntry("TagPosX"),
         //     tagTable.getEntry("TagPosY"),
