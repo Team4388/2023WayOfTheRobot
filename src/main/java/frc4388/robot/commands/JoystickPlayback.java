@@ -15,6 +15,8 @@ import frc4388.utility.UtilityStructs.TimedOutput;
 
 public class JoystickPlayback extends CommandBase {
   private final SwerveDrive            swerve;
+  private       String                 filename;
+  private       int                    mult       = 1;
   private       Scanner                input;
   private final ArrayList<TimedOutput> outputs      = new ArrayList<>();
   private       int                    counter      = 0;
@@ -22,13 +24,19 @@ public class JoystickPlayback extends CommandBase {
   private       long                   playbackTime = 0;
   private       int                    lastIndex;
   private       boolean                m_finished   = false; // ! find a better way
-  private       int                    m_mult       = 1;
 
   /** Creates a new JoystickPlayback. */
-  public JoystickPlayback(SwerveDrive swerve, int mult) {
+  public JoystickPlayback(SwerveDrive swerve, String filename, int mult) {
     this.swerve = swerve;
-    m_mult = mult;
+    this.filename = filename;
+    this.mult = mult;
+
     addRequirements(this.swerve);
+  }
+
+  /** Creates a new JoystickPlayback. */
+  public JoystickPlayback(SwerveDrive swerve, String filename) {
+    this(swerve, filename, 1);
   }
 
   // Called when the command is initially scheduled.
@@ -38,7 +46,7 @@ public class JoystickPlayback extends CommandBase {
     playbackTime = 0;
     lastIndex    = 0;
     try {
-      input = new Scanner(new File("/home/lvuser/BlueNearDriveToChargeStation.txt"));
+      input = new Scanner(new File("/home/lvuser/" + filename));
 
       String line = "";
       while (input.hasNextLine()) {
@@ -52,7 +60,7 @@ public class JoystickPlayback extends CommandBase {
         System.out.println("values: " + values[0] + " " + values[1] + " " + values[2] + " " + values[3]);
 
         var out = new TimedOutput();
-        out.leftX  = Double.parseDouble(values[0]) * m_mult;
+        out.leftX  = Double.parseDouble(values[0]) * mult;
         out.leftY  = Double.parseDouble(values[1]);
         out.rightX = Double.parseDouble(values[2]);
         out.rightY = Double.parseDouble(values[3]);
