@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,6 +42,9 @@ public class RobotContainer {
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
+    /* Auto */
+    private SendableChooser<String> m_sendableChooser = new SendableChooser<>();
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -54,6 +58,9 @@ public class RobotContainer {
                                                   true);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
+        
+        // * Auto Commands
+        m_sendableChooser.setDefaultOption("JoystickInputs", "JoystickInputs.txt");
     }
 
 
@@ -95,6 +102,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         return new JoystickPlayback(m_robotSwerveDrive);
+        // return new JoystickPlayback(m_robotSwerveDrive, (String) m_sendableChooser.getSelected());
     }
 
     public DeadbandedXboxController getDeadbandedDriverController() {
