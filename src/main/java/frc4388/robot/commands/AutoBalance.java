@@ -26,7 +26,7 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 
 	@Override
 	public double getError() {
-		var pitch = gyro.getPitch();
+		var pitch = gyro.getRoll();
 		SmartDashboard.putNumber("pitch", pitch);
 		return pitch;
 	}
@@ -34,8 +34,8 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 	@Override
 	public void runWithOutput(double output) {
 		double out2 = MathUtil.clamp(output / 40, -.5, .5);
-		if (Math.abs(gyro.getPitch()) < 3) out2 = 0;
-		drive.driveWithInput(new Translation2d(0, out2), new Translation2d(), false);
+		if (Math.abs(getError()) < 3) out2 = 0;
+		drive.driveWithInput(new Translation2d(0, out2), new Translation2d(), true);
 	}
 
 	@Override
