@@ -15,6 +15,7 @@ import frc4388.utility.UtilityStructs.TimedOutput;
 
 public class JoystickPlayback extends CommandBase {
   private final SwerveDrive            swerve;
+  private       String                 filename;
   private       Scanner                input;
   private final ArrayList<TimedOutput> outputs      = new ArrayList<>();
   private       int                    counter      = 0;
@@ -26,6 +27,16 @@ public class JoystickPlayback extends CommandBase {
   /** Creates a new JoystickPlayback. */
   public JoystickPlayback(SwerveDrive swerve) {
     this.swerve = swerve;
+    this.filename = "JoystickInputs.txt";
+
+    addRequirements(this.swerve);
+  }
+
+  /** Creates a new JoystickPlayback. */
+  public JoystickPlayback(SwerveDrive swerve, String filename) {
+    this.swerve = swerve;
+    this.filename = filename;
+
     addRequirements(this.swerve);
   }
 
@@ -36,7 +47,7 @@ public class JoystickPlayback extends CommandBase {
     playbackTime = 0;
     lastIndex    = 0;
     try {
-      input = new Scanner(new File("/home/lvuser/JoystickInputs.txt"));
+      input = new Scanner(new File("/home/lvuser/" + this.filename));
 
       String line = "";
       while (input.hasNextLine()) {

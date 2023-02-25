@@ -94,7 +94,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new InstantCommand();
+        return new JoystickPlayback(m_robotSwerveDrive);
     }
 
     public DeadbandedXboxController getDeadbandedDriverController() {
