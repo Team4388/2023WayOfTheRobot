@@ -23,6 +23,7 @@ import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -62,6 +63,20 @@ public class RobotContainer {
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
+    /* Autos */
+    private SendableChooser<Command> chooser = new SendableChooser<>();
+    
+    private Command noAuto = new InstantCommand();
+    
+    private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
+    
+    private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "BlueNearDriveToChargeStation.txt");
+    private Command blue1PathWithBalance = blue1Path.andThen(balance);
+    
+    private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "BlueNearDriveToChargeStation.txt", -1);
+    private Command red1PathWithBalance = red1Path.andThen(balance);
+
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -75,6 +90,17 @@ public class RobotContainer {
                                                   true);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
+        
+        // * Auto Commands
+        chooser.setDefaultOption("NoAuto", noAuto);
+
+        chooser.addOption("Blue1Path", blue1Path);
+        chooser.addOption("Blue1PathWithBalance", blue1PathWithBalance);
+
+        chooser.addOption("Red1Path", red1Path);
+        chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
+
+        SmartDashboard.putData(chooser);
     }
 
 
@@ -104,8 +130,8 @@ public class RobotContainer {
                                             () -> getDeadbandedDriverController().getRightY()))
             .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new JoystickPlayback(m_robotSwerveDrive, 1));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, 1));
 
         // * Operator Buttons
     }
@@ -117,8 +143,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-        return new JoystickPlayback(m_robotSwerveDrive, 1)
-            .andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+        return chooser.getSelected();
         // return new InstantCommand();
     }
 
