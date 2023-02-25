@@ -46,7 +46,7 @@ public class JoystickPlayback extends CommandBase {
     playbackTime = 0;
     lastIndex    = 0;
     try {
-      input = new Scanner(new File("/home/lvuser/" + filename));
+      input = new Scanner(new File("/home/lvuser/autos/" + filename));
 
       String line = "";
       while (input.hasNextLine()) {

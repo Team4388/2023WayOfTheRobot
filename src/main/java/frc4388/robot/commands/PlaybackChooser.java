@@ -1,4 +1,4 @@
-package frc4388.robot;
+package frc4388.robot.commands;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.subsystems.SwerveDrive;
 
 public class PlaybackChooser {
@@ -39,7 +38,7 @@ public class PlaybackChooser {
         }
 
         m_choosers.add(m_playback);
-        SmartDashboard.putData(m_playback);
+        SmartDashboard.putData("Command: 0", m_playback);
     }
 
     // This will be bound to a button for the time being
