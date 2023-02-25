@@ -45,6 +45,8 @@ public class JoystickRecorder extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    outputs.clear();
+
     this.startTime = System.currentTimeMillis();
 
     outputs.add(new TimedOutput());
@@ -65,6 +67,8 @@ public class JoystickRecorder extends CommandBase {
     swerve.driveWithInput(new Translation2d(inputs.leftX,  inputs.leftY),
                           new Translation2d(inputs.rightX, inputs.rightY),
                           true);
+    
+    System.out.println("RECORDING");
   }
 
   // Called once the command ends or is interrupted.

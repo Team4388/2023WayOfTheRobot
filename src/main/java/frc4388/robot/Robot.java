@@ -71,8 +71,6 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotTime.endMatchTime();
-
-    SmartDashboard.putData("AutoPlayback Chooser", m_robotContainer.chooser);
   }
 
   @Override
