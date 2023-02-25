@@ -105,7 +105,7 @@ public class RobotContainer {
             .onFalse(new InstantCommand());
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new JoystickPlayback(m_robotSwerveDrive));
+            .onTrue(new JoystickPlayback(m_robotSwerveDrive, 1));
 
         // * Operator Buttons
     }
@@ -117,7 +117,9 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-        return new JoystickPlayback(m_robotSwerveDrive);
+        return new JoystickPlayback(m_robotSwerveDrive, 1)
+            .andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+        // return new InstantCommand();
     }
 
     public DeadbandedXboxController getDeadbandedDriverController() {
@@ -127,4 +129,5 @@ public class RobotContainer {
     public DeadbandedXboxController getDeadbandedOperatorController() {
         return this.m_operatorXbox;
     }
+
 }
