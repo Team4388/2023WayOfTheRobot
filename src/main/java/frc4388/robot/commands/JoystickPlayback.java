@@ -22,10 +22,12 @@ public class JoystickPlayback extends CommandBase {
   private       long                   playbackTime = 0;
   private       int                    lastIndex;
   private       boolean                m_finished   = false; // ! find a better way
+  private       int                    m_mult       = 1;
 
   /** Creates a new JoystickPlayback. */
-  public JoystickPlayback(SwerveDrive swerve) {
+  public JoystickPlayback(SwerveDrive swerve, int mult) {
     this.swerve = swerve;
+    m_mult = mult;
     addRequirements(this.swerve);
   }
 
@@ -41,11 +43,16 @@ public class JoystickPlayback extends CommandBase {
       String line = "";
       while (input.hasNextLine()) {
         line = input.nextLine();
+
+        if (line.isEmpty() || line.isBlank() || line.equals("\n")) {
+          continue;
+        }
       
         String[] values = line.split(",");
+        System.out.println("values: " + values[0] + " " + values[1] + " " + values[2] + " " + values[3]);
 
         var out = new TimedOutput();
-        out.leftX  = Double.parseDouble(values[0]);
+        out.leftX  = Double.parseDouble(values[0]) * m_mult;
         out.leftY  = Double.parseDouble(values[1]);
         out.rightX = Double.parseDouble(values[2]);
         out.rightY = Double.parseDouble(values[3]);
@@ -59,8 +66,6 @@ public class JoystickPlayback extends CommandBase {
     } catch (FileNotFoundException e) {
       e.printStackTrace();
     }
-
-    System.out.println("STARTING PLAYBACK");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -106,8 +111,7 @@ public class JoystickPlayback extends CommandBase {
     this.swerve.driveWithInput( new Translation2d(lerpLX, lerpLY),
                                 new Translation2d(lerpRX, lerpRY),
                                 true);
-                                
-    System.out.println("PLAYING");
+                             
     counter++;
   }
 
