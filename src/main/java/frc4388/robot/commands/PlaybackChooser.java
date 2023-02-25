@@ -66,12 +66,13 @@ public class PlaybackChooser {
     }
 
     public Command getCommand() {
-        Command command = m_playback.getSelected();
+        Command command = m_playback.getSelected().asProxy();
         
-        for (int i = 1; i < m_choosers.size(); i++) {
-            command.andThen(m_choosers.get(i).getSelected());
+        Command[] commands = new Command[m_choosers.size() - 1];
+        for (int i = 0; i < m_choosers.size()-1; i++) {
+            commands[i] = m_choosers.get(i + 1).getSelected().asProxy();
         }
 
-        return command;
+        return command.andThen(commands);
     }
 }
