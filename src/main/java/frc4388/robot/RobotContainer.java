@@ -117,69 +117,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
 
-        //Create Trajectory Settings
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(SwerveDriveConstants.AutoConstants.PATH_MAX_VEL, 
-            SwerveDriveConstants.AutoConstants.PATH_MAX_ACC).setKinematics(m_robotSwerveDrive.getKinematics());
-
-        // generate trajectory
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-            
-            new Pose2d(0, 0, new Rotation2d(0)),
-            List.of(
-                    new Translation2d(0, 1)),
-            new Pose2d(0, 2, Rotation2d.fromDegrees(0)),
-            
-            trajectoryConfig);
-
-        ArrayList<Pose2d> simplePath = new ArrayList<Pose2d>();
-        simplePath.add(new Pose2d(0, 0, new Rotation2d(0)));
-        simplePath.add(new Pose2d(0, -1, new Rotation2d(0)));
-
-        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(simplePath, trajectoryConfig);
-        // Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-        //     new Pose2d(0, 0, new Rotation2d(0),
-        //     List.of(new Translation2d(0, 1)),
-        //     new Pose2d(0, 2, new Rotation2d(0)),
-        //     trajectoryConfig
-        // );
-
-
-        // ArrayList<double[]> states = new ArrayList<double[]>();
-
-
-
-        //Defining PID Controller for tracking trajectory
-        PIDController xController = new PIDController(SwerveDriveConstants.AutoConstants.X_CONTROLLER.kP, 0, 0);
-        PIDController yController = new PIDController(SwerveDriveConstants.AutoConstants.Y_CONTROLLER.kP, 0, 0);
-        ProfiledPIDController thetaController = new ProfiledPIDController(AutoConstants.THETA_CONTROLLER.kP,
-        AutoConstants.THETA_CONTROLLER.kI, AutoConstants.THETA_CONTROLLER.kD, AutoConstants.THETA_CONSTRAINTS);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-        HolonomicDriveController holoController = new HolonomicDriveController(xController, yController, thetaController);
-
-        //Command to follow trajectory
-        // SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        //     trajectory,
-        //     m_robotSwerveDrive::getOdometry,
-        //     m_robotSwerveDrive.getKinematics(),
-        //     holoController,
-        //     m_robotSwerveDrive::setModuleStates,
-        //     m_robotSwerveDrive);
-
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-            trajectory,
-            m_robotSwerveDrive::getPoseEstimator,
-            m_robotSwerveDrive.getKinematics(),
-            holoController,
-            m_robotSwerveDrive::setModuleStates,
-            m_robotSwerveDrive);
-
-        //Init and wrap-up, return everything
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> m_robotSwerveDrive.resetPoseEstimator(), m_robotSwerveDrive),
-                // new InstantCommand(() -> m_robotSwerveDrive.setOdometry(trajectory.getInitialPose())),
-                swerveControllerCommand,
-                new InstantCommand(() -> m_robotSwerveDrive.stopModules()));
+        return new JoystickPlayback(m_robotSwerveDrive);
     }
 
     public DeadbandedXboxController getDeadbandedDriverController() {
