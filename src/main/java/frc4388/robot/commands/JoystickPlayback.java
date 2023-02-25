@@ -42,6 +42,9 @@ public class JoystickPlayback extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    outputs.clear();
+    m_finished = false;
+
     startTime = System.currentTimeMillis();
     playbackTime = 0;
     lastIndex    = 0;
