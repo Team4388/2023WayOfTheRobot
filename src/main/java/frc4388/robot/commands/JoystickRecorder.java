@@ -22,19 +22,22 @@ public class JoystickRecorder extends CommandBase {
   public  final Supplier<Double>       leftY;
   public  final Supplier<Double>       rightX;
   public  final Supplier<Double>       rightY;
+  private       String                 filename;
   public  final ArrayList<TimedOutput> outputs   = new ArrayList<>();
   private       long                   startTime = -1;
 
 
   /** Creates a new JoystickRecorder. */
   public JoystickRecorder(SwerveDrive swerve, Supplier<Double> leftX,  Supplier<Double> leftY,
-                                              Supplier<Double> rightX, Supplier<Double> rightY)
+                                              Supplier<Double> rightX, Supplier<Double> rightY,
+                                              String filename)
   {
     this.swerve = swerve;
     this.leftX  = leftX;
     this.leftY  = leftY;
     this.rightX = rightX;
     this.rightY = rightY;
+    this.filename = filename;
 
     addRequirements(this.swerve);
   }
@@ -67,7 +70,7 @@ public class JoystickRecorder extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    File output = new File("/home/lvuser/BlueNearDriveToChargeStation.txt");
+    File output = new File("/home/lvuser/" + filename);
 
     try (PrintWriter writer = new PrintWriter(output)) {
       for (var input : outputs) {
