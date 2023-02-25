@@ -67,7 +67,7 @@ public class JoystickRecorder extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    File output = new File("/home/lvuser/JoystickInputs.txt");
+    File output = new File("/home/lvuser/BlueNearDriveToChargeStation.txt");
 
     try (PrintWriter writer = new PrintWriter(output)) {
       for (var input : outputs) {
