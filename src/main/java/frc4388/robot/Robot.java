@@ -13,6 +13,7 @@ import java.io.PrintWriter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.RobotTime;
@@ -41,7 +42,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    
+    SmartDashboard.putData("AutoPlayback Chooser", m_robotContainer.chooser);
   }
 
   /**
@@ -70,6 +71,8 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotTime.endMatchTime();
+
+    SmartDashboard.putData("AutoPlayback Chooser", m_robotContainer.chooser);
   }
 
   @Override

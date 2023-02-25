@@ -64,7 +64,7 @@ public class RobotContainer {
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
     /* Autos */
-    private SendableChooser<Command> chooser = new SendableChooser<>();
+    public SendableChooser<Command> chooser = new SendableChooser<>();
     
     private Command noAuto = new InstantCommand();
     
@@ -143,8 +143,8 @@ public class RobotContainer {
                                             "Blue1Path.txt"))
             .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"));
 
         // * Operator Buttons
     }
@@ -157,7 +157,6 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
 
         return chooser.getSelected();
-        // return new InstantCommand();
     }
 
     public DeadbandedXboxController getDeadbandedDriverController() {
