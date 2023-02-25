@@ -37,6 +37,7 @@ import frc4388.robot.Constants.SwerveDriveConstants.PIDConstants;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.commands.JoystickRecorder;
+import frc4388.robot.commands.PlaybackChooser;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController;
@@ -102,8 +103,6 @@ public class RobotContainer {
         chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
         
         chooser.addOption("Taxi", taxi);
-
-        SmartDashboard.putData(chooser);
 
         PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive,
             "Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
