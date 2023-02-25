@@ -79,6 +79,7 @@ public class RobotContainer {
 
     private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
+    PlaybackChooser playbackChooser;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -104,8 +105,9 @@ public class RobotContainer {
         
         chooser.addOption("Taxi", taxi);
 
-        PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive,
-            "Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+        playbackChooser = new PlaybackChooser(m_robotSwerveDrive,
+            "Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive),
+            "Balance2", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> playbackChooser.appendCommand()));
@@ -154,8 +156,8 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-
-        return chooser.getSelected();
+        // return chooser.getSelected();
+        return playbackChooser.getCommand();
     }
 
     public DeadbandedXboxController getDeadbandedDriverController() {
