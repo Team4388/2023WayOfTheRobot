@@ -70,12 +70,13 @@ public class RobotContainer {
     
     private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
     
-    private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "BlueNearDriveToChargeStation.txt");
-    private Command blue1PathWithBalance = blue1Path.andThen(balance);
+    private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
+    private Command blue1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt").andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
     
-    private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "BlueNearDriveToChargeStation.txt", -1);
-    private Command red1PathWithBalance = red1Path.andThen(balance);
+    private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1);
+    private Command red1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1).andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
+    private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -99,6 +100,8 @@ public class RobotContainer {
 
         chooser.addOption("Red1Path", red1Path);
         chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
+        
+        chooser.addOption("Taxi", taxi);
 
         SmartDashboard.putData(chooser);
     }
@@ -127,11 +130,12 @@ public class RobotContainer {
                                             () -> getDeadbandedDriverController().getLeftX(),
                                             () -> getDeadbandedDriverController().getLeftY(),
                                             () -> getDeadbandedDriverController().getRightX(),
-                                            () -> getDeadbandedDriverController().getRightY()))
+                                            () -> getDeadbandedDriverController().getRightY(),
+                                            "Blue1Path.txt"))
             .onFalse(new InstantCommand());
 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, 1));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"));
 
         // * Operator Buttons
     }
