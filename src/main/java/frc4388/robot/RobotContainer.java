@@ -107,9 +107,6 @@ public class RobotContainer {
 
         playbackChooser = new PlaybackChooser(m_robotSwerveDrive,
             "Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
-
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> playbackChooser.appendCommand()));
     }
 
 
