@@ -15,8 +15,7 @@ public class PlaybackChooser {
     private SendableChooser<Command>            m_playback    = new SendableChooser<>();
     private HashMap<String, Command>            m_commandPool = new HashMap<>();
 
-    private File m_dir = new File("/home/lvuser/autos/");
-
+    private File        m_dir = new File("/home/lvuser/autos/");
     private SwerveDrive m_swerve;
 
     // commands
@@ -26,16 +25,17 @@ public class PlaybackChooser {
         m_swerve = swerve;
 
         for (int i = 0; i < pool.length; i += 2) {
-            if (!(pool[i]     instanceof String))  throw new RuntimeException("Need (string, command)");
-            if (!(pool[i + 1] instanceof Command)) throw new RuntimeException("Need (string, command)");
+            if (!(pool[i]     instanceof String) || !(pool[i + 1] instanceof Command)) {
+                throw new RuntimeException("Need (string, command)");
+            }
 
             m_commandPool.put((String) pool[i], (Command) pool[i + 1]);
         }
 
-        m_playback.addOption("No Auto", m_noAuto);
         for (String auto : m_dir.list()) {
             m_playback.addOption(auto, new JoystickPlayback(m_swerve, auto));
         }
+        m_playback.addOption("No Auto", m_noAuto);
 
         m_choosers.add(m_playback);
         SmartDashboard.putData("Command: 0", m_playback);
@@ -66,11 +66,15 @@ public class PlaybackChooser {
     }
 
     public Command getCommand() {
-        Command command = m_playback.getSelected().asProxy();
+        Command command = m_playback.getSelected();
+        command = command == null ? m_noAuto : command.asProxy();
         
         Command[] commands = new Command[m_choosers.size() - 1];
         for (int i = 0; i < m_choosers.size()-1; i++) {
-            commands[i] = m_choosers.get(i + 1).getSelected().asProxy();
+            Command command2 = m_choosers.get(i + 1).getSelected();
+            command2 = command2 == null ? m_noAuto : command2.asProxy();
+            
+            commands[i] = command2.asProxy();
         }
 
         return command.andThen(commands);
