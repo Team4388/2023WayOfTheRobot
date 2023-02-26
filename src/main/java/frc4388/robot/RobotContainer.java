@@ -69,17 +69,17 @@ public class RobotContainer {
     
     private Command noAuto = new InstantCommand();
     
-    private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
+    // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
     
-    private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
-    private Command blue1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt").andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+    // private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
+    // private Command blue1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt").andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
     
-    private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1);
-    private Command red1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1).andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+    // private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1);
+    // private Command red1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1).andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
-    private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
+    // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
-    PlaybackChooser playbackChooser;
+    private PlaybackChooser playbackChooser;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -95,15 +95,15 @@ public class RobotContainer {
             .withName("SwerveDrive DefaultCommand"));
         
         // * Auto Commands
-        chooser.setDefaultOption("NoAuto", noAuto);
+        // chooser.setDefaultOption("NoAuto", noAuto);
 
-        chooser.addOption("Blue1Path", blue1Path);
-        chooser.addOption("Blue1PathWithBalance", blue1PathWithBalance);
+        // chooser.addOption("Blue1Path", blue1Path);
+        // chooser.addOption("Blue1PathWithBalance", blue1PathWithBalance);
 
-        chooser.addOption("Red1Path", red1Path);
-        chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
+        // chooser.addOption("Red1Path", red1Path);
+        // chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
         
-        chooser.addOption("Taxi", taxi);
+        // chooser.addOption("Taxi", taxi);
 
         playbackChooser = new PlaybackChooser(m_robotSwerveDrive,
             "Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
