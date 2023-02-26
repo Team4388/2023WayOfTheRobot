@@ -105,8 +105,9 @@ public class RobotContainer {
         
         // chooser.addOption("Taxi", taxi);
 
-        playbackChooser = new PlaybackChooser(m_robotSwerveDrive,
-            "Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+        playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
+            .addOption("Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive))
+            .buildDisplay();
     }
 
 
@@ -136,9 +137,6 @@ public class RobotContainer {
                                             () -> getDeadbandedDriverController().getRightY(),
                                             "Blue1Path.txt"))
             .onFalse(new InstantCommand());
-
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"));
 
         // * Operator Buttons
     }
