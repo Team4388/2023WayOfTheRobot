@@ -111,9 +111,6 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> playbackChooser.appendCommand()));
-        
-        new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> playbackChooser.appendPlayback()));
     }
 
 
