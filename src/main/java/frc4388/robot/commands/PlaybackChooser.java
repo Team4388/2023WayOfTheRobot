@@ -47,13 +47,13 @@ public class PlaybackChooser {
     public void appendCommand() {
         var chooser = new SendableChooser<Command>();
 
+        chooser.setDefaultOption("No Auto", m_noAuto);
         for (String auto : m_dir.list()) {
             m_playback.addOption(auto, new JoystickPlayback(m_swerve, auto));
         }
         for (var cmd_name : m_commandPool.keySet()) {
             chooser.addOption(cmd_name, m_commandPool.get(cmd_name));
         }
-        chooser.addOption("No Auto", m_noAuto);
 
         m_choosers.add(chooser);
         Shuffleboard.getTab("Auto Chooser")
