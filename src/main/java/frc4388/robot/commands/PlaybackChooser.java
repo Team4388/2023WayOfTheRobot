@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,7 +37,10 @@ public class PlaybackChooser {
 
         appendCommand();
         m_playback = m_choosers.get(0);
-        SmartDashboard.putData("Command: 0", m_playback);
+
+        Shuffleboard.getTab("Auto Chooser")
+            .add("Add Sequence", new InstantCommand(() -> appendCommand()))
+            .withPosition(4, 0);
     }
 
     // This will be bound to a button for the time being
@@ -50,7 +56,11 @@ public class PlaybackChooser {
         chooser.addOption("No Auto", m_noAuto);
 
         m_choosers.add(chooser);
-        SmartDashboard.putData("Command: " + m_choosers.size(), chooser);
+        Shuffleboard.getTab("Auto Chooser")
+            .add("Command: " + m_choosers.size(), chooser)
+            .withSize(4, 1)
+            .withPosition(0, 0)
+            .withWidget(BuiltInWidgets.kSplitButtonChooser);
     }
 
     public Command getCommand() {
