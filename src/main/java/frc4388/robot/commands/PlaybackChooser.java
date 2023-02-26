@@ -15,7 +15,7 @@ import frc4388.robot.subsystems.SwerveDrive;
 
 public class PlaybackChooser {
     private final ArrayList<SendableChooser<Command>> m_choosers    = new ArrayList<>();
-    private final SendableChooser<Command>            m_playback;
+    private       SendableChooser<Command>            m_playback    = null;
     private final HashMap<String, Command>            m_commandPool = new HashMap<>();
 
     private final File        m_dir = new File("/home/lvuser/autos/");
@@ -26,21 +26,21 @@ public class PlaybackChooser {
     
     public PlaybackChooser(SwerveDrive swerve, Object... pool) {
         m_swerve = swerve;
+    }
 
-        for (int i = 0; i < pool.length; i += 2) {
-            if (!(pool[i]     instanceof String) || !(pool[i + 1] instanceof Command)) {
-                throw new RuntimeException("Need (string, command)");
-            }
+    public PlaybackChooser addOption(String name, Command option) {
+        m_commandPool.put(name, option);
+        return this;
+    }
 
-            m_commandPool.put((String) pool[i], (Command) pool[i + 1]);
-        }
-
+    public PlaybackChooser buildDisplay() {
         appendCommand();
         m_playback = m_choosers.get(0);
 
         Shuffleboard.getTab("Auto Chooser")
             .add("Add Sequence", new InstantCommand(() -> appendCommand()))
             .withPosition(4, 0);
+        return this;
     }
 
     // This will be bound to a button for the time being
