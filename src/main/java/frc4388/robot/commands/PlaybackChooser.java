@@ -59,7 +59,7 @@ public class PlaybackChooser {
         Shuffleboard.getTab("Auto Chooser")
             .add("Command: " + m_choosers.size(), chooser)
             .withSize(4, 1)
-            .withPosition(0, 0)
+            .withPosition(0, m_choosers.size() - 1)
             .withWidget(BuiltInWidgets.kSplitButtonChooser);
     }
 
