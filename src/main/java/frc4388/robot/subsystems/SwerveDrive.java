@@ -19,10 +19,10 @@ import frc4388.utility.RobotGyro;
 
 public class SwerveDrive extends SubsystemBase {
   
-  public SwerveModule leftFront;
-  public SwerveModule rightFront;
-  public SwerveModule leftBack;
-  public SwerveModule rightBack;
+  private SwerveModule leftFront;
+  private SwerveModule rightFront;
+  private SwerveModule leftBack;
+  private SwerveModule rightBack;
 
   private SwerveModule[] modules;
 
@@ -106,7 +106,7 @@ public class SwerveDrive extends SubsystemBase {
    * @param desiredStates Array of module states to set.
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
-    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Units.metersToFeet(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    SwerveDriveKinematics.desaturateWheelSpeeds(desiredStates, Units.feetToMeters(SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
     for (int i = 0; i < desiredStates.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = desiredStates[i];
@@ -205,7 +205,7 @@ public class SwerveDrive extends SubsystemBase {
 
   /**
    * Resets the odometry of the SwerveDrive to 0.
-   * *NOTE: If you reset your gyroscope or wheel encoders, this method MUST be called with the new gyro angle and wheel encoder positions.
+   * *NOTE: If you reset your gyro, this method MUST be called with the new gyro angle and wheel encoder positions.
    */
   // public void resetOdometry() {
   //   setOdometry(new Pose2d());
