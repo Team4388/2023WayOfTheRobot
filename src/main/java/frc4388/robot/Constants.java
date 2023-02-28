@@ -47,18 +47,17 @@ public final class Constants {
     public static final class PIDConstants {
       public static final int SWERVE_SLOT_IDX = 0;
       public static final int SWERVE_PID_LOOP_IDX = 1;
-      public static final Gains SWERVE_GAINS = new Gains(1.0, 0.0, 0.0, 0.0, 0, 1.0);
+      public static final Gains SWERVE_GAINS = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
     }
 
     public static final class AutoConstants {
-      public static final PIDController X_CONTROLLER = new PIDController(0.0, 0.0, 0.0);
-      public static final PIDController Y_CONTROLLER = new PIDController(0.0, 0.0, 0.0);
-      public static final ProfiledPIDController THETA_CONTROLLER = new ProfiledPIDController(0.0, 0.0, 0.0, 
-        new TrapezoidProfile.Constraints(0.0, 0.0)
-      );
+      public static final Gains X_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+      public static final Gains Y_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+      public static final Gains THETA_CONTROLLER = new Gains(-0.8, 0.0, 0.0);
+      public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(Math.PI/2, Math.PI/2); // TODO: tune
 
-      public static final double PATH_MAX_VEL = -1; // TODO: find the actual value
-      public static final double PATH_MAX_ACC = -1; // TODO: find the actual value
+      public static final double PATH_MAX_VEL = 0.3; // TODO: find the actual value
+      public static final double PATH_MAX_ACC = 0.3; // TODO: find the actual value
     }
 
     public static final class Conversions {
@@ -89,7 +88,8 @@ public final class Constants {
       public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
     }
 
-    public static final double MAX_SPEED_FEET_PER_SECOND = 10; // TODO: find the actual value
+    public static final double MAX_SPEED_FEET_PER_SECOND = 5; // TODO: find the actual value
+    public static final double MAX_ANGULAR_SPEED_FEET_PER_SECOND = 2 * 2 * Math.PI; // TODO: find the actual value
 
     // dimensions
     public static final double WIDTH = 18.5;
