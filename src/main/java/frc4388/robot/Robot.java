@@ -10,8 +10,13 @@ package frc4388.robot;
 import java.lang.System;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.RobotTime;
@@ -45,6 +50,8 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+
+    SmartDashboard.putData("AutoPlayback Chooser", m_robotContainer.chooser);
   }
 
   /**
@@ -94,6 +101,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.m_robotSwerveDrive.resetGyro();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     // schedule the autonomous command (example)
@@ -112,6 +120,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.m_robotSwerveDrive.resetGyro();
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -119,6 +129,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.m_robotSwerveDrive.resetGyro();
     m_robotTime.startMatchTime();
   }
 
