@@ -20,8 +20,8 @@ import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
 
 public class SwerveModule extends SubsystemBase {
-    public WPI_TalonFX driveMotor;
-    public WPI_TalonFX angleMotor;
+    private WPI_TalonFX driveMotor;
+    private WPI_TalonFX angleMotor;
     private CANCoder encoder;
 
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
@@ -44,6 +44,9 @@ public class SwerveModule extends SubsystemBase {
         angleMotor.configAllSettings(angleConfig);
 
         encoder.configMagnetOffset(offset);
+        
+        driveMotor.setSelectedSensorPosition(0);
+        driveMotor.config_kP(0, 0.2);
     }
 
     /**
@@ -77,6 +80,18 @@ public class SwerveModule extends SubsystemBase {
     public Rotation2d getAngle() {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
+    }
+    
+    public double getAngularVel() {
+        return this.angleMotor.getSelectedSensorVelocity();
+    }
+
+    public double getDrivePos() {
+        return this.driveMotor.getSelectedSensorPosition() / SwerveDriveConstants.Conversions.TICKS_PER_MOTOR_REV;
+    }
+
+    public double getDriveVel() {
+        return this.driveMotor.getSelectedSensorVelocity(0);
     }
 
     public void stop() {
@@ -129,8 +144,7 @@ public class SwerveModule extends SubsystemBase {
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
 
-        driveMotor.set(-1 * angleMotor.get() + feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND);
-        // driveMotor.set(TalonFXControlMode.Velocity, inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);
+        driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
     }
 
     public void reset(double position) {
