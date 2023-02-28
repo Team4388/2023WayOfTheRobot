@@ -125,9 +125,7 @@ public class SwerveModule extends SubsystemBase {
         // convert the CANCoder from its position reading to ticks
         double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
 
-        if (!ignoreAngle) {
-            angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
-        }
+        angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
 
