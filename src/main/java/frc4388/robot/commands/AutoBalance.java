@@ -16,7 +16,7 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 
 	/** Creates a new AutoBalanceTF2. */
 	public AutoBalance(RobotGyro gyro, SwerveDrive drive) {
-		super(1.0, 0, 0, 0);
+		super(0.6, 0, 0, 0);
 
 		this.gyro = gyro;
 		this.drive = drive;
