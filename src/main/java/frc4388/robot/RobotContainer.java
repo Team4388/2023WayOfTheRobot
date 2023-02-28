@@ -128,7 +128,7 @@ public class RobotContainer {
         //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
         //     // .onFalse()
 
-        new JoystickButton(getDriverJoystick(), XboxController.Y_BUTTON)
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
