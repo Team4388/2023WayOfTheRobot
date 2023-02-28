@@ -5,6 +5,7 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.RobotGyro;
