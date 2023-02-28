@@ -40,6 +40,9 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator;
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
+  
+  public Rotation2d rotTarget = new Rotation2d();
+  public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   /** Creates a new SwerveDrive. */
   public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack) {//, RobotGyro gyro) {
