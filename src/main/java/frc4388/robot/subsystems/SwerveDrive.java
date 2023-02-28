@@ -45,7 +45,7 @@ public class SwerveDrive extends SubsystemBase {
   public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   /** Creates a new SwerveDrive. */
-  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack) {//, RobotGyro gyro) {
+  public SwerveDrive(SwerveModule leftFront, SwerveModule rightFront, SwerveModule leftBack, SwerveModule rightBack, RobotGyro gyro) {
     this.leftFront = leftFront;
     this.rightFront = rightFront;
     this.leftBack = leftBack;
