@@ -9,10 +9,10 @@ package frc4388.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
@@ -40,7 +40,7 @@ public class RobotMap {
   }
 
   /* LED Subsystem */
-  public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
+  // public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
 
   void configureLEDMotorControllers() {
         
@@ -115,19 +115,18 @@ public class RobotMap {
 
     rightBackWheel.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
     rightBackSteer.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
-
-    // config magnet offset
-    leftFrontEncoder.configMagnetOffset(SwerveDriveConstants.Configurations.LEFT_FRONT_ENCODER_OFFSET);
-    rightFrontEncoder.configMagnetOffset(SwerveDriveConstants.Configurations.RIGHT_FRONT_ENCODER_OFFSET);
-    leftBackEncoder.configMagnetOffset(SwerveDriveConstants.Configurations.LEFT_BACK_ENCODER_OFFSET);
-    rightBackEncoder.configMagnetOffset(SwerveDriveConstants.Configurations.RIGHT_BACK_ENCODER_OFFSET);
+    
+    // set neutral mode
+    leftFrontSteer.setNeutralMode(NeutralMode.Brake);
+    rightFrontSteer.setNeutralMode(NeutralMode.Brake);
+    leftBackSteer.setNeutralMode(NeutralMode.Brake);
+    rightBackSteer.setNeutralMode(NeutralMode.Brake);
 
     // initialize SwerveModules
-    this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, SwerveDriveConstants.Configurations.LEFT_FRONT_ENCODER_OFFSET);
-    this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, SwerveDriveConstants.Configurations.RIGHT_FRONT_ENCODER_OFFSET);
-    this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, SwerveDriveConstants.Configurations.LEFT_BACK_ENCODER_OFFSET);
-    this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, SwerveDriveConstants.Configurations.RIGHT_BACK_ENCODER_OFFSET);
-
+    this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, -181.230469);
+    this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, -270.615234);
+    this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, -240.029297);
+    this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, -40.869142);
   }
 
   // arm stuff

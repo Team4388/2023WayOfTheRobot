@@ -54,6 +54,12 @@ public class Gains {
         this.kMinOutput = -1.0;
     }
 
+    public Gains(double kP, double kI, double kD) {
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+    }
+
     /**
      * Creates Gains object for PIDs
      * @param kP The P value.

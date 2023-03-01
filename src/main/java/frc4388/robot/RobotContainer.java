@@ -7,18 +7,43 @@
 
 package frc4388.robot;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.opencv.objdetect.HOGDescriptor;
+
+import edu.wpi.first.math.controller.HolonomicDriveController;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.Constants.SwerveDriveConstants.AutoConstants;
+import frc4388.robot.Constants.SwerveDriveConstants.PIDConstants;
+import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.LEDPatterns;
-import frc4388.utility.RobotGyro;
 import frc4388.utility.controller.IHandController;
+import frc4388.robot.commands.JoystickPlayback;
+import frc4388.robot.commands.JoystickRecorder;
+import frc4388.robot.commands.PlaybackChooser;
+import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController;
 
 /**
@@ -30,42 +55,68 @@ import frc4388.utility.controller.XboxController;
  */
 public class RobotContainer {
     /* RobotMap */
-    private final RobotMap m_robotMap = new RobotMap();
+    public final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
-    private final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront, m_robotMap.rightFront, m_robotMap.leftBack, m_robotMap.rightBack, m_robotMap.gyro);
     private final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
     private final LED m_robotLED = new LED(m_robotMap.LEDController);
 
     
+    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront,
+                                                                  m_robotMap.rightFront,
+                                                                  m_robotMap.leftBack,
+                                                                  m_robotMap.rightBack,
+                                                                  m_robotMap.gyro);
 
     /* Controllers */
-    private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
-    private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+    private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
+    private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
-    public RobotGyro gyroRef = m_robotMap.gyro;
+    /* Autos */
+    public SendableChooser<Command> chooser = new SendableChooser<>();
+    
+    private Command noAuto = new InstantCommand();
+    
+    // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
+    
+    // private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
+    // private Command blue1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt").andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+    
+    // private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1);
+    // private Command red1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1).andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
+    // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
+
+    private PlaybackChooser playbackChooser;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         configureButtonBindings();
 
-        /* Default Commands */
-        // drives the robot with a two-axis input from the driver controller
-        // continually sends updates to the Blinkin LED controller to keep the lights on
-        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+        // * Default Commands
+        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+                m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
+                                                  getDeadbandedDriverController().getRight(),
+                                                  true);
+            }, m_robotSwerveDrive)
+            .withName("SwerveDrive DefaultCommand"));
+        
+        // * Auto Commands
+        // chooser.setDefaultOption("NoAuto", noAuto);
 
-        m_robotSwerveDrive.setDefaultCommand(
-            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(-getDriverController().getLeftXAxis(), 
-                                                                    getDriverController().getLeftYAxis(), 
-                                                                   -getDriverController().getRightXAxis(), false), m_robotSwerveDrive)
-        );
+        // chooser.addOption("Blue1Path", blue1Path);
+        // chooser.addOption("Blue1PathWithBalance", blue1PathWithBalance);
+        // chooser.addOption("Red1Path", red1Path);
+        // chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
+        
+        // chooser.addOption("Taxi", taxi);
 
-        m_robotArm.setDefaultCommand(new RunCommand(() -> m_robotArm.armSetLength(
-            getOperatorController().getLeftYAxis()), m_robotArm)
-        );
+        playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
+            .addOption("Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive))
+            .buildDisplay();
     }
+
 
     /**
      * Use this method to define your button->command mappings. Buttons can be
@@ -74,20 +125,27 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        /* Driver Buttons */
+        // * Driver Buttons
+        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
-        new JoystickButton(getDriverJoystick(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> gyroRef.reset()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+        //     // .onFalse()
 
-        /* Operator Buttons */
-        // activates "Lit Mode"
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-            .whileTrue(new RunCommand(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW), m_robotLED))
-            .whileFalse(new RunCommand(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN), m_robotLED));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
-        //New interupt button
-        new JoystickButton(getOperatorJoystick(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand());
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+                                            () -> getDeadbandedDriverController().getLeftX(),
+                                            () -> getDeadbandedDriverController().getLeftY(),
+                                            () -> getDeadbandedDriverController().getRightX(),
+                                            () -> getDeadbandedDriverController().getRightY(),
+                                            "Blue1Path.txt"))
+            .onFalse(new InstantCommand());
+
+        // * Operator Buttons
     }
 
     /**
@@ -96,35 +154,16 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // no auto
-        return new InstantCommand();
+        // return chooser.getSelected();
+        return playbackChooser.getCommand();
     }
 
-    /**
-     * Add your docs here.
-     */
-    public IHandController getDriverController() {
-        return m_driverXbox;
+    public DeadbandedXboxController getDeadbandedDriverController() {
+        return this.m_driverXbox;
     }
 
-    /**
-     * Add your docs here.
-     */
-    public IHandController getOperatorController() {
-        return m_operatorXbox;
+    public DeadbandedXboxController getDeadbandedOperatorController() {
+        return this.m_operatorXbox;
     }
 
-    /**
-     * Add your docs here.
-     */
-    public Joystick getOperatorJoystick() {
-        return m_operatorXbox.getJoyStick();
-    }
-
-    /**
-     * Add your docs here.
-     */
-    public Joystick getDriverJoystick() {
-        return m_driverXbox.getJoyStick();
-    }
 }
