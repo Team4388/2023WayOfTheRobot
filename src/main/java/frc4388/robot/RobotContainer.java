@@ -7,42 +7,17 @@
 
 package frc4388.robot;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.opencv.objdetect.HOGDescriptor;
-
-import edu.wpi.first.math.controller.HolonomicDriveController;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.math.trajectory.Trajectory.State;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.subsystems.Arm;
-import frc4388.robot.subsystems.LED;
-import frc4388.robot.Constants.SwerveDriveConstants.AutoConstants;
-import frc4388.robot.Constants.SwerveDriveConstants.PIDConstants;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.controller.IHandController;
-import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.commands.PlaybackChooser;
-import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController;
 
@@ -59,7 +34,7 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
-    private final LED m_robotLED = new LED(m_robotMap.LEDController);
+    // private final LED m_robotLED = new LED(m_robotMap.LEDController);
 
     
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront,
@@ -75,7 +50,7 @@ public class RobotContainer {
     /* Autos */
     public SendableChooser<Command> chooser = new SendableChooser<>();
     
-    private Command noAuto = new InstantCommand();
+    // private Command noAuto = new InstantCommand();
     
     // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
     
