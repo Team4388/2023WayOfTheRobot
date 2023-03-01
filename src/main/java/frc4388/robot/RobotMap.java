@@ -9,12 +9,10 @@ package frc4388.robot;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
 import frc4388.robot.Constants.ArmConstants;
-import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
 import frc4388.utility.RobotGyro;
