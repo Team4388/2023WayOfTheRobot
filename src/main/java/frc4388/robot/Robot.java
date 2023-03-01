@@ -7,6 +7,9 @@
 
 package frc4388.robot;
 
+import java.lang.System;
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +20,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.RobotTime;
+
+import frc4388.robot.subsystems.Location;
+import frc4388.robot.subsystems.Apriltags.Tag;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -30,6 +37,8 @@ public class Robot extends TimedRobot {
   
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
+
+  private Location location = new Location();
 
 
   /**
@@ -61,6 +70,13 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    final Tag pos = location.getPosRot();
+    if (pos != null) {
+      SmartDashboard.putNumber("x position", pos.x);
+    }
+
+    //ystem.out.print(apriltagPos[0]);
   }
 
   /**
