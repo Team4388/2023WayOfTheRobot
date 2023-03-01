@@ -81,7 +81,7 @@ public class SwerveModule extends SubsystemBase {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
     }
-
+    
     public double getAngularVel() {
         return this.angleMotor.getSelectedSensorVelocity();
     }
@@ -126,7 +126,7 @@ public class SwerveModule extends SubsystemBase {
      * Set the speed and rotation of the SwerveModule from a SwerveModuleState object
      * @param desiredState a SwerveModuleState representing the desired new state of the module
      */
-    public void setDesiredState(SwerveModuleState desiredState, boolean ignoreAngle) {
+    public void setDesiredState(SwerveModuleState desiredState) {
         Rotation2d currentRotation = this.getAngle();
 
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
@@ -140,18 +140,11 @@ public class SwerveModule extends SubsystemBase {
         // convert the CANCoder from its position reading to ticks
         double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
 
-        if (!ignoreAngle) {
-            angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
-        }
+        angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-        // double inchesPerSecond = Units.metersToFeet(state.speedMetersPerSecond) * 12;
 
-        // driveMotor.set(TalonFXControlMode.Velocity, inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);
-        // driveMotor.set(0.1);
-        // double angleCorrection = getAngularVel() * 2.69;
         driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-        // driveMotor.set(TalonFXControlMode.Velocity, angleCorrection + inchesPerSecond * SwerveDriveConstants.Conversions.TICKS_PER_INCH * SwerveDriveConstants.Conversions.SECONDS_TO_TICK_TIME);
     }
 
     public void reset(double position) {

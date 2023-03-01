@@ -63,8 +63,8 @@ public final class Constants {
     public static final class Conversions {
       public static final int CANCODER_TICKS_PER_ROTATION = 4096;
 
-      public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 11.0; // TODO: find the actual value
-      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 1.0; // TODO: find the actual value
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 5.8;
+      public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 0.8;
 
       public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
       public static final double MOTOR_REV_PER_STEER_REV = 12.8;
@@ -86,22 +86,6 @@ public final class Constants {
       public static final double OPEN_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
       public static final double CLOSED_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
       public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
-
-      // public static final double LEFT_FRONT_ENCODER_OFFSET = (4 * 360. - 232.6466 + 180 - 90) % 360.; // * 2022 SwerveDrive values
-      // public static final double RIGHT_FRONT_ENCODER_OFFSET = (4 * 360. - 152.1265 - 180 - 90) % 360.; // * 2022 SwerveDrive values
-      // public static final double LEFT_BACK_ENCODER_OFFSET = (4 * 360. - 189.4834 - 90) % 360.; // * 2022 SwerveDrive values
-      // public static final double RIGHT_BACK_ENCODER_OFFSET = (4 * 360. - 9.3156 - 180 - 90) % 360.; // * 2022 SwerveDrive values
-      
-      // public static final double LEFT_FRONT_ENCODER_OFFSET = (4 * 360. - 152.1265 - 180 - 90) % 360.; // * 2023 translated values (don't work)
-      // public static final double RIGHT_FRONT_ENCODER_OFFSET = (4 * 360. - 9.3156 - 180 - 90) % 360.; // * 2023 translated values (don't work)
-      // public static final double LEFT_BACK_ENCODER_OFFSET = (4 * 360. - 232.6466 + 180 - 90) % 360.; // * 2023 translated values (don't work)
-      // public static final double RIGHT_BACK_ENCODER_OFFSET = (4 * 360. - 189.4834 - 90) % 360.; // * 2023 translated values (don't work)
-      
-      // public static final double LEFT_FRONT_ENCODER_OFFSET = 0.0 + 90.0; // * 2023 experimentally-derived values (mostly work) 
-      // public static final double RIGHT_FRONT_ENCODER_OFFSET = 0.0; // * 2023 experimentally-derived values (mostly work) 
-      // public static final double LEFT_BACK_ENCODER_OFFSET = 0.0 + 24.0; // * 2023 experimentally-derived values (mostly work) 
-      // public static final double RIGHT_BACK_ENCODER_OFFSET = 0.0 + 45.0 + 180.0; // * 2023 experimentally-derived values (mostly work)  
-      
     }
 
     public static final double MAX_SPEED_FEET_PER_SECOND = 5; // TODO: find the actual value
@@ -137,10 +121,8 @@ public final class Constants {
   public static final class OIConstants {
     public static final int XBOX_DRIVER_ID = 0;
     public static final int XBOX_OPERATOR_ID = 1;
-    
     public static final double LEFT_AXIS_DEADBAND = 0.1;
     public static final double RIGHT_AXIS_DEADBAND = 0.6;
-
-    public static final boolean SKEW_STICKS = true; 
+    public static final boolean SKEW_STICKS = true; // ! this might have to actually be false, merge conflicts are confusing
   }
 }

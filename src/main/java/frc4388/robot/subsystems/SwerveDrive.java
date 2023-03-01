@@ -4,19 +4,16 @@
 
 package frc4388.robot.subsystems;
 
-
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.RobotGyro;
 
@@ -43,6 +40,7 @@ public class SwerveDrive extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator;
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
+  
   public Rotation2d rotTarget = new Rotation2d();
   public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
@@ -52,6 +50,7 @@ public class SwerveDrive extends SubsystemBase {
     this.rightFront = rightFront;
     this.leftBack = leftBack;
     this.rightBack = rightBack;
+    
     this.gyro = gyro;
 
     // this.odometry = new SwerveDriveOdometry(
@@ -80,7 +79,6 @@ public class SwerveDrive extends SubsystemBase {
 
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
   }
-
 
   public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
     if (fieldRelative) {
@@ -112,7 +110,7 @@ public class SwerveDrive extends SubsystemBase {
     for (int i = 0; i < desiredStates.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = desiredStates[i];
-      module.setDesiredState(state, false);
+      module.setDesiredState(state);
     }
   }
 
@@ -230,7 +228,6 @@ public class SwerveDrive extends SubsystemBase {
 
     // SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
     // SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
-
   }
 
   /**
