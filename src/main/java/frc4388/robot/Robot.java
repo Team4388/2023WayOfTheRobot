@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc4388.utility.RobotTime;
 
 import frc4388.robot.subsystems.Location;
-
+import frc4388.robot.subsystems.Apriltags.Tag;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -71,12 +71,9 @@ public class Robot extends TimedRobot {
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
 
-    // Call position and rotation reorder
-    location.reoderPrio();
-
-    final Object[] pos = location.getPosition();
+    final Tag pos = location.getPosRot();
     if (pos != null) {
-      SmartDashboard.putNumber("name", (Double) pos[0]);
+      SmartDashboard.putNumber("x position", pos.x);
     }
 
     //ystem.out.print(apriltagPos[0]);

@@ -1,40 +1,27 @@
 package frc4388.robot.subsystems;
 
-import frc4388.robot.subsystems.Apriltags;
+import frc4388.robot.subsystems.Apriltags.Tag;
 
 public class Location {
-    final Apriltags Apriltag = new Apriltags();
+    final Apriltags apriltag = new Apriltags();
 
     private boolean isLimelight = false;
     private boolean isApriltag = false;
 
     //Determines which source to get pos and rot from and also resets
-    public void reoderPrio(){
+    private void reoderPrio(){
         isLimelight = false; //If limelight gets position and if within a certain range of poles
-        isApriltag = Apriltag.isAprilTag();
+        isApriltag = apriltag.isAprilTag();
     }
 
-    public Object[] getPosition() {
-        if(isLimelight){
-            //Return Limelight Position
-        }else if(isApriltag){
-            return Apriltag.getApriltagPosition();
+    public Tag getPosRot() {
+        reoderPrio();
+        if(isApriltag){
+            return apriltag.getTagPosRot();
+        } else if (isLimelight) {
+            return null;
         }
 
         return null;
-    }
-
-    public Object[] getRotation() {
-        Object[] Rotation = {};
-
-        if(isLimelight){
-            //Return Limelight Rotation
-        }else if(isApriltag){
-            return Apriltag.getApriltagRotation();
-        }else{
-            //Return odometry Rotation, last resort
-        }
-
-        return Rotation;
     }
 }
