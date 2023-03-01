@@ -46,6 +46,14 @@ public class Arm extends SubsystemBase {
         this(pivot, tele, encoder, false);
     }
 
+    public void setRotVel(double vel) {
+        m_pivot.set(ControlMode.Velocity, vel);
+    }
+
+    public void setTeleVel(double vel) {
+        m_tele.set(ControlMode.Velocity, vel);
+    }
+
     public void armSetRotation(double rot) {
         if (rot > 1 || rot < 0) return;
         // Move arm code
@@ -69,6 +77,11 @@ public class Arm extends SubsystemBase {
     public double getArmLength() {
         return (m_tele.getSelectedSensorPosition() - ArmConstants.TELE_FORWARD_SOFT_LIMIT) /
             (ArmConstants.TELE_REVERSE_SOFT_LIMIT - ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+    }
+
+    public double getArmRotation() {
+        return (m_pivotEncoder.getAbsolutePosition() - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT) /
+            (ArmConstants.PIVOT_REVERSE_SOFT_LIMIT - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
     }
 
     public void runPivotTele(double pivot, double tele) {
