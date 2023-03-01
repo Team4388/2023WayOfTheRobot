@@ -7,11 +7,12 @@
 
 package frc4388.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
 import frc4388.utility.RobotGyro;
@@ -30,10 +31,10 @@ public class RobotMap {
   public SwerveModule leftBack;
   public SwerveModule rightBack;
 
-
   public RobotMap() {
     configureLEDMotorControllers();
     configureDriveMotors();
+    configArmMotors();
   }
 
   /* LED Subsystem */
@@ -59,7 +60,6 @@ public class RobotMap {
   public final WPI_TalonFX rightBackWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_WHEEL_ID);
   public final WPI_TalonFX rightBackSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_STEER_ID);
   public final CANCoder rightBackEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
-
 
   void configureDriveMotors() {
     // config factory default
@@ -125,5 +125,39 @@ public class RobotMap {
     this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, -270.615234);
     this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, -240.029297);
     this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, -40.869142);
+  }
+
+  // arm stuff
+  public WPI_TalonFX pivot        = new WPI_TalonFX(-1); // TODO: Add real id
+  public WPI_TalonFX tele         =  new WPI_TalonFX(-1); // TODO: Add real id
+  public CANCoder    pivotEncoder = new CANCoder(-1);
+
+  public void configArmMotors() {
+    // config factory default
+    pivot.configFactoryDefault();
+    tele.configFactoryDefault();
+
+    // config open loop ramp
+    pivot.configOpenloopRamp(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+    tele.configOpenloopRamp(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+
+    // config closed loop ramp
+    pivot.configClosedloopRamp(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+    tele.configClosedloopRamp(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
+
+    // config neutral mode to brake
+    pivot.setNeutralMode(NeutralMode.Brake);
+    tele.setNeutralMode(NeutralMode.Brake);
+
+    // soft limits
+    pivot.configForwardSoftLimitThreshold(ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
+    pivot.configReverseSoftLimitThreshold(ArmConstants.PIVOT_REVERSE_SOFT_LIMIT);
+    pivot.configForwardSoftLimitEnable(false);
+    pivot.configReverseSoftLimitEnable(false);
+
+    tele.configForwardSoftLimitThreshold(ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+    tele.configReverseSoftLimitThreshold(ArmConstants.TELE_REVERSE_SOFT_LIMIT);
+    tele.configForwardSoftLimitEnable(false);
+    tele.configReverseSoftLimitEnable(false);
   }
 }
