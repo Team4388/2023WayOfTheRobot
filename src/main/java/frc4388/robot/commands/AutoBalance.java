@@ -5,37 +5,44 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
-import frc4388.robot.Robot;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.utility.RobotGyro;
 
-// NOTE:	Consider using this command inline, rather than writing a subclass.	For more
-// information, see:
-// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoBalance extends PelvicInflammatoryDisease {
-	Robot.MicroBot bot;
+	RobotGyro gyro;
+	SwerveDrive drive;
 
 	/** Creates a new AutoBalanceTF2. */
-	public AutoBalance(Robot.MicroBot bot) {
-		super(.7, .1, 15, 0);
-		addRequirements(bot);
-		this.bot = bot;
+	public AutoBalance(RobotGyro gyro, SwerveDrive drive) {
+		super(0.6, 0, 0, 0);
+
+		this.gyro = gyro;
+		this.drive = drive;
+
+		addRequirements(drive);
 	}
 
 	@Override
 	public double getError() {
-		return bot.gyro.getPitch();
+		var pitch = gyro.getRoll();
+		SmartDashboard.putNumber("pitch", pitch);
+		return pitch;
 	}
 
 	@Override
 	public void runWithOutput(double output) {
 		double out2 = MathUtil.clamp(output / 40, -.5, .5);
-		if (Math.abs(bot.gyro.getPitch()) < 3) out2 = 0;
-		bot.setOutput(out2);
+
+		if (Math.abs(getError()) < 3) out2 = 0;
+		drive.driveWithInput(new Translation2d(0, out2), new Translation2d(), false);
 	}
 
 	@Override
 	public void initialize() {
 		super.initialize();
-		this.bot.gyro.reset();
+		// this.gyro.reset();
 	}
 
 	// Returns true when the command should end.

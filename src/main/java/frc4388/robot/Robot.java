@@ -7,18 +7,23 @@
 
 package frc4388.robot;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import java.lang.System;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.commands.AutoBalance;
-import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotTime;
+
+import frc4388.robot.subsystems.Location;
+import frc4388.robot.subsystems.Apriltags.Tag;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -33,34 +38,8 @@ public class Robot extends TimedRobot {
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
 
-  public static class MicroBot extends SubsystemBase {
-    public WPI_Pigeon2 pigeon = new WPI_Pigeon2(14);
-    public RobotGyro gyro = new RobotGyro(pigeon);
+  private Location location = new Location();
 
-    public TalonSRX frontLeft = new TalonSRX(2);
-    public TalonSRX backLeft = new TalonSRX(3);
-    public TalonSRX backRight = new TalonSRX(5);
-    public TalonSRX frontRight = new TalonSRX(4);
-
-    public MicroBot() {
-      frontRight.configFactoryDefault();
-      frontLeft.configFactoryDefault();
-      backLeft.configFactoryDefault();
-      backRight.configFactoryDefault();
-  
-      frontLeft.setInverted(true);
-      backLeft.setInverted(true);
-    }
-
-    public void setOutput(double output) {
-      frontRight.set(ControlMode.PercentOutput, output);
-      frontLeft.set(ControlMode.PercentOutput, output);
-      backLeft.set(ControlMode.PercentOutput, output);
-      backRight.set(ControlMode.PercentOutput, output);
-    }
-  }
-
-  private MicroBot bot = new MicroBot();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -72,7 +51,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    bot.setDefaultCommand(new AutoBalance(bot));
+    SmartDashboard.putData("AutoPlayback Chooser", m_robotContainer.chooser);
   }
 
   /**
@@ -91,6 +70,13 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
+
+    final Tag pos = location.getPosRot();
+    if (pos != null) {
+      SmartDashboard.putNumber("x position", pos.x);
+    }
+
+    //ystem.out.print(apriltagPos[0]);
   }
 
   /**
@@ -112,14 +98,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.m_robotSwerveDrive.resetGyro();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    /*
-     * String autoSelected = SmartDashboard.getString("Auto Selector",
-     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-     * = new MyAutoCommand(); break; case "Default Auto": default:
-     * autonomousCommand = new ExampleCommand(); break; }
-     */
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -137,6 +117,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    m_robotContainer.m_robotSwerveDrive.resetGyro();
+
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -144,9 +126,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.m_robotSwerveDrive.resetGyro();
     m_robotTime.startMatchTime();
-
-    m_robotContainer.gyroRef.reset();
   }
 
   /**
@@ -154,9 +135,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    SmartDashboard.putNumber("yaw", m_robotContainer.gyroRef.getAngle());
-    SmartDashboard.putNumber("pitch", m_robotContainer.gyroRef.getPitch());
-    SmartDashboard.putNumber("roll", m_robotContainer.gyroRef.getRoll());
   }
 
   /**
