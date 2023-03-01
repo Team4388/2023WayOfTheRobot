@@ -1,7 +1,13 @@
 package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+
 import frc4388.robot.Constants.ArmConstants;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -9,19 +15,35 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Arm extends SubsystemBase {
     private WPI_TalonFX m_tele;
     private WPI_TalonFX m_pivot;
-    private boolean m_debug;
+    private CANCoder    m_pivotEncoder;
+    private boolean     m_debug;
 
     // Moves arm to distance [dist] then returns new ang
-    public Arm(WPI_TalonFX pivot, WPI_TalonFX tele, boolean debug) {
-        m_tele = tele;
-        m_pivot = pivot;
+    public Arm(WPI_TalonFX pivot, WPI_TalonFX tele, CANCoder encoder, boolean debug) {
+        m_tele         = tele;
+        m_pivot        = pivot;
+        m_pivotEncoder = encoder;
+
+        TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
+        pivotConfig.slot0.kP = ArmConstants.kP;
+        pivotConfig.slot0.kI = ArmConstants.kI;
+        pivotConfig.slot0.kD = ArmConstants.kD;
+
+        pivotConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
+        pivotConfig.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
+        pivotConfig.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
+        pivot.configAllSettings(pivotConfig);
+
+        CANCoderConfiguration config = new CANCoderConfiguration();
+        config.magnetOffsetDegrees = ArmConstants.OFFSET;
+        m_pivotEncoder.configAllSettings(config);
         
         tele.configFactoryDefault();
         pivot.configFactoryDefault();
     }
 
-    public Arm(WPI_TalonFX pivot, WPI_TalonFX tele) {
-        this(pivot, tele, false);
+    public Arm(WPI_TalonFX pivot, WPI_TalonFX tele, CANCoder encoder) {
+        this(pivot, tele, encoder, false);
     }
 
     public void armSetRotation(double rot) {
@@ -36,6 +58,12 @@ public class Arm extends SubsystemBase {
         // Move arm code
         m_tele.set(ControlMode.Position, len * Math.abs(ArmConstants.TELE_REVERSE_SOFT_LIMIT - ArmConstants.TELE_FORWARD_SOFT_LIMIT) +
             ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+
+        if (m_tele.isRevLimitSwitchClosed() == 1) {
+            m_tele.setSelectedSensorPosition(ArmConstants.TELE_REVERSE_SOFT_LIMIT);
+        } else if (m_tele.isFwdLimitSwitchClosed() == 1) {
+            m_tele.setSelectedSensorPosition(ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+        }
     }
 
     public double getArmLength() {
