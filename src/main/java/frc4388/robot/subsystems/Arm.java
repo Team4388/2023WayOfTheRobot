@@ -33,6 +33,11 @@ public class Arm extends SubsystemBase {
         pivotConfig.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
         pivot.configAllSettings(pivotConfig);
 
+        pivot.configForwardSoftLimitThreshold(ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+        pivot.configReverseSoftLimitThreshold(ArmConstants.TELE_REVERSE_SOFT_LIMIT);
+        pivot.configForwardSoftLimitEnable(true);
+        pivot.configReverseSoftLimitEnable(true);
+
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.magnetOffsetDegrees = ArmConstants.OFFSET;
         m_pivotEncoder.configAllSettings(config);
@@ -46,11 +51,11 @@ public class Arm extends SubsystemBase {
     }
 
     public void setRotVel(double vel) {
-        m_pivot.set(ControlMode.Velocity, vel);
+        m_pivot.set(ControlMode.PercentOutput, vel / 5);
     }
 
     public void setTeleVel(double vel) {
-        m_tele.set(ControlMode.Velocity, vel);
+        m_tele.set(ControlMode.PercentOutput, vel);
     }
 
     public void armSetRotation(double rot) {
@@ -84,7 +89,7 @@ public class Arm extends SubsystemBase {
     }
 
     public void runPivotTele(double pivot, double tele) {
-        var rot = 0;
+        double rot = 0;
 
         if (checkLimits(tele, rot)) {
             armSetRotation(pivot);
@@ -112,7 +117,8 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (m_debug)
-            SmartDashboard.putNumber("Arm Motor", m_tele.getSelectedSensorPosition());
+        // if (m_debug)
+        //     SmartDashboard.putNumber("Arm Motor", m_tele.getSelectedSensorPosition());
+        SmartDashboard.putNumber("Pivot AbsPos", m_pivotEncoder.getAbsolutePosition());
     }
 }

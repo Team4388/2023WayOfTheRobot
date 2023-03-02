@@ -7,19 +7,20 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
-import frc4388.robot.subsystems.Arm;
 import frc4388.robot.commands.AutoBalance;
+import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.commands.PlaybackChooser;
 import frc4388.utility.controller.DeadbandedXboxController;
-import frc4388.utility.controller.XboxController;
+import frc4388.utility.controller.XboxController; 
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -33,15 +34,13 @@ public class RobotContainer {
     public final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
-    private final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
-    // private final LED m_robotLED = new LED(m_robotMap.LEDController);
-
-    
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront,
                                                                   m_robotMap.rightFront,
                                                                   m_robotMap.leftBack,
                                                                   m_robotMap.rightBack,
                                                                   m_robotMap.gyro);
+    
+    public final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
@@ -50,7 +49,7 @@ public class RobotContainer {
     /* Autos */
     public SendableChooser<Command> chooser = new SendableChooser<>();
     
-    // private Command noAuto = new InstantCommand();
+    private Command noAuto = new InstantCommand();
     
     // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
     
@@ -63,6 +62,8 @@ public class RobotContainer {
     // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
     private PlaybackChooser playbackChooser;
+    private PWM             servo      = new PWM(0);
+    private boolean         servo_open = true;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -76,12 +77,19 @@ public class RobotContainer {
                                                   true);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
+
+        m_robotArm.setDefaultCommand(new RunCommand(() -> {
+            m_robotArm.setRotVel(getDeadbandedOperatorController().getLeftY());
+            m_robotArm.setTeleVel(getDeadbandedOperatorController().getRightY());
+        }, m_robotArm)
+        .withName("Arm DefaultCommand"));
         
         // * Auto Commands
         // chooser.setDefaultOption("NoAuto", noAuto);
 
         // chooser.addOption("Blue1Path", blue1Path);
         // chooser.addOption("Blue1PathWithBalance", blue1PathWithBalance);
+
         // chooser.addOption("Red1Path", red1Path);
         // chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
         
@@ -121,6 +129,12 @@ public class RobotContainer {
             .onFalse(new InstantCommand());
 
         // * Operator Buttons
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                servo.setRaw(servo_open ? 1000 : 2000);
+                servo_open = !servo_open;
+            }));
     }
 
     /**
