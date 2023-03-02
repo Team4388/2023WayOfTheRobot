@@ -128,9 +128,9 @@ public class RobotMap {
   }
 
   // arm stuff
-  public WPI_TalonFX pivot        = new WPI_TalonFX(-1); // TODO: Add real id
-  public WPI_TalonFX tele         =  new WPI_TalonFX(-1); // TODO: Add real id
-  public CANCoder    pivotEncoder = new CANCoder(-1);
+  public WPI_TalonFX pivot        = new WPI_TalonFX(15);
+  public WPI_TalonFX tele         = new WPI_TalonFX(16);
+  public CANCoder    pivotEncoder = new CANCoder(17);
 
   public void configArmMotors() {
     // config factory default

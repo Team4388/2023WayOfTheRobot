@@ -103,7 +103,7 @@ public final class Constants {
   }
 
   public static final class GyroConstants {
-    public static final int ID = 14; // TODO: find the actual ID
+    public static final int ID = 14;
   }
 
   public static final class ArmConstants {
