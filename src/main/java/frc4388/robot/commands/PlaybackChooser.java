@@ -42,7 +42,7 @@ public class PlaybackChooser {
         nextChooser();
 
         Shuffleboard.getTab("Auto Chooser")
-            .add("Add Sequence", new InstantCommand(() -> {}))
+            .add("Add Sequence", new InstantCommand(() -> nextChooser()))
             .withPosition(4, 0);
         return this;
     }

@@ -24,7 +24,9 @@ import frc4388.utility.LEDPatterns;
 public final class Constants {
   public static final class SwerveDriveConstants {
 
-    public static final double ROTATION_SPEED = -0.7;
+    public static final double MAX_ROT_SPEED = -0.7;
+    public static final double MIN_ROT_SPEED = -0.3;
+    public static       double ROTATION_SPEED = MAX_ROT_SPEED;
 
     public static final class IDs {
       public static final int LEFT_FRONT_WHEEL_ID = 2;
@@ -114,10 +116,10 @@ public final class Constants {
 
     public static final double TELE_TICKS_PER_SECOND = (-5);
     
-    public static final double PIVOT_FORWARD_SOFT_LIMIT = -1.0; // TODO: find actual value
-    public static final double PIVOT_REVERSE_SOFT_LIMIT = -1.0; // TODO: find actual value
+    public static final double PIVOT_FORWARD_SOFT_LIMIT = 100; // TODO: find actual value
+    public static final double PIVOT_REVERSE_SOFT_LIMIT = 0; // TODO: find actual value
     
-    public static final double TELE_FORWARD_SOFT_LIMIT = 0;
+    public static final double TELE_FORWARD_SOFT_LIMIT = 100;
     public static final double TELE_REVERSE_SOFT_LIMIT = 0;
 
     public static final double kP = 0;
