@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
+import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
@@ -128,6 +129,10 @@ public class RobotContainer {
                                             "Blue1Path.txt"))
             .onFalse(new InstantCommand());
 
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
+            .onFalse(new InstantCommand());
+
         // * Operator Buttons
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
@@ -135,6 +140,9 @@ public class RobotContainer {
                 servo.setRaw(servo_open ? 1000 : 2000);
                 servo_open = !servo_open;
             }));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit()));
     }
 
     /**
