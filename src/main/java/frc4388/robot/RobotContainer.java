@@ -8,6 +8,7 @@
 package frc4388.robot;
 
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,6 +18,7 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.subsystems.Arm;
+import frc4388.robot.subsystems.Claw;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.commands.PlaybackChooser;
@@ -42,6 +44,8 @@ public class RobotContainer {
                                                                   m_robotMap.gyro);
     
     public final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
+
+    public final Claw m_robotClaw = new Claw(m_robotMap.servo);
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
@@ -135,14 +139,22 @@ public class RobotContainer {
 
         // * Operator Buttons
 
+        // TODO: use the claw subsystem
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> {
                 servo.setRaw(servo_open ? 1000 : 2000);
                 servo_open = !servo_open;
             }));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotClaw.setClaw(servo_open)));
+            servo_open = !servo_open;
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-        .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit()));
+            .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive /* claw */));
     }
 
     /**
