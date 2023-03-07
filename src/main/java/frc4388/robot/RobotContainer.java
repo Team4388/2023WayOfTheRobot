@@ -140,11 +140,11 @@ public class RobotContainer {
         // * Operator Buttons
 
         // TODO: use the claw subsystem
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                servo.setRaw(servo_open ? 1000 : 2000);
-                servo_open = !servo_open;
-            }));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {
+        //         servo.setRaw(servo_open ? 1000 : 2000);
+        //         servo_open = !servo_open;
+        //     }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
