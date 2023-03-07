@@ -2,6 +2,8 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -24,7 +26,10 @@ public class Arm extends SubsystemBase {
         m_pivot        = pivot;
         m_pivotEncoder = encoder;
 
-        tele.configFactoryDefault();
+        m_tele.configFactoryDefault();
+        // m_tele.configReverseLimitSwitchSource(null, null);
+        m_tele.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+        m_tele.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         m_pivot.configFactoryDefault();
 
         TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
@@ -150,7 +155,7 @@ public class Arm extends SubsystemBase {
             resetable = true;
         }
 
-        double x = Math.cos(degrees);
+        double x = Math.cos(Math.toRadians(degrees));
         SwerveDriveConstants.ROTATION_SPEED = SwerveDriveConstants.MIN_ROT_SPEED + x * (SwerveDriveConstants.MAX_ROT_SPEED - SwerveDriveConstants.MIN_ROT_SPEED);
         // if (m_debug)
         //     SmartDashboard.putNumber("Arm Motor", m_tele.getSelectedSensorPosition());
