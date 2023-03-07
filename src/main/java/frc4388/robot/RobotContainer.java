@@ -147,8 +147,7 @@ public class RobotContainer {
             }));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotClaw.setClaw(servo_open)));
-            servo_open = !servo_open;
+            .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));

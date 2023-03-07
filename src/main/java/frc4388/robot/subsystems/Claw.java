@@ -18,6 +18,10 @@ public class Claw extends SubsystemBase {
 		m_clawMotor.setRaw(open ? 0 : 2000);
     }
 
+	public void toggle() {
+		setClaw(!m_open);
+	}
+
 	public boolean isClawOpen() {
 		return m_open;
 	}
