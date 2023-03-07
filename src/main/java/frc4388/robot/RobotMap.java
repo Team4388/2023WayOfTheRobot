@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.wpilibj.PWM;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
@@ -160,4 +161,8 @@ public class RobotMap {
     tele.configForwardSoftLimitEnable(false);
     tele.configReverseSoftLimitEnable(false);
   }
+
+  // claw stuff (i will punch someone)
+  PWM servo = new PWM(0);
+
 }

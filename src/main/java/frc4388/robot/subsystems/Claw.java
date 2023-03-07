@@ -1,7 +1,8 @@
 package frc4388.robot.subsystems;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Claw {
+public class Claw extends SubsystemBase {
 	private PWM m_clawMotor;
 	private boolean m_open = false;
 
