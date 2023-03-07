@@ -153,7 +153,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive /* claw */));
+            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));
     }
 
     /**
