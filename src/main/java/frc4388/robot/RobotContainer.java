@@ -67,8 +67,6 @@ public class RobotContainer {
     // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
     private PlaybackChooser playbackChooser;
-    private PWM             servo      = new PWM(0);
-    private boolean         servo_open = true;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -117,8 +115,8 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.toggleGear(), m_robotSwerveDrive));
         //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
@@ -138,16 +136,12 @@ public class RobotContainer {
             .onFalse(new InstantCommand());
 
         // * Operator Buttons
-
-        // TODO: use the claw subsystem
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-        //     .onTrue(new InstantCommand(() -> {
-        //         servo.setRaw(servo_open ? 1000 : 2000);
-        //         servo_open = !servo_open;
-        //     }));
-
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            // .onTrue(new InstantCommand(() -> System.out.println("Claw Button")));
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));

@@ -116,6 +116,11 @@ public class RobotMap {
     rightBackSteer.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
     
     // set neutral mode
+    leftFrontWheel.setNeutralMode(NeutralMode.Brake);
+    rightFrontWheel.setNeutralMode(NeutralMode.Brake);
+    leftBackWheel.setNeutralMode(NeutralMode.Brake);
+    rightBackWheel.setNeutralMode(NeutralMode.Brake);
+
     leftFrontSteer.setNeutralMode(NeutralMode.Brake);
     rightFrontSteer.setNeutralMode(NeutralMode.Brake);
     leftBackSteer.setNeutralMode(NeutralMode.Brake);
