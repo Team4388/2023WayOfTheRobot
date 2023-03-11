@@ -10,10 +10,16 @@ package frc4388.robot;
 import java.lang.System;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.can.MotControllerJNI;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -84,13 +90,27 @@ public class Robot extends TimedRobot {
    * You can use it to reset any subsystem information you want to clear when
    * the robot is disabled.
    */
+  boolean dis = false;
   @Override
   public void disabledInit() {
+    // m_robotContainer.m_robotClaw.setClaw(false);
     m_robotTime.endMatchTime();
+    m_robotContainer.m_robotClaw.disable();
+
+    m_handle = m_robotContainer.m_robotMap.leftBackWheel.getHandle();
   }
 
+  long m_handle = 0;
   @Override
   public void disabledPeriodic() {
+    // if (dis) {
+      
+    //   MotControllerJNI.Set_4(m_handle, ControlMode.PercentOutput.value, 1, 1, DemandType.Neutral.value);
+    //   // m_robotContainer.m_robotMap.leftBackSteer.set(ControlMode.PercentOutput, 1, DemandType.Neutral, 0);
+    //   // m_robotContainer.m_robotSwerveDrive.driveWithInput(new Translation2d(.5, 0), new Translation2d(), true);
+    // }
+
+    // System.out.println("hi from disabled");
   }
 
   /**
@@ -118,6 +138,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     m_robotContainer.m_robotSwerveDrive.resetGyro();
+    dis = true;
+
+    m_robotContainer.m_robotClaw.enable();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
