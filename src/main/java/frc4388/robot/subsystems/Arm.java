@@ -3,6 +3,7 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -16,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
     private WPI_TalonFX m_tele;
-    private WPI_TalonFX m_pivot;
+    public WPI_TalonFX m_pivot;
     private CANCoder    m_pivotEncoder;
     private boolean     m_debug;
 
@@ -29,15 +30,16 @@ public class Arm extends SubsystemBase {
         tele.configFactoryDefault();
         m_pivot.configFactoryDefault();
 
-        TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
-        pivotConfig.slot0.kP = ArmConstants.kP;
-        pivotConfig.slot0.kI = ArmConstants.kI;
-        pivotConfig.slot0.kD = ArmConstants.kD;
+        // TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
+        // pivotConfig.slot0.kP = 0.5;//ArmConstants.kP;
+        // pivotConfig.slot0.kI = 0.0;//ArmConstants.kI;
+        // pivotConfig.slot0.kD = 0.0;//ArmConstants.kD;
 
-        pivotConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-        pivotConfig.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
-        pivotConfig.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
-        m_pivot.configAllSettings(pivotConfig);
+        // pivotConfig.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
+        // pivotConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
+        // pivotConfig.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
+
+        // m_pivot.configAllSettings(pivotConfig);
 
         resetTeleSoftLimit();
 
@@ -58,17 +60,18 @@ public class Arm extends SubsystemBase {
             pivotConfig_.slot0.kI = SmartDashboard.getNumber("kI Pivot", 0);
             pivotConfig_.slot0.kD = SmartDashboard.getNumber("kD Pivot", 0);
 
+            pivotConfig_.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
+            pivotConfig_.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
+            pivotConfig_.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
+
             // pivotConfig_.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
             // pivotConfig_.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
             // pivotConfig_.configSelectedFeedbackFilter();// FeedbackDevice.RemoteSensor0;
             m_pivot.configAllSettings(pivotConfig_);
-            m_pivot.configRemoteFeedbackFilter(encoder.getDeviceID(), RemoteSensorSource.CANCoder, 0);
-            m_pivot.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
+            // m_pivot.configRemoteFeedbackFilter(encoder.getDeviceID(), RemoteSensorSource.CANCoder, 0);
+            // m_pivot.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
             // m_pivot.selectProfileSlot(0, 0);
         }));
-
-        SmartDashboard.putData("set pos 1", new RunCommand(() -> m_pivot.set(ControlMode.Position, 225), this));
-        SmartDashboard.putData("set pos 2", new RunCommand(() -> m_pivot.set(ControlMode.Position, 135), this));
         SmartDashboard.putData("Kill Self", new InstantCommand(() -> {}, this));
     }
 
