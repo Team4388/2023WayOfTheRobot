@@ -7,6 +7,8 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+
 import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -136,18 +138,29 @@ public class RobotContainer {
             .onFalse(new InstantCommand());
 
         // * Operator Buttons
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            // .onTrue(new InstantCommand(() -> System.out.println("Claw Button")));
-            .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        //     // .onTrue(new InstantCommand(() -> System.out.println("Claw Button")));
+        //     .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
 
+        
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+            .whileTrue(new RunCommand(() -> m_robotArm.m_pivot.set(TalonFXControlMode.Position, 200), m_robotArm));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .whileTrue(new RunCommand(() -> m_robotArm.m_pivot.set(TalonFXControlMode.Position, 135), m_robotArm));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .whileTrue(new RunCommand(() -> m_robotArm.m_pivot.set(TalonFXControlMode.Position, 225), m_robotArm));
+        
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
         
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));
     }
 
     /**
