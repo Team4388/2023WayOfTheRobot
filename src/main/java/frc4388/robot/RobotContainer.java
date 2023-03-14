@@ -7,7 +7,10 @@
 
 package frc4388.robot;
 
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -17,8 +20,10 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.subsystems.Arm;
+import frc4388.robot.subsystems.Claw;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
+import frc4388.robot.commands.PivotCommand;
 import frc4388.robot.commands.PlaybackChooser;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 
@@ -43,6 +48,8 @@ public class RobotContainer {
     
     public final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
 
+    public final Claw m_robotClaw = new Claw(m_robotMap.servo);
+
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
@@ -63,8 +70,6 @@ public class RobotContainer {
     // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
     private PlaybackChooser playbackChooser;
-    private PWM             servo      = new PWM(0);
-    private boolean         servo_open = true;
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -113,8 +118,8 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetOdometry(), m_robotSwerveDrive));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.toggleGear(), m_robotSwerveDrive));
         //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
@@ -134,15 +139,29 @@ public class RobotContainer {
             .onFalse(new InstantCommand());
 
         // * Operator Buttons
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        //     // .onTrue(new InstantCommand(() -> System.out.println("Claw Button")));
+        //     .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> {
-                servo.setRaw(servo_open ? 1000 : 2000);
-                servo_open = !servo_open;
-            }));
         
+
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-        .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit()));
+            .onTrue(new PivotCommand(m_robotArm, 135));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(new PivotCommand(m_robotArm, 210));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
+        
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
+
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));
     }
 
     /**

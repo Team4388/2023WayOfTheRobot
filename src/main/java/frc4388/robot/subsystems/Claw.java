@@ -1,9 +1,12 @@
 package frc4388.robot.subsystems;
+import edu.wpi.first.hal.PWMJNI;
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Claw {
+public class Claw extends SubsystemBase {
 	private PWM m_clawMotor;
-	private boolean m_open = false;
+	private boolean m_open     = false;
+	private boolean m_disabled = false;
 
     // Opens claw
 	public Claw(PWM m_clawMotor) {
@@ -14,10 +17,15 @@ public class Claw {
     public void setClaw(boolean open) {
         // Open claw
 		m_open = open;
-		m_clawMotor.setRaw(open ? 0 : 2000);
+		m_clawMotor.setRaw(m_open ? 1000 : 2000);
     }
+
+	public void toggle() {
+		setClaw(!m_open);
+	}
 
 	public boolean isClawOpen() {
 		return m_open;
 	}
+
 }

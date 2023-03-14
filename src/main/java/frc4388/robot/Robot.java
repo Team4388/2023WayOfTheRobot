@@ -10,15 +10,22 @@ package frc4388.robot;
 import java.lang.System;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.can.MotControllerJNI;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc4388.utility.DeferredBlock;
 import frc4388.utility.RobotTime;
 
 import frc4388.robot.subsystems.Location;
@@ -37,9 +44,6 @@ public class Robot extends TimedRobot {
   
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
-
-  private Location location = new Location();
-
 
   /**
    * This function is run when the robot is first started up and should be
@@ -65,18 +69,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     m_robotTime.updateTimes();
+    
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    
     CommandScheduler.getInstance().run();
-
-    final Tag pos = location.getPosRot();
-    if (pos != null) {
-      SmartDashboard.putNumber("x position", pos.x);
-    }
-
-    //ystem.out.print(apriltagPos[0]);
   }
 
   /**
@@ -90,7 +89,12 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {
+  public void disabledPeriodic() {}
+
+  @Override
+  public void disabledExit() {
+      DeferredBlock.execute();
+      super.disabledExit();
   }
 
   /**
@@ -134,13 +138,11 @@ public class Robot extends TimedRobot {
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() {
-  }
+  public void teleopPeriodic() {}
 
   /**
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {}
 }

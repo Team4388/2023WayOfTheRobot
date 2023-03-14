@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 
+import edu.wpi.first.wpilibj.PWM;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
@@ -115,6 +116,11 @@ public class RobotMap {
     rightBackSteer.configNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND, SwerveDriveConstants.TIMEOUT_MS);
     
     // set neutral mode
+    leftFrontWheel.setNeutralMode(NeutralMode.Brake);
+    rightFrontWheel.setNeutralMode(NeutralMode.Brake);
+    leftBackWheel.setNeutralMode(NeutralMode.Brake);
+    rightBackWheel.setNeutralMode(NeutralMode.Brake);
+
     leftFrontSteer.setNeutralMode(NeutralMode.Brake);
     rightFrontSteer.setNeutralMode(NeutralMode.Brake);
     leftBackSteer.setNeutralMode(NeutralMode.Brake);
@@ -160,4 +166,8 @@ public class RobotMap {
     tele.configForwardSoftLimitEnable(false);
     tele.configReverseSoftLimitEnable(false);
   }
+
+  // claw stuff (WHAT IS A SOAP ENGINEER)
+  PWM servo = new PWM(0);
+
 }
