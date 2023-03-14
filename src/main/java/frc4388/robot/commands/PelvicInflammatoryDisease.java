@@ -55,7 +55,6 @@ public abstract class PelvicInflammatoryDisease extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
-		SmartDashboard.putBoolean("isFinished", Math.abs(getError()) < tolerance);
 		return Math.abs(getError()) < tolerance;
 	}
 }
