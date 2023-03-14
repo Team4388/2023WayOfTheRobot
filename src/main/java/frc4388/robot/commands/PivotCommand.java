@@ -4,6 +4,7 @@
 
 package frc4388.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc4388.robot.subsystems.Arm;
 
 public class PivotCommand extends PelvicInflammatoryDisease {
@@ -12,7 +13,7 @@ public class PivotCommand extends PelvicInflammatoryDisease {
   
   /** Creates a new ArmCommand. */
   public PivotCommand(Arm arm, double target) {
-    super(0.6, 0, 0, 0, 0);
+    super(6, 1.5, 0, 0, 0.015);
     this.arm    = arm;
     this.target = target;
     addRequirements(arm);
@@ -20,11 +21,12 @@ public class PivotCommand extends PelvicInflammatoryDisease {
 
   @Override
   public double getError() {
-    return (arm.getArmRotation() - target) / 360;
+    return (target - arm.getArmRotation()) / 360;
   }
 
   @Override
   public void runWithOutput(double output) {
+    SmartDashboard.putNumber("pivot output", output);
     arm.setRotVel(output);
   }
 }

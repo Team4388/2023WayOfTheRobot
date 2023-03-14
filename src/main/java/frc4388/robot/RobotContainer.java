@@ -146,10 +146,10 @@ public class RobotContainer {
         
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .whileTrue(new RunCommand(() -> new PivotCommand(m_robotArm, 135)));
+            .onTrue(new PivotCommand(m_robotArm, 135));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .whileTrue(new RunCommand(() -> m_robotArm.m_pivot.set(TalonFXControlMode.Position, 135), m_robotArm));
+            .onTrue(new PivotCommand(m_robotArm, 210));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));

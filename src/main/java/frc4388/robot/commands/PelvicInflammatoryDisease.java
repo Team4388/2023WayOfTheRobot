@@ -4,6 +4,7 @@
 
 package frc4388.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.utility.Gains;
 
@@ -54,6 +55,7 @@ public abstract class PelvicInflammatoryDisease extends CommandBase {
 	// Returns true when the command should end.
 	@Override
 	public boolean isFinished() {
+		SmartDashboard.putBoolean("isFinished", Math.abs(getError()) < tolerance);
 		return Math.abs(getError()) < tolerance;
 	}
 }
