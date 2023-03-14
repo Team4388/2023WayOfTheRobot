@@ -45,9 +45,6 @@ public class Robot extends TimedRobot {
   private RobotTime m_robotTime = RobotTime.getInstance();
   private RobotContainer m_robotContainer;
 
-  private Location location = new Location();
-
-
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -72,18 +69,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     m_robotTime.updateTimes();
+    
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
+    
     CommandScheduler.getInstance().run();
-
-    final Tag pos = location.getPosRot();
-    if (pos != null) {
-      SmartDashboard.putNumber("x position", pos.x);
-    }
-
-    //ystem.out.print(apriltagPos[0]);
   }
 
   /**
@@ -91,28 +83,13 @@ public class Robot extends TimedRobot {
    * You can use it to reset any subsystem information you want to clear when
    * the robot is disabled.
    */
-  boolean dis = false;
   @Override
   public void disabledInit() {
-    // m_robotContainer.m_robotClaw.setClaw(false);
     m_robotTime.endMatchTime();
-    m_robotContainer.m_robotClaw.disable();
-
-    m_handle = m_robotContainer.m_robotMap.leftBackWheel.getHandle();
   }
 
-  long m_handle = 0;
   @Override
-  public void disabledPeriodic() {
-    // if (dis) {
-      
-    //   MotControllerJNI.Set_4(m_handle, ControlMode.PercentOutput.value, 1, 1, DemandType.Neutral.value);
-    //   // m_robotContainer.m_robotMap.leftBackSteer.set(ControlMode.PercentOutput, 1, DemandType.Neutral, 0);
-    //   // m_robotContainer.m_robotSwerveDrive.driveWithInput(new Translation2d(.5, 0), new Translation2d(), true);
-    // }
-
-    // System.out.println("hi from disabled");
-  }
+  public void disabledPeriodic() {}
 
   @Override
   public void disabledExit() {
@@ -145,9 +122,6 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopInit() {
     m_robotContainer.m_robotSwerveDrive.resetGyro();
-    dis = true;
-
-    m_robotContainer.m_robotClaw.enable();
 
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -164,13 +138,11 @@ public class Robot extends TimedRobot {
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() {
-  }
+  public void teleopPeriodic() {}
 
   /**
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {}
 }
