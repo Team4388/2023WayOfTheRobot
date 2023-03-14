@@ -10,6 +10,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
+import frc4388.utility.DeferredBlock;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -30,6 +31,9 @@ public class Arm extends SubsystemBase {
         tele.configFactoryDefault();
         m_pivot.configFactoryDefault();
 
+        // * Example of deferred code
+        new DeferredBlock(() -> resetTeleSoftLimit());
+
         // TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
         // pivotConfig.slot0.kP = 0.5;//ArmConstants.kP;
         // pivotConfig.slot0.kI = 0.0;//ArmConstants.kI;
@@ -41,7 +45,7 @@ public class Arm extends SubsystemBase {
 
         // m_pivot.configAllSettings(pivotConfig);
 
-        resetTeleSoftLimit();
+        // resetTeleSoftLimit();
 
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.magnetOffsetDegrees = ArmConstants.OFFSET;
