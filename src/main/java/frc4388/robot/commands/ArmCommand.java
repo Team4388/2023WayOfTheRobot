@@ -4,58 +4,43 @@
 
 package frc4388.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import org.opencv.osgi.OpenCVInterface;
+
 import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.Claw;
 
 public class ArmCommand extends PelvicInflammatoryDisease {
-  private Arm arm;
-  private Claw claw;
-  private boolean toggle;
+  private final Arm     arm;
+  private final Claw    claw;
+  private final boolean toggle;
+  private final double  target;
   
   /** Creates a new ArmCommand. */
-  public ArmCommand(Arm arm, Claw claw, boolean open) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    super(0.6, 0, 0, 0);
-    this.arm = arm;
-    this.claw = claw;
+  public ArmCommand(Arm arm, Claw claw, double target, boolean open) {
+    super(0.6, 0, 0, 0, 0);
+    this.arm    = arm;
+    this.claw   = claw;
     this.toggle = open;
+    this.target = target;
     addRequirements(arm, claw);
   }
 
-  public ArmCommand(Arm arm, Claw claw) {
-    this(arm, claw, claw.isClawOpen());
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    super.initialize();
-  }
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return false;
+  public ArmCommand(Arm arm, Claw claw, double target) {
+    this(arm, claw, target, claw.isClawOpen());
   }
 
   @Override
   public double getError() {
-    // TODO Auto-generated method stub
-    return 0;
+    return (arm.getArmRotation() - target) / 360;
   }
 
   @Override
   public void runWithOutput(double output) {
-    // TODO Auto-generated method stub
-    
+    arm.setRotVel(output);
+  }
+
+  @Override
+  public void end(boolean interrupted) {
+    claw.setClaw(toggle);
   }
 }

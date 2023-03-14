@@ -8,16 +8,19 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.utility.Gains;
 
 public abstract class PelvicInflammatoryDisease extends CommandBase {
-	protected Gains gains;
-	private double output = 0;
+	protected Gains  gains;
+	private   double output    = 0;
+	private   double tolerance = 0;
 
 	/** Creates a new PelvicInflammatoryDisease. */
-	public PelvicInflammatoryDisease(double kp, double ki, double kd, double kf) {
-		gains = new Gains(kp, ki, kd, kf, 0);
+	public PelvicInflammatoryDisease(double kp, double ki, double kd, double kf, double tolerance) {
+		gains          = new Gains(kp, ki, kd, kf, 0);
+		this.tolerance = tolerance;
 	}
 
-	public PelvicInflammatoryDisease(Gains gains) {
-		this.gains = gains;
+	public PelvicInflammatoryDisease(Gains gains, double tolerance) {
+		this.gains     = gains;
+		this.tolerance = tolerance;
 	}
 
 	/** produces the error from the setpoint */
@@ -48,11 +51,9 @@ public abstract class PelvicInflammatoryDisease extends CommandBase {
 		runWithOutput(output);
 	}
 
-	// Called once the command ends or is interrupted.
-	@Override
-	public void end(boolean interrupted) {}
-
 	// Returns true when the command should end.
 	@Override
-	public boolean isFinished() { return false; }
+	public boolean isFinished() {
+		return Math.abs(getError()) < tolerance;
+	}
 }
