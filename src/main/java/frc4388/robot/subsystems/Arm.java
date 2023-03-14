@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
     private WPI_TalonFX m_tele;
-    public WPI_TalonFX m_pivot;
+    public WPI_TalonFX  m_pivot;
     private CANCoder    m_pivotEncoder;
     private boolean     m_debug;
 
@@ -32,7 +32,7 @@ public class Arm extends SubsystemBase {
         m_pivot.configFactoryDefault();
 
         // * Example of deferred code
-        new DeferredBlock(() -> resetTeleSoftLimit());
+        // new DeferredBlock(() -> resetTeleSoftLimit());
 
         // TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
         // pivotConfig.slot0.kP = 0.5;//ArmConstants.kP;
@@ -84,7 +84,17 @@ public class Arm extends SubsystemBase {
     }
 
     public void setRotVel(double vel) {
-        m_pivot.set(ControlMode.PercentOutput, .4 * vel);
+        var degrees = Math.abs(getArmRotation()) - 135;
+        SmartDashboard.putNumber("arm degrees", degrees);
+        SmartDashboard.putNumber("arm rot vel", vel);
+
+        if ((degrees < 2 && vel < 0) || (degrees > 110 && vel > 0)) {
+            m_pivot.set(ControlMode.PercentOutput, 0);
+        } else if (degrees > 90 && vel > 0) {
+            m_pivot.set(ControlMode.PercentOutput, .2 * vel);
+        } else {
+            m_pivot.set(ControlMode.PercentOutput, .4 * vel);
+        }
     }
 
     public void setTeleVel(double vel) {
@@ -167,21 +177,6 @@ public class Arm extends SubsystemBase {
     @Override
     public void periodic() {
         double degrees = Math.abs(m_pivotEncoder.getAbsolutePosition() - 135);
-        if (degrees < 2 && resetable) {
-            var pivot_soft = m_pivot.getSelectedSensorPosition();
-            var tele_soft  = m_tele.getSelectedSensorPosition();
-            
-            SmartDashboard.putNumber("start pivot", pivot_soft);
-            SmartDashboard.putNumber("start tele", tele_soft);
-            
-            m_pivot.configForwardSoftLimitEnable(soft_limits);
-            m_pivot.configReverseSoftLimitEnable(soft_limits);
-            SmartDashboard.putNumber("fwd err", m_pivot.configForwardSoftLimitThreshold(1200 + pivot_soft).value);
-            SmartDashboard.putNumber("rvs err", m_pivot.configReverseSoftLimitThreshold(pivot_soft).value);
-            resetable = false;
-        } else if (degrees > 2) {
-            resetable = true;
-        }
 
         if (m_tele.isFwdLimitSwitchClosed() == 1 && tele_reset) {
             var tele_soft = m_tele.getSelectedSensorPosition();
@@ -207,6 +202,7 @@ public class Arm extends SubsystemBase {
 
     boolean soft_limits = true;
     public void killSoftLimits() {
+        resetTeleSoftLimit();
         var pivot_soft = m_pivot.getSelectedSensorPosition();
         var tele_soft  = m_tele.getSelectedSensorPosition();
         

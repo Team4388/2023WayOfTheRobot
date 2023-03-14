@@ -23,6 +23,7 @@ import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.Claw;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
+import frc4388.robot.commands.PivotCommand;
 import frc4388.robot.commands.PlaybackChooser;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 
@@ -145,13 +146,13 @@ public class RobotContainer {
         
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .whileTrue(new RunCommand(() -> m_robotArm.m_pivot.set(TalonFXControlMode.Position, 200), m_robotArm));
+            .whileTrue(new RunCommand(() -> new PivotCommand(m_robotArm, 135)));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
             .whileTrue(new RunCommand(() -> m_robotArm.m_pivot.set(TalonFXControlMode.Position, 135), m_robotArm));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .whileTrue(new RunCommand(() -> m_robotArm.m_pivot.set(TalonFXControlMode.Position, 225), m_robotArm));
+            .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
