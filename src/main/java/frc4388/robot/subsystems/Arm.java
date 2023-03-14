@@ -112,21 +112,18 @@ public class Arm extends SubsystemBase {
     }
 
     public double getArmLength() {
-        return (m_tele.getSelectedSensorPosition() - ArmConstants.TELE_FORWARD_SOFT_LIMIT) /
-            (ArmConstants.TELE_REVERSE_SOFT_LIMIT - ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+        return m_tele.getSelectedSensorPosition();
     }
 
     public double getArmRotation() {
-        return (m_pivotEncoder.getAbsolutePosition() - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT) /
-            (ArmConstants.PIVOT_REVERSE_SOFT_LIMIT - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
+        return m_pivotEncoder.getAbsolutePosition();
     }
 
     public void runPivotTele(double pivot, double tele) {
-        double rot = 0;
-
-        if (checkLimits(tele, rot)) {
-            armSetRotation(pivot);
-            armSetLength(tele);
+        // TODO: tele has to go through some kind of transformation
+        if (pivot > 0 || tele < 0 || checkLimits(tele, getArmRotation())) {
+            setRotVel(pivot);
+            setTeleVel(tele);
         }
     }
 
@@ -142,10 +139,7 @@ public class Arm extends SubsystemBase {
         var y   = ArmConstants.ARM_HEIGHT + len * Math.sin(_theta);
 
         var minHeight = Math.pow(ArmConstants.CURVE_POWER, Math.abs(x));
-        if (y < minHeight)
-            return false;
-        
-        return true;
+        return y < minHeight;
     }
 
     boolean tele_softLimit = false;
