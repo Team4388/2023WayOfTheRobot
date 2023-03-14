@@ -35,10 +35,6 @@ public class SwerveDrive extends SubsystemBase {
 
   private RobotGyro gyro;
 
-  // private SwerveDriveOdometry odometry;
-
-  private SwerveDrivePoseEstimator poseEstimator;
-
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
   
   public Rotation2d rotTarget = new Rotation2d();
@@ -52,30 +48,6 @@ public class SwerveDrive extends SubsystemBase {
     this.rightBack = rightBack;
     
     this.gyro = gyro;
-
-    // this.odometry = new SwerveDriveOdometry(
-    //   kinematics, 
-    //   gyro.getRotation2d(),
-    //   new SwerveModulePosition[] {
-    //     leftFront.getPosition(),
-    //     rightFront.getPosition(),
-    //     leftBack.getPosition(),
-    //     rightBack.getPosition()
-    //   },
-    //   getOdometry()
-    // );
-
-    this.poseEstimator = new SwerveDrivePoseEstimator(
-      kinematics, 
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        leftFront.getPosition(),
-        rightFront.getPosition(),
-        leftBack.getPosition(),
-        rightBack.getPosition()
-      },
-      new Pose2d(0,0, new Rotation2d(0))
-    );
 
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
   }
@@ -123,81 +95,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public void resetGyro() {
     gyro.reset();
-    // setOdometry(getOdometry());
     rotTarget = new Rotation2d(0);
-  }
-
-  /**
-   * Updates the odometry of the SwerveDrive.
-   */
-  // public void updateOdometry() {
-  //   odometry.update(
-  //     gyro.getRotation2d(), 
-  //     new SwerveModulePosition[] {
-  //       leftFront.getPosition(),
-  //       rightFront.getPosition(),
-  //       leftBack.getPosition(),
-  //       rightBack.getPosition()
-  //     }
-  //   );
-  // }
-
-  public void updatePoseEstimator() {
-    poseEstimator.update(
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        leftFront.getPosition(),
-        rightFront.getPosition(),
-        leftBack.getPosition(),
-        rightBack.getPosition()
-      }
-    );
-  }
-
-  /**
-   * Gets the odometry of the SwerveDrive.
-   * @return The odometry of the SwerveDrive as a Pose2d object (xMeters, yMeters, theta).
-   */
-  // public Pose2d getOdometry() {
-  //   return odometry.getPoseMeters();
-  // }
-
-  public Pose2d getPoseEstimator() {
-    return poseEstimator.getEstimatedPosition();
-  }
-
-  /**
-   * Sets the odometry of the SwerveDrive.
-   * @param pose Pose to set the odometry to.
-   */
-  // public void setOdometry(Pose2d pose) {
-  //   odometry.resetPosition(
-  //     gyro.getRotation2d(), 
-  //     new SwerveModulePosition[] {
-  //       leftFront.getPosition(),
-  //       rightFront.getPosition(),
-  //       leftBack.getPosition(),
-  //       rightBack.getPosition()
-  //     },
-  //     pose
-  //   );
-  // }
-
-  public void setPoseEstimator(Pose2d pose) {
-    poseEstimator.resetPosition(
-      gyro.getRotation2d(), 
-      new SwerveModulePosition[] {
-        leftFront.getPosition(),
-        rightFront.getPosition(),
-        leftBack.getPosition(),
-        rightBack.getPosition()
-      },
-      pose
-    );
-  }
-
-  public void resetPoseEstimator() {
-    setPoseEstimator(new Pose2d());
   }
   
   public void stopModules() {
@@ -206,14 +104,6 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
-  /**
-   * Resets the odometry of the SwerveDrive to 0.
-   * *NOTE: If you reset your gyro, this method MUST be called with the new gyro angle and wheel encoder positions.
-   */
-  // public void resetOdometry() {
-  //   setOdometry(new Pose2d());
-  // }
-
   public SwerveDriveKinematics getKinematics() {
     return this.kinematics;
   }
@@ -221,25 +111,7 @@ public class SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-
-    // updateOdometry();
-    updatePoseEstimator();
-
-    // SmartDashboard.putNumber("Odo X (ft)", Units.metersToFeet(this.getOdometry().getX()));
-    // SmartDashboard.putNumber("Odo Y (ft)", Units.metersToFeet(this.getOdometry().getY()));
-    // SmartDashboard.putNumber("Odo Theta", this.getOdometry().getRotation().getDegrees());
-
-    // SmartDashboard.putNumber("Gyro Angle", getGyroAngle());
-    // SmartDashboard.putNumber("rotTarget", this.rotTarget.getDegrees());
   }
-
-  /**
-   * Shifts gear from high to low, or vice versa.
-   * @param shift true to shift to high, false to shift to low
-   */
-  // public void highSpeed(boolean shift) {
-  //   this.speedAdjust = shift ? SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST : SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
-  // }
 
   public void toggleGear() {
     if (this.speedAdjust == SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW) {
