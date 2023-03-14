@@ -91,9 +91,9 @@ public class Arm extends SubsystemBase {
         if ((degrees < 2 && vel < 0) || (degrees > 110 && vel > 0)) {
             m_pivot.set(ControlMode.PercentOutput, 0);
         } else if (degrees > 90 && vel > 0) {
-            m_pivot.set(ControlMode.PercentOutput, .2 * vel);
+            m_pivot.set(ControlMode.PercentOutput, .15 * vel);
         } else {
-            m_pivot.set(ControlMode.PercentOutput, .4 * vel);
+            m_pivot.set(ControlMode.PercentOutput, .3 * vel);
         }
     }
 
