@@ -5,18 +5,22 @@ import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
+import frc4388.utility.DeferredBlock;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
     private WPI_TalonFX m_tele;
-    private WPI_TalonFX m_pivot;
+    public WPI_TalonFX  m_pivot;
     private CANCoder    m_pivotEncoder;
     private boolean     m_debug;
 
@@ -27,22 +31,12 @@ public class Arm extends SubsystemBase {
         m_pivotEncoder = encoder;
 
         m_tele.configFactoryDefault();
-        // m_tele.configReverseLimitSwitchSource(null, null);
         m_tele.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         m_tele.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         m_pivot.configFactoryDefault();
 
-        TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
-        pivotConfig.slot0.kP = ArmConstants.kP;
-        pivotConfig.slot0.kI = ArmConstants.kI;
-        pivotConfig.slot0.kD = ArmConstants.kD;
-
-        pivotConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-        pivotConfig.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
-        pivotConfig.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
-        m_pivot.configAllSettings(pivotConfig);
-
-        resetTeleSoftLimit();
+        // * Example of deferred code
+        new DeferredBlock(() -> resetTeleSoftLimit());
 
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.magnetOffsetDegrees = ArmConstants.OFFSET;
@@ -54,11 +48,21 @@ public class Arm extends SubsystemBase {
     }
 
     public void setRotVel(double vel) {
-        m_pivot.set(ControlMode.PercentOutput, vel / 5);
+        var degrees = Math.abs(getArmRotation()) - 135;
+        SmartDashboard.putNumber("arm degrees", degrees);
+        SmartDashboard.putNumber("arm rot vel", vel);
+
+        if ((degrees < 2 && vel < 0) || (degrees > 110 && vel > 0)) {
+            m_pivot.set(ControlMode.PercentOutput, 0);
+        } else if (degrees > 90 && vel > 0) {
+            m_pivot.set(ControlMode.PercentOutput, .15 * vel);
+        } else {
+            m_pivot.set(ControlMode.PercentOutput, .3 * vel);
+        }
     }
 
     public void setTeleVel(double vel) {
-        m_tele.set(ControlMode.PercentOutput, -0.25 * vel);
+        m_tele.set(ControlMode.PercentOutput, -0.5 * vel);
     }
 
     public void armSetRotation(double rot) {
@@ -82,21 +86,21 @@ public class Arm extends SubsystemBase {
     }
 
     public double getArmLength() {
-        return (m_tele.getSelectedSensorPosition() - ArmConstants.TELE_FORWARD_SOFT_LIMIT) /
-            (ArmConstants.TELE_REVERSE_SOFT_LIMIT - ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+        return m_tele.getSelectedSensorPosition();
     }
 
     public double getArmRotation() {
-        return (m_pivotEncoder.getAbsolutePosition() - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT) /
-            (ArmConstants.PIVOT_REVERSE_SOFT_LIMIT - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
+        return m_pivotEncoder.getAbsolutePosition();
     }
 
     public void runPivotTele(double pivot, double tele) {
-        double rot = 0;
+        double abs_pivot = Math.toRadians(getArmRotation() - 135);
+        double abs_tele  = (getArmLength() - ArmConstants.TELE_REVERSE_SOFT_LIMIT) /
+                           (ArmConstants.TELE_FORWARD_SOFT_LIMIT - ArmConstants.TELE_REVERSE_SOFT_LIMIT);
 
-        if (checkLimits(tele, rot)) {
-            armSetRotation(pivot);
-            armSetLength(tele);
+        if (pivot > 0 || tele < 0 || checkLimits(abs_tele, abs_pivot)) {
+            setRotVel(pivot);
+            setTeleVel(tele);
         }
     }
 
@@ -112,10 +116,7 @@ public class Arm extends SubsystemBase {
         var y   = ArmConstants.ARM_HEIGHT + len * Math.sin(_theta);
 
         var minHeight = Math.pow(ArmConstants.CURVE_POWER, Math.abs(x));
-        if (y < minHeight)
-            return false;
-        
-        return true;
+        return y < minHeight;
     }
 
     boolean tele_softLimit = false;
@@ -134,33 +135,36 @@ public class Arm extends SubsystemBase {
         tele_softLimit = !tele_softLimit;
     }
 
-    boolean resetable = true;
+    boolean resetable  = true;
+    boolean tele_reset = true;
 
     @Override
     public void periodic() {
         double degrees = Math.abs(m_pivotEncoder.getAbsolutePosition() - 135);
-        if (degrees < 2 && resetable) {
-            var pivot_soft = m_pivot.getSelectedSensorPosition();
-            var tele_soft  = m_tele.getSelectedSensorPosition();
-            
-            SmartDashboard.putNumber("start pivot", pivot_soft);
-            SmartDashboard.putNumber("start tele", tele_soft);
-            
-            m_pivot.configForwardSoftLimitEnable(true);
-            m_pivot.configReverseSoftLimitEnable(true);
-            SmartDashboard.putNumber("fwd err", m_pivot.configForwardSoftLimitThreshold(1200 + pivot_soft).value);
-            SmartDashboard.putNumber("rvs err", m_pivot.configReverseSoftLimitThreshold(pivot_soft).value);
-            resetable = false;
-        } else if (degrees > 2) {
-            resetable = true;
+
+        if (m_tele.isFwdLimitSwitchClosed() == 1 && tele_reset) {
+            var tele_soft = m_tele.getSelectedSensorPosition();
+            m_tele.configForwardSoftLimitThreshold(91000 - tele_soft);
+            m_tele.configReverseSoftLimitThreshold(1000  - tele_soft);
+            m_tele.configForwardSoftLimitEnable(true);
+            m_tele.configReverseSoftLimitEnable(true);
+            tele_reset = false;
+        } else if (m_tele.isFwdLimitSwitchClosed() == 0) {
+            tele_reset = true;
         }
 
-        double x = Math.cos(Math.toRadians(degrees));
-        SwerveDriveConstants.ROTATION_SPEED = SwerveDriveConstants.MIN_ROT_SPEED + x * (SwerveDriveConstants.MAX_ROT_SPEED - SwerveDriveConstants.MIN_ROT_SPEED);
-        // if (m_debug)
-        //     SmartDashboard.putNumber("Arm Motor", m_tele.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Pivot CANCoder", m_pivotEncoder.getAbsolutePosition());
-        SmartDashboard.putNumber("Pivot IntegratedSensor", m_pivot.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Telescope Encoder", m_tele.getSelectedSensorPosition());
+        // double x = Math.cos(Math.toRadians(degrees));
+    }
+
+    boolean soft_limits = true;
+    public void killSoftLimits() {
+        resetTeleSoftLimit();
+        var pivot_soft = m_pivot.getSelectedSensorPosition();
+        var tele_soft  = m_tele.getSelectedSensorPosition();
+        
+        m_pivot.configForwardSoftLimitEnable(!soft_limits);
+        m_pivot.configReverseSoftLimitEnable(!soft_limits);
+
+        soft_limits = !soft_limits;
     }
 }
