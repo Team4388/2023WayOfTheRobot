@@ -15,22 +15,12 @@ public class Claw extends SubsystemBase {
 	}
 
     public void setClaw(boolean open) {
-		if (m_disabled) return;
         // Open claw
-		// m_clawMotor.setRaw(150);
 		m_open = open;
-		System.out.println("setClaw()");
-		// m_clawMotor.setPosition(0.5);
-		// m_clawMotor.setRaw(0);
 		m_clawMotor.setRaw(m_open ? 1000 : 2000);
-		// m_clawMotor.setSpeed(m_open ? -1 : 1);
-		// PWMJNI.setPWMSpeed(m_clawMotor.getHandle(), m_open ? -1 : 1);
-		// PWMJNI.setPWMDisabled(0);
-		System.out.println("Claw Pos: " + m_clawMotor.getRaw());
     }
 
 	public void toggle() {
-		System.out.println("toggle()");
 		setClaw(!m_open);
 	}
 
@@ -38,14 +28,4 @@ public class Claw extends SubsystemBase {
 		return m_open;
 	}
 
-	public void disable() {
-		// m_disabled = true;
-		// // PWMJNI.setPWMRaw(m_clawMotor.getHandle(), PWMJNI.getPWMRaw(m_clawMotor.getHandle()));
-		// PWMJNI.setPWMSpeed(m_clawMotor.getHandle(), 0.5);
-		// PWMJNI.setPWMDisabled(m_clawMotor.getHandle());
-	}
-
-	public void enable() {
-		m_disabled = false;
-	}
 }
