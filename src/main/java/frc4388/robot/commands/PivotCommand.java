@@ -5,26 +5,17 @@
 package frc4388.robot.commands;
 
 import frc4388.robot.subsystems.Arm;
-import frc4388.robot.subsystems.Claw;
 
-public class ArmCommand extends PelvicInflammatoryDisease {
+public class PivotCommand extends PelvicInflammatoryDisease {
   private final Arm     arm;
-  private final Claw    claw;
-  private final boolean toggle;
   private final double  target;
   
   /** Creates a new ArmCommand. */
-  public ArmCommand(Arm arm, Claw claw, double target, boolean open) {
+  public PivotCommand(Arm arm, double target) {
     super(0.6, 0, 0, 0, 0);
     this.arm    = arm;
-    this.claw   = claw;
-    this.toggle = open;
     this.target = target;
-    addRequirements(arm, claw);
-  }
-
-  public ArmCommand(Arm arm, Claw claw, double target) {
-    this(arm, claw, target, claw.isClawOpen());
+    addRequirements(arm);
   }
 
   @Override
@@ -35,10 +26,5 @@ public class ArmCommand extends PelvicInflammatoryDisease {
   @Override
   public void runWithOutput(double output) {
     arm.setRotVel(output);
-  }
-
-  @Override
-  public void end(boolean interrupted) {
-    claw.setClaw(toggle);
   }
 }
