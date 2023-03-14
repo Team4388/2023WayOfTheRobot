@@ -2,6 +2,8 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
@@ -28,7 +30,9 @@ public class Arm extends SubsystemBase {
         m_pivot        = pivot;
         m_pivotEncoder = encoder;
 
-        tele.configFactoryDefault();
+        m_tele.configFactoryDefault();
+        m_tele.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
+        m_tele.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
         m_pivot.configFactoryDefault();
 
         // * Example of deferred code
@@ -149,13 +153,7 @@ public class Arm extends SubsystemBase {
             tele_reset = true;
         }
 
-        SmartDashboard.putBoolean("reverse", m_tele.isFwdLimitSwitchClosed() == 1);
-
-        double x = Math.cos(degrees);
-
-        SmartDashboard.putNumber("Pivot CANCoder", m_pivotEncoder.getAbsolutePosition());
-        SmartDashboard.putNumber("Pivot IntegratedSensor", m_pivot.getSelectedSensorPosition());
-        SmartDashboard.putNumber("Telescope Encoder", m_tele.getSelectedSensorPosition());
+        // double x = Math.cos(Math.toRadians(degrees));
     }
 
     boolean soft_limits = true;
@@ -164,13 +162,8 @@ public class Arm extends SubsystemBase {
         var pivot_soft = m_pivot.getSelectedSensorPosition();
         var tele_soft  = m_tele.getSelectedSensorPosition();
         
-        SmartDashboard.putNumber("start pivot", pivot_soft);
-        SmartDashboard.putNumber("start tele", tele_soft);
-        
         m_pivot.configForwardSoftLimitEnable(!soft_limits);
         m_pivot.configReverseSoftLimitEnable(!soft_limits);
-        SmartDashboard.putNumber("fwd err", m_pivot.configForwardSoftLimitThreshold(1200 + pivot_soft).value);
-        SmartDashboard.putNumber("rvs err", m_pivot.configReverseSoftLimitThreshold(pivot_soft).value);
 
         soft_limits = !soft_limits;
     }
