@@ -120,8 +120,11 @@ public class Arm extends SubsystemBase {
     }
 
     public void runPivotTele(double pivot, double tele) {
-        // TODO: tele has to go through some kind of transformation
-        if (pivot > 0 || tele < 0 || checkLimits(tele, getArmRotation())) {
+        double abs_pivot = Math.toRadians(getArmRotation() - 135);
+        double abs_tele  = (getArmLength() - ArmConstants.TELE_REVERSE_SOFT_LIMIT) /
+                           (ArmConstants.TELE_FORWARD_SOFT_LIMIT - ArmConstants.TELE_REVERSE_SOFT_LIMIT);
+
+        if (pivot > 0 || tele < 0 || checkLimits(abs_tele, abs_pivot)) {
             setRotVel(pivot);
             setTeleVel(tele);
         }
