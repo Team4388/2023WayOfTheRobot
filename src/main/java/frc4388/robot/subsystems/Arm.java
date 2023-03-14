@@ -32,51 +32,11 @@ public class Arm extends SubsystemBase {
         m_pivot.configFactoryDefault();
 
         // * Example of deferred code
-        // new DeferredBlock(() -> resetTeleSoftLimit());
-
-        // TalonFXConfiguration pivotConfig = new TalonFXConfiguration();
-        // pivotConfig.slot0.kP = 0.5;//ArmConstants.kP;
-        // pivotConfig.slot0.kI = 0.0;//ArmConstants.kI;
-        // pivotConfig.slot0.kD = 0.0;//ArmConstants.kD;
-
-        // pivotConfig.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
-        // pivotConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-        // pivotConfig.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
-
-        // m_pivot.configAllSettings(pivotConfig);
-
-        // resetTeleSoftLimit();
+        new DeferredBlock(() -> resetTeleSoftLimit());
 
         CANCoderConfiguration config = new CANCoderConfiguration();
         config.magnetOffsetDegrees = ArmConstants.OFFSET;
         m_pivotEncoder.configAllSettings(config);
-        // m_pivot.configFactoryDefault();
-        // m_pivot.clearStickyFaults();
-        // m_pi
-
-        SmartDashboard.putNumber("kP Pivot", 0);
-        SmartDashboard.putNumber("kI Pivot", 0);
-        SmartDashboard.putNumber("kD Pivot", 0);
-
-        SmartDashboard.putData("Set PID", new InstantCommand(() -> {
-            TalonFXConfiguration pivotConfig_ = new TalonFXConfiguration();
-            pivotConfig_.slot0.kP = SmartDashboard.getNumber("kP Pivot", 0);
-            pivotConfig_.slot0.kI = SmartDashboard.getNumber("kI Pivot", 0);
-            pivotConfig_.slot0.kD = SmartDashboard.getNumber("kD Pivot", 0);
-
-            pivotConfig_.primaryPID.selectedFeedbackSensor  = FeedbackDevice.RemoteSensor0;
-            pivotConfig_.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-            pivotConfig_.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
-
-            // pivotConfig_.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-            // pivotConfig_.remoteFilter0.remoteSensorSource   = RemoteSensorSource.CANCoder;
-            // pivotConfig_.configSelectedFeedbackFilter();// FeedbackDevice.RemoteSensor0;
-            m_pivot.configAllSettings(pivotConfig_);
-            // m_pivot.configRemoteFeedbackFilter(encoder.getDeviceID(), RemoteSensorSource.CANCoder, 0);
-            // m_pivot.configSelectedFeedbackSensor(FeedbackDevice.RemoteSensor0);
-            // m_pivot.selectProfileSlot(0, 0);
-        }));
-        SmartDashboard.putData("Kill Self", new InstantCommand(() -> {}, this));
     }
 
     public Arm(WPI_TalonFX pivot, WPI_TalonFX tele, CANCoder encoder) {
@@ -192,9 +152,7 @@ public class Arm extends SubsystemBase {
         SmartDashboard.putBoolean("reverse", m_tele.isFwdLimitSwitchClosed() == 1);
 
         double x = Math.cos(degrees);
-        // SwerveDriveConstants.ROTATION_SPEED = SwerveDriveConstants.MIN_ROT_SPEED + x * (SwerveDriveConstants.MAX_ROT_SPEED - SwerveDriveConstants.MIN_ROT_SPEED);
-        // if (m_debug)
-        //     SmartDashboard.putNumber("Arm Motor", m_tele.getSelectedSensorPosition());
+
         SmartDashboard.putNumber("Pivot CANCoder", m_pivotEncoder.getAbsolutePosition());
         SmartDashboard.putNumber("Pivot IntegratedSensor", m_pivot.getSelectedSensorPosition());
         SmartDashboard.putNumber("Telescope Encoder", m_tele.getSelectedSensorPosition());
