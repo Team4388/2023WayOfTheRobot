@@ -4,8 +4,6 @@
 
 package frc4388.robot.commands;
 
-import org.opencv.osgi.OpenCVInterface;
-
 import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.Claw;
 
