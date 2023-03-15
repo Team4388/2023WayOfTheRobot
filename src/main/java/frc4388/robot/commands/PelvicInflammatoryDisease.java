@@ -4,7 +4,6 @@
 
 package frc4388.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.utility.Gains;
 
@@ -26,12 +25,13 @@ public abstract class PelvicInflammatoryDisease extends CommandBase {
 
 	/** produces the error from the setpoint */
 	public abstract double getError();
+	
 	/** figure it out bitch */
 	public abstract void runWithOutput(double output);
 
 	// Called when the command is initially scheduled.
 	@Override 
-	public void initialize() {
+	public final void initialize() {
 		output = 0;
 	}
 
@@ -39,7 +39,7 @@ public abstract class PelvicInflammatoryDisease extends CommandBase {
 	
 	// Called every time the scheduler runs while the command is scheduled.
 	@Override 
-	public void execute() {
+	public final void execute() {
 		double error = getError();
 		cumError += error * .02; // 20 ms
 		double delta = error - prevError;
@@ -54,7 +54,7 @@ public abstract class PelvicInflammatoryDisease extends CommandBase {
 
 	// Returns true when the command should end.
 	@Override
-	public boolean isFinished() {
+	public final boolean isFinished() {
 		return Math.abs(getError()) < tolerance;
 	}
 }

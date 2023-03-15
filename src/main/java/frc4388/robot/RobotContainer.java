@@ -7,10 +7,6 @@
 
 package frc4388.robot;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-
-import edu.wpi.first.wpilibj.PWM;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -21,6 +17,7 @@ import frc4388.robot.commands.AutoBalance;
 import frc4388.robot.commands.JoystickPlayback;
 import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.Claw;
+import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.commands.PivotCommand;
@@ -49,6 +46,8 @@ public class RobotContainer {
     public final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
 
     public final Claw m_robotClaw = new Claw(m_robotMap.servo);
+
+    public final Limelight m_limeLight = new Limelight();
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
