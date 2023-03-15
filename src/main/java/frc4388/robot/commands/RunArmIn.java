@@ -22,7 +22,7 @@ public class RunArmIn extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_arm.setTeleVel(1);
+    m_arm.setTeleVel(1, true);
   }
 
   // Called once the command ends or is interrupted.
