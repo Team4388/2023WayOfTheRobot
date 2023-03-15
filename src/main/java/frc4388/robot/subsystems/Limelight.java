@@ -14,6 +14,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.utility.AbhiIsADumbass;
@@ -21,13 +22,24 @@ import frc4388.utility.AbhiIsADumbass;
 public class Limelight extends SubsystemBase {
   private PhotonCamera cam;
 
+  private boolean lightOn;
+  private boolean isConnected = false;
+
   /** Creates a new Limelight. */
   public Limelight() {
     cam = new PhotonCamera(VisionConstants.NAME);
+    isConnected = cam.isConnected();
+    cam.setDriverMode(false);
   }
 
   public void setLEDs(boolean on) {
-    cam.setLED(on ? VisionLEDMode.kOn : VisionLEDMode.kOff);
+    lightOn = on;
+    cam.setLED(lightOn ? VisionLEDMode.kOn : VisionLEDMode.kOff);
+  }
+
+  public void toggleLEDs() {
+    lightOn = !lightOn;
+    cam.setLED(lightOn ? VisionLEDMode.kOn : VisionLEDMode.kOff);
   }
 
   public void setDriverMode(boolean driverMode) {
@@ -35,6 +47,8 @@ public class Limelight extends SubsystemBase {
   }
 
   public ArrayList<Point> getTargetPoints() throws AbhiIsADumbass {
+    if (!cam.isConnected()) return null;
+
     PhotonPipelineResult result = cam.getLatestResult();
 
     if (!result.hasTargets()) throw new AbhiIsADumbass();
@@ -69,12 +83,13 @@ public class Limelight extends SubsystemBase {
 
   public double getHorizontalDistanceToTarget(boolean high) throws AbhiIsADumbass {
     ArrayList<Point> targetPoints = getTargetPoints();
+    if (targetPoints == null) return -1;
 
-    Point highPoint = targetPoints.get(0).y <= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
-    Point midPoint = targetPoints.get(0).y >= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
+    // Point highPoint = targetPoints.get(0).y <= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
+    // Point midPoint = targetPoints.get(0).y >= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
 
-    Point tapePoint = high ? highPoint : midPoint;
-    double tapeHeight = high ? VisionConstants.HIGH_TAPE_HEIGHT : VisionConstants.MID_TAPE_HEIGHT;
+    Point tapePoint = targetPoints.get(0);//high ? highPoint : midPoint;
+    double tapeHeight = VisionConstants.MID_TAPE_HEIGHT;//high ? VisionConstants.HIGH_TAPE_HEIGHT : VisionConstants.MID_TAPE_HEIGHT;
 
     double theta = VisionConstants.LIME_ANGLE + getPointAngle(tapePoint);
 
@@ -90,5 +105,10 @@ public class Limelight extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    try {
+      System.out.println(getHorizontalDistanceToTarget(false));
+    } catch(AbhiIsADumbass abhiIsADumbass) {
+      abhiIsADumbass.printStackTrace();
+    } 
   }
 }
