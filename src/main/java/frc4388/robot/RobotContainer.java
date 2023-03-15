@@ -89,8 +89,8 @@ public class RobotContainer {
             .withName("SwerveDrive DefaultCommand"));
 
         m_robotArm.setDefaultCommand(new RunCommand(() -> {
-            m_robotArm.setRotVel(getDeadbandedOperatorController().getLeftY());
-            m_robotArm.setTeleVel(getDeadbandedOperatorController().getRightY());
+            m_robotArm.setRotVel(getDeadbandedOperatorController().getLeftY(), false);
+            m_robotArm.setTeleVel(getDeadbandedOperatorController().getRightY(), false);
         }, m_robotArm)
         .withName("Arm DefaultCommand"));
         
@@ -165,9 +165,8 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new ParallelCommandGroup(
                 new InstantCommand(() -> m_robotClaw.toggle()),
-                new RunArmIn(m_robotArm),
                 new SequentialCommandGroup(
-                    new WaitCommand(.25),
+                    new RunArmIn(m_robotArm),
                     new PivotCommand(m_robotArm, 135)
                 )
             ));

@@ -27,6 +27,6 @@ public class TeleCommand extends PelvicInflammatoryDisease {
 
   @Override
   public void runWithOutput(double output) {
-    arm.setTeleVel(output);
+    arm.setTeleVel(output, true);
   }
 }
