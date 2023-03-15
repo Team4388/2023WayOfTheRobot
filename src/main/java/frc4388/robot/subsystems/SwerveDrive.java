@@ -56,7 +56,7 @@ public class SwerveDrive extends SubsystemBase {
     if (fieldRelative) {
 
       double rot = 0;
-      if (rightStick.getNorm() > 0.1) {
+      if (rightStick.getNorm() > 0.01) {
         rotTarget = gyro.getRotation2d();
         rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
       } else {
