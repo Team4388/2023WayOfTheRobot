@@ -65,6 +65,11 @@ public class Arm extends SubsystemBase {
         m_tele.set(ControlMode.PercentOutput, -0.5 * vel);
     }
 
+    public boolean isTeleIn() {
+        return m_tele.isFwdLimitSwitchClosed() == 1 ||
+            m_tele.getSelectedSensorPosition() < reverse_tele;
+    }
+
     public void armSetRotation(double rot) {
         if (rot > 1 || rot < 0) return;
         // Move arm code
@@ -127,6 +132,8 @@ public class Arm extends SubsystemBase {
             m_tele.configReverseSoftLimitThreshold(tele_soft);
             m_tele.configForwardSoftLimitEnable(true);
             m_tele.configReverseSoftLimitEnable(true);
+
+            reverse_tele = tele_soft;
         } else {
             m_tele.configForwardSoftLimitEnable(false);
             m_tele.configReverseSoftLimitEnable(false);
@@ -135,8 +142,9 @@ public class Arm extends SubsystemBase {
         tele_softLimit = !tele_softLimit;
     }
 
-    boolean resetable  = true;
-    boolean tele_reset = true;
+    boolean resetable    = true;
+    boolean tele_reset   = true;
+    double  reverse_tele = 0;
 
     @Override
     public void periodic() {
@@ -148,6 +156,8 @@ public class Arm extends SubsystemBase {
             m_tele.configReverseSoftLimitThreshold(1000  - tele_soft);
             m_tele.configForwardSoftLimitEnable(true);
             m_tele.configReverseSoftLimitEnable(true);
+            
+            reverse_tele = 1000 - tele_soft;
             tele_reset = false;
         } else if (m_tele.isFwdLimitSwitchClosed() == 0) {
             tele_reset = true;
