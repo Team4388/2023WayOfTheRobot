@@ -67,7 +67,7 @@ public class Limelight extends SubsystemBase {
     return (VisionConstants.LIME_VIXELS - point.y) * (VisionConstants.V_FOV / VisionConstants.LIME_VIXELS);
   }
 
-  public double getDistanceToTarget(boolean high) throws AbhiIsADumbass {
+  public double getHorizontalDistanceToTarget(boolean high) throws AbhiIsADumbass {
     ArrayList<Point> targetPoints = getTargetPoints();
 
     Point highPoint = targetPoints.get(0).y <= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
@@ -75,18 +75,16 @@ public class Limelight extends SubsystemBase {
 
     Point tapePoint = high ? highPoint : midPoint;
     double tapeHeight = high ? VisionConstants.HIGH_TAPE_HEIGHT : VisionConstants.MID_TAPE_HEIGHT;
-    double targetHeight = high ? VisionConstants.HIGH_TARGET_HEIGHT : VisionConstants.MID_TARGET_HEIGHT;
 
     double theta = VisionConstants.LIME_ANGLE + getPointAngle(tapePoint);
 
     double effectiveTapeHeight = tapeHeight - VisionConstants.LIME_HEIGHT;
-    double effectiveTargetHeight = targetHeight - VisionConstants.LIME_HEIGHT;
 
     double distanceToTape = effectiveTapeHeight / Math.sin(Math.toRadians(theta));
 
-    double distanceToTarget = effectiveTargetHeight * distanceToTape / effectiveTapeHeight;
+    double horizontalDistanceToTarget = Math.sqrt(Math.pow(distanceToTape, 2) - Math.pow(effectiveTapeHeight, 2));
 
-    return distanceToTarget;
+    return horizontalDistanceToTarget;
   }
 
   @Override
