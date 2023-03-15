@@ -144,11 +144,8 @@ public class RobotContainer {
 
         
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .onTrue(new PivotCommand(m_robotArm, 135));
-        
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(new PivotCommand(m_robotArm, 210));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_limeLight.toggleLEDs(), m_limeLight));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
