@@ -146,13 +146,17 @@ public final class Constants {
   public static final class VisionConstants {
     public static final String NAME = "Aarav is poopy";
 
-    public static final int LIME_FOV = -1;
+    public static final int LIME_HIXELS = 640;
+    public static final int LIME_VIXELS = 480;
+
+    public static final double H_FOV = 59.6;
+    public static final double V_FOV = 45.7;
 
     public static final double LIME_HEIGHT = -1.0;
     public static final double LIME_ANGLE = -1.0;
 
     public static final double HIGH_TARGET_HEIGHT = -1.0;
-    public static final double HIGHT_TAPE_HEIGHT = -1.0;
+    public static final double HIGH_TAPE_HEIGHT = -1.0;
     
     public static final double MID_TARGET_HEIGHT = -1.0;
     public static final double MID_TAPE_HEIGHT = -1.0;
