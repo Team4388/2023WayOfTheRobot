@@ -58,9 +58,9 @@ public class SwerveDrive extends SubsystemBase {
       double rot = 0;
       if (rightStick.getNorm() > 0.1) {
         rotTarget = gyro.getRotation2d();
-        rot = rightStick.getX();
+        rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
       } else {
-        rot = rotTarget.minus(gyro.getRotation2d()).getRadians();
+        rot = rotTarget.minus(gyro.getRotation2d()).getRadians() * SwerveDriveConstants.ROT_CORRECTION_SPEED;
       }
 
       // Use the left joystick to set speed. Apply a cubic curve and the set max speed.
@@ -68,7 +68,7 @@ public class SwerveDrive extends SubsystemBase {
       Translation2d cubedSpeed = new Translation2d(Math.pow(speed.getX(), 3.00), Math.pow(speed.getY(), 3.00));
 
       // Convert field-relative speeds to robot-relative speeds.
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * cubedSpeed.getX(), cubedSpeed.getY(), rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d().times(-1));
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * cubedSpeed.getX(), cubedSpeed.getY(), rot, gyro.getRotation2d().times(-1));
     } else {
       // Create robot-relative speeds.
       chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), leftStick.getY(), rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
