@@ -11,8 +11,10 @@ import org.opencv.core.Point;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.utility.AbhiIsADumbass;
@@ -32,18 +34,59 @@ public class Limelight extends SubsystemBase {
     cam.setDriverMode(driverMode);
   }
 
-  public Point getTargetPoints() throws AbhiIsADumbass {
+  public ArrayList<Point> getTargetPoints() throws AbhiIsADumbass {
     PhotonPipelineResult result = cam.getLatestResult();
 
     if (!result.hasTargets()) throw new AbhiIsADumbass();
 
-    Point point = new Point();
-    List<TargetCorner> corners = result.getTargets().get(0).getDetectedCorners();
+    ArrayList<Point> points = new ArrayList<>(2);
 
-    double x1, x2, y1, y2;
-    double mx, my;
+    for(PhotonTrackedTarget target : result.getTargets()){
+      List<TargetCorner> corners = target.getDetectedCorners();
+  
+      double sumX = 0.0;
+      double sumY = 0.0;
+      double mx = 0.0;
+      double my = 0.0;
+  
+      for (TargetCorner c : corners) {
+        sumX += c.x;
+        sumY += c.y;
+      }
+  
+      mx = sumX / 4.0;
+      my = sumY / 4.0;
 
-    return new Point(mx, my);
+      points.add(new Point(mx, my));
+    }
+
+    return points;
+  }
+
+  private double getPointAngle(Point point) {
+    return (VisionConstants.LIME_VIXELS - point.y) * (VisionConstants.V_FOV / VisionConstants.LIME_VIXELS);
+  }
+
+  public double getDistanceToTarget(boolean high) throws AbhiIsADumbass {
+    ArrayList<Point> targetPoints = getTargetPoints();
+
+    Point highPoint = targetPoints.get(0).y <= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
+    Point midPoint = targetPoints.get(0).y >= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
+
+    Point tapePoint = high ? highPoint : midPoint;
+    double tapeHeight = high ? VisionConstants.HIGH_TAPE_HEIGHT : VisionConstants.MID_TAPE_HEIGHT;
+    double targetHeight = high ? VisionConstants.HIGH_TARGET_HEIGHT : VisionConstants.MID_TARGET_HEIGHT;
+
+    double theta = VisionConstants.LIME_ANGLE + getPointAngle(tapePoint);
+
+    double effectiveTapeHeight = tapeHeight - VisionConstants.LIME_HEIGHT;
+    double effectiveTargetHeight = targetHeight - VisionConstants.LIME_HEIGHT;
+
+    double distanceToTape = effectiveTapeHeight / Math.sin(Math.toRadians(theta));
+
+    double distanceToTarget = effectiveTargetHeight * distanceToTape / effectiveTapeHeight;
+
+    return distanceToTarget;
   }
 
   @Override
