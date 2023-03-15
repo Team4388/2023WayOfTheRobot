@@ -14,14 +14,14 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
 
-import edu.wpi.first.math.Pair;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.utility.AbhiIsADumbass;
 
 public class Limelight extends SubsystemBase {
   private PhotonCamera cam;
-  /** Creates a new LImelight. */
+
+  /** Creates a new Limelight. */
   public Limelight() {
     cam = new PhotonCamera(VisionConstants.NAME);
   }

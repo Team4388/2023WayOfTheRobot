@@ -144,7 +144,7 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final String NAME = "Aarav is poopy";
+    public static final String NAME = "photonCamera";
 
     public static final int LIME_HIXELS = 640;
     public static final int LIME_VIXELS = 480;

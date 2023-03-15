@@ -38,16 +38,4 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 		if (Math.abs(getError()) < 3) out2 = 0;
 		drive.driveWithInput(new Translation2d(0, out2), new Translation2d(), false);
 	}
-
-	@Override
-	public void initialize() {
-		super.initialize();
-		// this.gyro.reset();
-	}
-
-	// Returns true when the command should end.
-	@Override
-	public boolean isFinished() {
-		return false;
-	}
 }
