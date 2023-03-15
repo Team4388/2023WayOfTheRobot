@@ -27,7 +27,10 @@ public final class Constants {
     public static final double MAX_ROT_SPEED        = 1.5;
     public static final double MIN_ROT_SPEED        = 0.8;
     public static       double ROTATION_SPEED       = MAX_ROT_SPEED;
-    public static       double ROT_CORRECTION_SPEED = MIN_ROT_SPEED;
+    public static       double ROT_CORRECTION_SPEED = 10; // MIN_ROT_SPEED;
+
+    public static final double CORRECTION_MIN = 10;
+    public static final double CORRECTION_MAX = 50;
 
     public static final class IDs {
       public static final int LEFT_FRONT_WHEEL_ID = 2;

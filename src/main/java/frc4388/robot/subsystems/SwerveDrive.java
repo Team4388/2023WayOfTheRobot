@@ -12,6 +12,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc4388.robot.Constants.SwerveDriveConstants;
@@ -37,7 +38,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
   
-  public Rotation2d rotTarget = new Rotation2d();
+  public double rotTarget = 0;
   public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   /** Creates a new SwerveDrive. */
@@ -56,11 +57,13 @@ public class SwerveDrive extends SubsystemBase {
     if (fieldRelative) {
 
       double rot = 0;
-      if (rightStick.getNorm() > 0.01) {
-        rotTarget = gyro.getRotation2d();
+      if (rightStick.getNorm() > 0.05) {
+        rotTarget = gyro.getAngle();
         rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
+        SmartDashboard.putBoolean("drift correction", false);
       } else {
-        rot = rotTarget.minus(gyro.getRotation2d()).getRadians() * SwerveDriveConstants.ROT_CORRECTION_SPEED;
+        SmartDashboard.putBoolean("drift correction", true);
+        rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
       }
 
       // Use the left joystick to set speed. Apply a cubic curve and the set max speed.
@@ -95,7 +98,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public void resetGyro() {
     gyro.reset();
-    rotTarget = new Rotation2d(0);
+    rotTarget = 0;
   }
   
   public void stopModules() {
@@ -113,11 +116,14 @@ public class SwerveDrive extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void toggleGear() {
-    if (this.speedAdjust == SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW) {
+  public void toggleGear(double angle) {
+    if (this.speedAdjust == SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW
+        && Math.abs(angle) < 2) {
       this.speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
+      SwerveDriveConstants.ROT_CORRECTION_SPEED = SwerveDriveConstants.CORRECTION_MAX;
     } else {
       this.speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
+      SwerveDriveConstants.ROT_CORRECTION_SPEED = SwerveDriveConstants.CORRECTION_MIN;
     }
   }
 

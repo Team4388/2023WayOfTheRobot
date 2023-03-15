@@ -55,9 +55,9 @@ public class Arm extends SubsystemBase {
         if ((degrees < 2 && vel < 0) || (degrees > 110 && vel > 0)) {
             m_pivot.set(ControlMode.PercentOutput, 0);
         } else if (degrees > 90 && vel > 0) {
-            m_pivot.set(ControlMode.PercentOutput, .15 * vel);
+            m_pivot.set(ControlMode.PercentOutput, .1 * vel);
         } else {
-            m_pivot.set(ControlMode.PercentOutput, .3 * vel);
+            m_pivot.set(ControlMode.PercentOutput, .25 * vel);
         }
     }
 
@@ -169,12 +169,6 @@ public class Arm extends SubsystemBase {
     boolean soft_limits = true;
     public void killSoftLimits() {
         resetTeleSoftLimit();
-        var pivot_soft = m_pivot.getSelectedSensorPosition();
-        var tele_soft  = m_tele.getSelectedSensorPosition();
-        
-        m_pivot.configForwardSoftLimitEnable(!soft_limits);
-        m_pivot.configReverseSoftLimitEnable(!soft_limits);
-
         soft_limits = !soft_limits;
     }
 }
