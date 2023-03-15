@@ -161,7 +161,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
 
         // TODO: put this into a variable
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new ParallelCommandGroup(
                 new InstantCommand(() -> m_robotClaw.toggle()),
                 new SequentialCommandGroup(
