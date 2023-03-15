@@ -67,7 +67,9 @@ public class SwerveDrive extends SubsystemBase {
       }
 
       // Use the left joystick to set speed. Apply a cubic curve and the set max speed.
-      Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
+      Translation2d speed = leftStick.times(speedAdjust * leftStick.getNorm());
+      // Translation2d speed = leftStick.times(speedAdjust / leftStick.getNorm());
+
       Translation2d cubedSpeed = new Translation2d(Math.pow(speed.getX(), 3.00), Math.pow(speed.getY(), 3.00));
 
       // Convert field-relative speeds to robot-relative speeds.
@@ -117,12 +119,17 @@ public class SwerveDrive extends SubsystemBase {
   }
 
   public void toggleGear(double angle) {
-    if (this.speedAdjust == SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW
-        && Math.abs(angle) < 2) {
+    if (this.speedAdjust == SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW && Math.abs(angle) < 2) {
+
       this.speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
+      SwerveDriveConstants.ROTATION_SPEED = SwerveDriveConstants.MAX_ROT_SPEED;
+
       SwerveDriveConstants.ROT_CORRECTION_SPEED = SwerveDriveConstants.CORRECTION_MAX;
     } else {
+
       this.speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
+      SwerveDriveConstants.ROTATION_SPEED = SwerveDriveConstants.MIN_ROT_SPEED;
+
       SwerveDriveConstants.ROT_CORRECTION_SPEED = SwerveDriveConstants.CORRECTION_MIN;
     }
   }
