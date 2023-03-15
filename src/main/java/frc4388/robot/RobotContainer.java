@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
@@ -122,7 +123,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.toggleGear(), m_robotSwerveDrive));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.toggleGear(m_robotArm.getArmRotation()-135), m_robotSwerveDrive));
         //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
@@ -164,8 +165,9 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new ParallelCommandGroup(
                 new InstantCommand(() -> m_robotClaw.toggle()),
+                new RunArmIn(m_robotArm),
                 new SequentialCommandGroup(
-                    new RunArmIn(m_robotArm),
+                    new WaitCommand(.25),
                     new PivotCommand(m_robotArm, 135)
                 )
             ));

@@ -12,7 +12,7 @@ public class RunArmIn extends CommandBase {
 
   public RunArmIn(Arm arm) {
     m_arm = arm;
-    addRequirements(arm);
+    addRequirements();
   }
 
   // Called when the command is initially scheduled.
