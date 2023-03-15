@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
@@ -25,6 +27,7 @@ import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.commands.PivotCommand;
 import frc4388.robot.commands.PlaybackChooser;
+import frc4388.robot.commands.RunArmIn;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 
 
@@ -149,13 +152,23 @@ public class RobotContainer {
             .onTrue(new PivotCommand(m_robotArm, 135));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(new PivotCommand(m_robotArm, 210));
+            .onTrue(new PivotCommand(m_robotArm, 225));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
+            .onTrue(new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
+
+        // TODO: put this into a variable
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new ParallelCommandGroup(
+                new InstantCommand(() -> m_robotClaw.toggle()),
+                new SequentialCommandGroup(
+                    new RunArmIn(m_robotArm),
+                    new PivotCommand(m_robotArm, 135)
+                )
+            ));
         
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
         //     .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
