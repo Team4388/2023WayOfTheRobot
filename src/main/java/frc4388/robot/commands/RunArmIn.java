@@ -5,22 +5,25 @@
 package frc4388.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.robot.subsystems.Arm;
 
-public class LimeAlign extends CommandBase {
-  public LimeAlign(SwerveDrive drive) {
-    addRequirements(drive);
+public class RunArmIn extends CommandBase {
+  private final Arm m_arm;
+
+  public RunArmIn(Arm arm) {
+    m_arm = arm;
+    addRequirements();
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_arm.setTeleVel(1, true);
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -29,6 +32,6 @@ public class LimeAlign extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return m_arm.isTeleIn();
   }
 }
