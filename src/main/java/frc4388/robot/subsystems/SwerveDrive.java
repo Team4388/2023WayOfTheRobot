@@ -107,7 +107,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public void resetGyro() {
     gyro.reset();
-    rotTarget = new Rotation2d(0);
+    rotTarget = 0.0;
   }
   
   public void stopModules() {
