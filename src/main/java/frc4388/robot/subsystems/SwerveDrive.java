@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.RobotGyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDrive extends SubsystemBase {
   
@@ -37,7 +38,7 @@ public class SwerveDrive extends SubsystemBase {
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
   
-  public Rotation2d rotTarget = new Rotation2d();
+  public double rotTarget = 0.0;
   public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   /** Creates a new SwerveDrive. */
