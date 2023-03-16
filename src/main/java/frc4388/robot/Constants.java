@@ -159,6 +159,6 @@ public final class Constants {
     public static final double HIGH_TAPE_HEIGHT = 44.0;
     
     // public static final double MID_TARGET_HEIGHT = 34.0;
-    public static final double MID_TAPE_HEIGHT = 32.0;
+    public static final double MID_TAPE_HEIGHT = 24.0;
   }
 }
