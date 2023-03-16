@@ -14,10 +14,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
@@ -28,7 +25,6 @@ import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.commands.PivotCommand;
 import frc4388.robot.commands.PlaybackChooser;
-import frc4388.robot.commands.RunArmIn;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 
 
@@ -89,8 +85,8 @@ public class RobotContainer {
             .withName("SwerveDrive DefaultCommand"));
 
         m_robotArm.setDefaultCommand(new RunCommand(() -> {
-            m_robotArm.setRotVel(getDeadbandedOperatorController().getLeftY(), false);
-            m_robotArm.setTeleVel(getDeadbandedOperatorController().getRightY(), false);
+            m_robotArm.setRotVel(getDeadbandedOperatorController().getLeftY());
+            m_robotArm.setTeleVel(getDeadbandedOperatorController().getRightY());
         }, m_robotArm)
         .withName("Arm DefaultCommand"));
         
@@ -123,7 +119,7 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.toggleGear(m_robotArm.getArmRotation()-135), m_robotSwerveDrive));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.toggleGear(), m_robotSwerveDrive));
         //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
@@ -153,23 +149,13 @@ public class RobotContainer {
             .onTrue(new PivotCommand(m_robotArm, 135));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(new PivotCommand(m_robotArm, 225));
+            .onTrue(new PivotCommand(m_robotArm, 210));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw));
+            .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
-
-        // TODO: put this into a variable
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new ParallelCommandGroup(
-                new InstantCommand(() -> m_robotClaw.toggle()),
-                new SequentialCommandGroup(
-                    new RunArmIn(m_robotArm),
-                    new PivotCommand(m_robotArm, 135)
-                )
-            ));
         
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
         //     .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
