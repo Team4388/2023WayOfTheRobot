@@ -4,31 +4,47 @@
 
 package frc4388.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
+import edu.wpi.first.math.geometry.Translation2d;
+import frc4388.robot.Constants.VisionConstants;
+import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 
-public class LimeAlign extends CommandBase {
-  public LimeAlign(SwerveDrive drive) {
-    addRequirements(drive);
-  }
+public class LimeAlign extends PelvicInflammatoryDisease {
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
+  SwerveDrive drive;
+  Limelight lime;
+
+  public LimeAlign(SwerveDrive drive, Limelight lime) {
+    super(0.7, 0.1, 0.0, 0.0, 0);
+
+    this.drive = drive;
+    this.lime = lime;
     
+    addRequirements(drive, lime);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public double getError() {
+    double err = 0.0;
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    try {
+      err = lime.getFirstTargetPoint().getYaw() / (VisionConstants.H_FOV / 2); 
+    } catch (NullPointerException ex) {}
+    
+    return err;
+  }
 
-  // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    return false;
+  public void runWithOutput(double output) {
+
+    if (output > 0) {
+      output += 0.6;
+    } else if (output < 0) {
+      output -= 0.6;
+    }
+
+    drive.driveWithInput(new Translation2d(output, 0.0), new Translation2d(0.0, 0.0), true);
   }
 }
