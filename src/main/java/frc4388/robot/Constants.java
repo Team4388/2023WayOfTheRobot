@@ -23,7 +23,6 @@ import frc4388.utility.LEDPatterns;
  */
 public final class Constants {
   public static final class SwerveDriveConstants {
-
     public static final double MAX_ROT_SPEED        = 1.5;
     public static final double MIN_ROT_SPEED        = 0.8;
     public static       double ROTATION_SPEED       = MAX_ROT_SPEED;
@@ -31,6 +30,10 @@ public final class Constants {
 
     public static final double CORRECTION_MIN = 10;
     public static final double CORRECTION_MAX = 50;
+
+    public static final double SLOW_SPEED = 0.8;
+    public static final double FAST_SPEED = 1.0;
+    public static final double TURBO_SPEED = 4.0;
 
     public static final class IDs {
       public static final int LEFT_FRONT_WHEEL_ID = 2;

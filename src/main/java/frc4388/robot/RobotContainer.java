@@ -122,25 +122,33 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.toggleGear(m_robotArm.getArmRotation()-135), m_robotSwerveDrive));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToTurbo()))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //     .whileTrue(new InstantCommand(() -> m_robotSwerveDrive.setToTurbo()));
+        
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
+
         //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-                                            () -> getDeadbandedDriverController().getLeftX(),
-                                            () -> getDeadbandedDriverController().getLeftY(),
-                                            () -> getDeadbandedDriverController().getRightX(),
-                                            () -> getDeadbandedDriverController().getRightY(),
-                                            "Blue1Path.txt"))
-            .onFalse(new InstantCommand());
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                     () -> getDeadbandedDriverController().getLeftX(),
+        //                                     () -> getDeadbandedDriverController().getLeftY(),
+        //                                     () -> getDeadbandedDriverController().getRightX(),
+        //                                     () -> getDeadbandedDriverController().getRightY(),
+        //                                     "Blue1Path.txt"))
+        //     .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
-            .onFalse(new InstantCommand());
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
+        //     .onFalse(new InstantCommand());
 
         // * Operator Buttons
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)

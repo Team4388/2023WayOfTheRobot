@@ -20,8 +20,14 @@ public class DeadbandedXboxController extends XboxController {
   public static Translation2d skewToDeadzonedCircle(double x, double y) {
     Translation2d translation2d = new Translation2d(x, y);
     double magnitude = translation2d.getNorm();
-    if (OIConstants.SKEW_STICKS && magnitude >= 1) return translation2d.div(magnitude);
+
+    // if (OIConstants.SKEW_STICKS && magnitude >= 1) {
+    //   System.out.println("if statement running");
+    //   return translation2d.div(magnitude);
+    // }
+
     if (magnitude < LEFT_AXIS_DEADBAND) return new Translation2d(0,0);
+
     return translation2d;
   }
 }
