@@ -27,6 +27,6 @@ public class PivotCommand extends PelvicInflammatoryDisease {
   @Override
   public void runWithOutput(double output) {
     SmartDashboard.putNumber("pivot output", output);
-    arm.setRotVel(output, true);
+    arm.setRotVel(output);
   }
 }
