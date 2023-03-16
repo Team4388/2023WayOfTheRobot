@@ -23,13 +23,13 @@ public class Limelight extends SubsystemBase {
   private PhotonCamera cam;
 
   private boolean lightOn;
-  private boolean isConnected = false;
 
   /** Creates a new Limelight. */
   public Limelight() {
     cam = new PhotonCamera(VisionConstants.NAME);
-    isConnected = cam.isConnected();
     cam.setDriverMode(false);
+    
+    setToLimePipeline();
   }
 
   public void setLEDs(boolean on) {
@@ -46,16 +46,24 @@ public class Limelight extends SubsystemBase {
     cam.setDriverMode(driverMode);
   }
 
-  public ArrayList<Point> getTargetPoints() throws AbhiIsADumbass {
+  public void setToLimePipeline() {
+    cam.setPipelineIndex(1);
+  }
+
+  public void setToAprilPipeline() {
+    cam.setPipelineIndex(0);
+  }
+
+  public ArrayList<Point> getTargetPoints() {
     if (!cam.isConnected()) return null;
 
     PhotonPipelineResult result = cam.getLatestResult();
 
-    if (!result.hasTargets()) throw new AbhiIsADumbass();
+    if (!result.hasTargets()) return null;
 
     ArrayList<Point> points = new ArrayList<>(2);
 
-    for(PhotonTrackedTarget target : result.getTargets()){
+    for(PhotonTrackedTarget target : result.getTargets()) {
       List<TargetCorner> corners = target.getDetectedCorners();
   
       double sumX = 0.0;
@@ -77,38 +85,50 @@ public class Limelight extends SubsystemBase {
     return points;
   }
 
+  public PhotonTrackedTarget getFirstTargetPoint() {
+    if (!cam.isConnected()) return null;
+
+    PhotonPipelineResult result = cam.getLatestResult();
+
+    if (!result.hasTargets()) return null;
+
+    return result.getBestTarget();
+  }
+
   private double getPointAngle(Point point) {
     return (VisionConstants.LIME_VIXELS - point.y) * (VisionConstants.V_FOV / VisionConstants.LIME_VIXELS);
   }
 
-  public double getHorizontalDistanceToTarget(boolean high) throws AbhiIsADumbass {
+  public double getHorizontalDistanceToTarget(boolean high) {
     ArrayList<Point> targetPoints = getTargetPoints();
     if (targetPoints == null) return -1;
 
     // Point highPoint = targetPoints.get(0).y <= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
     // Point midPoint = targetPoints.get(0).y >= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
 
-    Point tapePoint = targetPoints.get(0);//high ? highPoint : midPoint;
+    PhotonTrackedTarget tapePoint = getFirstTargetPoint();//high ? highPoint : midPoint;
     double tapeHeight = VisionConstants.MID_TAPE_HEIGHT;//high ? VisionConstants.HIGH_TAPE_HEIGHT : VisionConstants.MID_TAPE_HEIGHT;
 
-    double theta = VisionConstants.LIME_ANGLE + getPointAngle(tapePoint);
+    double theta = 35.0 + tapePoint.getPitch();
 
     double effectiveTapeHeight = tapeHeight - VisionConstants.LIME_HEIGHT;
 
-    double distanceToTape = effectiveTapeHeight / Math.sin(Math.toRadians(theta));
-
-    double horizontalDistanceToTarget = Math.sqrt(Math.pow(distanceToTape, 2) - Math.pow(effectiveTapeHeight, 2));
+    double horizontalDistanceToTarget = effectiveTapeHeight / Math.tan(Math.toRadians(theta));
 
     return horizontalDistanceToTarget;
   }
 
+  int ctr = 0;
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    try {
-      System.out.println(getHorizontalDistanceToTarget(false));
-    } catch(AbhiIsADumbass abhiIsADumbass) {
-      abhiIsADumbass.printStackTrace();
-    } 
+    
+    if (ctr % 50 == 0) {
+      SmartDashboard.putNumber("Horizontal Distance", getHorizontalDistanceToTarget(false));
+    }
+
+    ctr++;
+
   }
 }

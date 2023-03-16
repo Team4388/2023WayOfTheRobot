@@ -20,7 +20,7 @@ import frc4388.robot.subsystems.Claw;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
-import frc4388.robot.commands.PivotCommand;
+import frc4388.robot.commands.LimeAlign;
 import frc4388.robot.commands.PlaybackChooser;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 
@@ -144,10 +144,15 @@ public class RobotContainer {
 
         
 
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_limeLight.toggleLEDs(), m_limeLight));
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> m_limeLight.toggleLEDs(), m_limeLight));
+
         
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+            .whileTrue(new LimeAlign(m_robotSwerveDrive, m_limeLight));
+        
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
