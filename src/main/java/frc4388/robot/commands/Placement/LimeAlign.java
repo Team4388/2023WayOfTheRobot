@@ -4,6 +4,8 @@
 
 package frc4388.robot.commands.Placement;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.commands.PelvicInflammatoryDisease;
@@ -15,11 +17,14 @@ public class LimeAlign extends PelvicInflammatoryDisease {
   SwerveDrive drive;
   Limelight lime;
 
-  public LimeAlign(SwerveDrive drive, Limelight lime) {
+  DoubleSupplier ds;
+
+  public LimeAlign(SwerveDrive drive, Limelight lime, DoubleSupplier ds) {
     super(0.7, 0.4, 0.0, 0.0, 0.04);
 
     this.drive = drive;
     this.lime = lime;
+    this.ds = ds;
     
     addRequirements(drive, lime);
   }
@@ -27,14 +32,14 @@ public class LimeAlign extends PelvicInflammatoryDisease {
   @Override
   public double getError() {
 
-    if (lime.numTargets() > 2) {
+    if (lime.getNumTapes() > 2) {
       return 0.0;
     }
 
     double err = 0.0;
 
     try {
-      err = lime.getLowestTargetPoint().getYaw() / (VisionConstants.H_FOV / 2); 
+      err = ds.getAsDouble() / (VisionConstants.H_FOV / 2); 
     } catch (NullPointerException ex) {}
     
     return err;

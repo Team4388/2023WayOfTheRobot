@@ -28,8 +28,6 @@ public class Limelight extends SubsystemBase {
   public Limelight() {
     cam = new PhotonCamera(VisionConstants.NAME);
     cam.setDriverMode(false);
-    
-    setToLimePipeline();
   }
 
   public void setLEDs(boolean on) {
@@ -54,38 +52,9 @@ public class Limelight extends SubsystemBase {
     cam.setPipelineIndex(0);
   }
 
-  public ArrayList<Point> getTargetPoints() {
-    if (!cam.isConnected()) return null;
+  public PhotonTrackedTarget getAprilPoint() {
+    setToAprilPipeline();
 
-    PhotonPipelineResult result = cam.getLatestResult();
-
-    if (!result.hasTargets()) return null;
-
-    ArrayList<Point> points = new ArrayList<>(2);
-
-    for(PhotonTrackedTarget target : result.getTargets()) {
-      List<TargetCorner> corners = target.getDetectedCorners();
-  
-      double sumX = 0.0;
-      double sumY = 0.0;
-      double mx = 0.0;
-      double my = 0.0;
-  
-      for (TargetCorner c : corners) {
-        sumX += c.x;
-        sumY += c.y;
-      }
-  
-      mx = sumX / 4.0;
-      my = sumY / 4.0;
-
-      points.add(new Point(mx, my));
-    }
-
-    return points;
-  }
-
-  public PhotonTrackedTarget getFirstTargetPoint() {
     if (!cam.isConnected()) return null;
 
     PhotonPipelineResult result = cam.getLatestResult();
@@ -95,7 +64,20 @@ public class Limelight extends SubsystemBase {
     return result.getBestTarget();
   }
 
-  public PhotonTrackedTarget getLowestTargetPoint() {
+  public double getDistanceToApril() {
+    PhotonTrackedTarget aprilPoint = getAprilPoint();
+    if (aprilPoint == null) return -1;
+
+    double aprilHeight = VisionConstants.APRIL_HEIGHT - VisionConstants.LIME_HEIGHT;
+    double theta = 35.0 + aprilPoint.getPitch();
+
+    double distanceToApril = aprilHeight / Math.tan(Math.toRadians(theta));
+    return distanceToApril;
+  }
+
+  public PhotonTrackedTarget getLowestTape() {
+    setToLimePipeline();
+
     if (!cam.isConnected()) return null;
 
     PhotonPipelineResult result = cam.getLatestResult();
@@ -114,29 +96,23 @@ public class Limelight extends SubsystemBase {
     return lowest;
   }
 
-  public int numTargets() {
+  public int getNumTapes() {
+    setToLimePipeline();
+
     PhotonPipelineResult result = cam.getLatestResult();
 
     return result.getTargets().size();
   }
 
-  public double getHorizontalDistanceToTarget(boolean high) {
-    ArrayList<Point> targetPoints = getTargetPoints();
-    if (targetPoints == null) return -1;
+  public double getDistanceToTape() {
+    PhotonTrackedTarget tapePoint = getLowestTape();
+    if (tapePoint == null) return -1;
 
-    // Point highPoint = targetPoints.get(0).y <= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
-    // Point midPoint = targetPoints.get(0).y >= targetPoints.get(1).y ? targetPoints.get(0) : targetPoints.get(1);
-
-    PhotonTrackedTarget tapePoint = getFirstTargetPoint();//high ? highPoint : midPoint;
-    double tapeHeight = VisionConstants.MID_TAPE_HEIGHT;//high ? VisionConstants.HIGH_TAPE_HEIGHT : VisionConstants.MID_TAPE_HEIGHT;
-
+    double tapeHeight = VisionConstants.MID_TAPE_HEIGHT - VisionConstants.LIME_HEIGHT;
     double theta = 35.0 + tapePoint.getPitch();
 
-    double effectiveTapeHeight = tapeHeight - VisionConstants.LIME_HEIGHT;
-
-    double horizontalDistanceToTarget = effectiveTapeHeight / Math.tan(Math.toRadians(theta));
-
-    return horizontalDistanceToTarget;
+    double distanceToTape = tapeHeight / Math.tan(Math.toRadians(theta));
+    return distanceToTape;
   }
 
   int ctr = 0;
@@ -146,7 +122,7 @@ public class Limelight extends SubsystemBase {
     // This method will be called once per scheduler run
     
     if (ctr % 50 == 0) {
-      SmartDashboard.putNumber("Horizontal Distance", getHorizontalDistanceToTarget(false));
+      SmartDashboard.putNumber("Horizontal Distance", getDistanceToTape());
     }
 
     ctr++;
