@@ -42,16 +42,16 @@ public class Limelight extends SubsystemBase {
 
   public void setToLimePipeline() {
     cam.setPipelineIndex(1);
+    setLEDs(true);
   }
 
   public void setToAprilPipeline() {
     cam.setPipelineIndex(0);
+    setLEDs(false);
   }
 
   // ! might need to find midpoint instead of entire target
   public PhotonTrackedTarget getAprilPoint() {
-    setToAprilPipeline();
-
     if (!cam.isConnected()) return null;
 
     PhotonPipelineResult result = cam.getLatestResult();
@@ -61,7 +61,7 @@ public class Limelight extends SubsystemBase {
     return result.getBestTarget();
   }
 
-  public double getDistanceToApril() {
+  public double getDistanceToApril() {    
     PhotonTrackedTarget aprilPoint = getAprilPoint();
     if (aprilPoint == null) return -1;
 
@@ -73,8 +73,6 @@ public class Limelight extends SubsystemBase {
   }
 
   public PhotonTrackedTarget getLowestTape() {
-    setToLimePipeline();
-
     if (!cam.isConnected()) return null;
 
     PhotonPipelineResult result = cam.getLatestResult();
@@ -93,15 +91,7 @@ public class Limelight extends SubsystemBase {
     return lowest;
   }
 
-  public int getNumTapes() {
-    setToLimePipeline();
-
-    PhotonPipelineResult result = cam.getLatestResult();
-
-    return result.getTargets().size();
-  }
-
-  public double getDistanceToTape() {
+  public double getDistanceToTape() {    
     PhotonTrackedTarget tapePoint = getLowestTape();
     if (tapePoint == null) return -1;
 

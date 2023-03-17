@@ -21,7 +21,7 @@ public class DriveToLimeDistance extends PelvicInflammatoryDisease {
 
   /** Creates a new DriveToLimeDistance. */
   public DriveToLimeDistance(SwerveDrive drive, Limelight lime, double targetDistance, DoubleSupplier ds) {
-    super(0.2, 0.0, 0.0, 0.0, 1);
+    super(0.5, 0.0, 0.0, 0.0, 1);
 
     this.drive = drive;
     this.lime = lime;
@@ -33,11 +33,12 @@ public class DriveToLimeDistance extends PelvicInflammatoryDisease {
 
   @Override
   public double getError() {
-    return ds.getAsDouble() - targetDistance;
+    return targetDistance - ds.getAsDouble();
   }
 
   @Override
   public void runWithOutput(double output) {
+    System.out.println(output / Math.abs(getError()));
     drive.driveWithInput(new Translation2d(0.0, output / Math.abs(getError())), new Translation2d(0.0, 0.0), true);    
   }
 }

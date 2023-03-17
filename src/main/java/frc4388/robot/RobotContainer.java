@@ -9,6 +9,7 @@ package frc4388.robot;
 
 import java.util.function.Consumer;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -22,6 +23,7 @@ import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.Claw;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.robot.commands.BooleanCommand;
 import frc4388.robot.commands.Arm.PivotCommand;
 import frc4388.robot.commands.Arm.TeleCommand;
 import frc4388.robot.commands.Autos.AutoBalance;
@@ -77,6 +79,7 @@ public class RobotContainer {
 
     /* Commands */
     private Command emptyCommand = new InstantCommand();
+    private Command interruptCommand = new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw, m_robotLimeLight);
 
     private SequentialCommandGroup armToHome = new SequentialCommandGroup(new TeleCommand(m_robotArm, 0), new PivotCommand(m_robotArm, 0));
 
@@ -85,22 +88,24 @@ public class RobotContainer {
     private boolean readyForPlacement = false;
     private Boolean isPole = null;
 
-    private ConditionalCommand alignToPole = new ConditionalCommand(
+    private SequentialCommandGroup alignToPole =
         new SequentialCommandGroup(
             new RotateToAngle(m_robotSwerveDrive, 0.0),
-            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getLowestTape().getYaw()),
-            new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30, () -> m_robotLimeLight.getDistanceToTape())
-        ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = true)),
-        emptyCommand.asProxy(),
-        () -> m_robotLimeLight.getNumTapes() <= 2
-    );
+            new InstantCommand(() -> m_robotLimeLight.setToLimePipeline(), m_robotLimeLight),
+            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getLowestTape().getYaw(), 0.04),
+            new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
+            // new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 37, () -> m_robotLimeLight.getDistanceToTape())
+        ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = true));
 
-    // TODO: find actual distance
-    private SequentialCommandGroup alignToShelf = new SequentialCommandGroup(
-        new RotateToAngle(m_robotSwerveDrive, 0.0),
-        new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw()),
-        new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30, () -> m_robotLimeLight.getDistanceToApril())
-    ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
+    private SequentialCommandGroup alignToShelf = 
+        new SequentialCommandGroup(
+            new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new InstantCommand(() -> m_robotLimeLight.setToAprilPipeline(), m_robotLimeLight),
+            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw(), 0.04),
+            new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
+        ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
 
     public SequentialCommandGroup place = null;
 
@@ -220,11 +225,13 @@ public class RobotContainer {
         
         // align (pole)
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .onTrue(alignToPole);
+            .onTrue(alignToPole)
+            .onFalse(interruptCommand.asProxy());
         
         // align (shelf)
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(alignToShelf);
+            .onTrue(alignToShelf)
+            .onFalse(interruptCommand.asProxy());
 
         // toggle claw
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
@@ -240,7 +247,7 @@ public class RobotContainer {
         
         // interrupt button
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw, m_robotLimeLight));
+            .onTrue(interruptCommand.asProxy());
 
         // place high
         new POVButton(getDeadbandedOperatorController(), 0)
@@ -264,7 +271,7 @@ public class RobotContainer {
 
         // confirm
         new POVButton(getDeadbandedOperatorController(), 90)
-            .onTrue(new ConditionalCommand(place, emptyCommand.asProxy(), () -> place != null));
+            .onTrue(new BooleanCommand(() -> place, () -> emptyCommand.asProxy(), () -> place != null));
 
     }
 

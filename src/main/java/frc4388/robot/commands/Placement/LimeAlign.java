@@ -19,8 +19,8 @@ public class LimeAlign extends PelvicInflammatoryDisease {
 
   DoubleSupplier ds;
 
-  public LimeAlign(SwerveDrive drive, Limelight lime, DoubleSupplier ds) {
-    super(0.7, 0.4, 0.0, 0.0, 0.04);
+  public LimeAlign(SwerveDrive drive, Limelight lime, DoubleSupplier ds, double tolerance) {
+    super(0.4, 0.4, 0.0, 0.0, tolerance);
 
     this.drive = drive;
     this.lime = lime;
@@ -31,15 +31,11 @@ public class LimeAlign extends PelvicInflammatoryDisease {
 
   @Override
   public double getError() {
-
-    if (lime.getNumTapes() > 2) {
-      return 0.0;
-    }
-
     double err = 0.0;
 
     try {
-      err = ds.getAsDouble() / (VisionConstants.H_FOV / 2); 
+      System.out.println(ds.getAsDouble());
+      err = ds.getAsDouble() / (VisionConstants.H_FOV / 2);
     } catch (NullPointerException ex) {}
     
     return err;
@@ -48,11 +44,11 @@ public class LimeAlign extends PelvicInflammatoryDisease {
   @Override
   public void runWithOutput(double output) {
 
-    if (output > 0) {
-      output += 0.6;
-    } else if (output < 0) {
-      output -= 0.6;
-    }
+    // if (output > 0) {
+    //   output += 0.6;
+    // } else if (output < 0) {
+    //   output -= 0.6;
+    // }
 
     drive.driveWithInput(new Translation2d(output, 0.0), new Translation2d(0.0, 0.0), true);
   }
