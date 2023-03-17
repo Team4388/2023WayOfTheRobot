@@ -29,12 +29,6 @@ public class DriveToLimeDistance extends PelvicInflammatoryDisease {
     addRequirements(drive, lime);
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    lime.readyForPlacement = true;
-  }
-
   @Override
   public double getError() {
     return lime.getHorizontalDistanceToTarget(false) - targetDistance;

@@ -23,7 +23,6 @@ public class Limelight extends SubsystemBase {
   private PhotonCamera cam;
 
   private boolean lightOn;
-  public boolean readyForPlacement = false;
 
   /** Creates a new Limelight. */
   public Limelight() {
