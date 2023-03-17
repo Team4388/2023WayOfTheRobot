@@ -114,16 +114,19 @@ public class RobotContainer {
     };
 
     // TODO: find actual values
-    private SequentialCommandGroup placeConeHigh = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 0),
-        new TeleCommand(m_robotArm, 0),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
-    );
+    private SequentialCommandGroup placeConeHigh =
+        new SequentialCommandGroup(
+            // new InstantCommand(() -> System.out.println("Placing cone high")),
+            new PivotCommand(m_robotArm, 64 + 135),
+            new InstantCommand(() -> m_robotArm.setRotVel(0)),
+            new TeleCommand(m_robotArm, 95642),
+            toggleClaw.asProxy(),
+            armToHome.asProxy()
+        );
 
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 0),
-        new TeleCommand(m_robotArm, 0),
+        new PivotCommand(m_robotArm, 70 + 135),
+        new TeleCommand(m_robotArm, 32866),
         toggleClaw.asProxy(),
         armToHome.asProxy()
     );
@@ -247,7 +250,8 @@ public class RobotContainer {
         
         // interrupt button
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(interruptCommand.asProxy());
+            .onTrue(placeConeHigh.asProxy());
+            // .onTrue(interruptCommand.asProxy());
 
         // place high
         new POVButton(getDeadbandedOperatorController(), 0)

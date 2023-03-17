@@ -4,30 +4,36 @@
 
 package frc4388.robot.commands.Arm;
 
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.commands.PelvicInflammatoryDisease;
 import frc4388.robot.subsystems.Arm;
 
-public class TeleCommand extends PelvicInflammatoryDisease {
-  private final Arm    arm;
-  private final double target;
+public class TeleCommand extends CommandBase {
+  private final Arm     arm;
+  private final double  target;
+  private       boolean goIn;
   
   /** Creates a new ArmCommand. */
   public TeleCommand(Arm arm, double target) {
-    super(0.6, 0, 0, 0, 0);
     this.arm    = arm;
     this.target = target;
     addRequirements(arm);
   }
 
   @Override
-  public double getError() {
-    return (arm.getArmLength() - target) /
-           (ArmConstants.TELE_FORWARD_SOFT_LIMIT - ArmConstants.TELE_REVERSE_SOFT_LIMIT);
+  public void initialize() {
+    this.goIn = target < arm.getArmLength();
   }
 
   @Override
-  public void runWithOutput(double output) {
-    arm.setTeleVel(output);
+  public void execute() {
+    arm.setTeleVel(goIn ? 1 : -1);
+  }
+
+  @Override
+  public boolean isFinished() {
+    if (goIn) return arm.getArmLength() < target;
+    else      return arm.getArmLength() > target;
   }
 }
