@@ -105,7 +105,7 @@ public class RobotContainer {
     public SequentialCommandGroup place = null;
 
     private Consumer<SequentialCommandGroup> queuePlacement = (scg) -> {
-        place = scg.andThen(new InstantCommand(() -> readyForPlacement = false), new InstantCommand(() -> isPole = null));
+        place = scg.andThen(new InstantCommand(() -> readyForPlacement = false), new InstantCommand(() -> isPole = null), new InstantCommand(() -> place = null));
     };
 
     // TODO: find actual values
@@ -217,7 +217,6 @@ public class RobotContainer {
         //     .onFalse(new InstantCommand());
 
         // * Operator Buttons
-
         
         // align (pole)
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
