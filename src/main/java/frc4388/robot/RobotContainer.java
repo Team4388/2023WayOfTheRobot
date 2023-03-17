@@ -99,10 +99,11 @@ public class RobotContainer {
         () -> m_robotLimeLight.getNumTapes() <= 2
     );
 
+    // TODO: find actual distance
     private SequentialCommandGroup alignToShelf = new SequentialCommandGroup(
         new RotateToAngle(m_robotSwerveDrive, 0.0),
         new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw()),
-        new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30, () -> m_robotLimeLight.getDistanceToApril()) // TODO: find distance
+        new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30, () -> m_robotLimeLight.getDistanceToApril())
     ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
 
     public SequentialCommandGroup place = null;
