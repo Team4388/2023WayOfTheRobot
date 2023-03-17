@@ -40,6 +40,8 @@ public class Arm extends SubsystemBase {
     }
 
     public void setRotVel(double vel) {
+        if (vel > 1) vel = 1;
+
         var degrees = Math.abs(getArmRotation()) - 135;
         SmartDashboard.putNumber("arm degrees", degrees);
         SmartDashboard.putNumber("arm rot vel", vel);
@@ -47,6 +49,8 @@ public class Arm extends SubsystemBase {
         if ((degrees < 2 && vel < 0) || (degrees > 110 && vel > 0)) {
             m_pivot.set(ControlMode.PercentOutput, 0);
         } else if (degrees > 90 && vel > 0) {
+            m_pivot.set(ControlMode.PercentOutput, .15 * vel);
+        } else if (degrees < 25 && vel < 0) {
             m_pivot.set(ControlMode.PercentOutput, .15 * vel);
         } else {
             m_pivot.set(ControlMode.PercentOutput, .3 * vel);
@@ -78,7 +82,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getArmLength() {
-        return m_tele.getSelectedSensorPosition();
+        return m_tele.getSelectedSensorPosition() - tele_soft;
     }
 
     public double getArmRotation() {
@@ -112,9 +116,10 @@ public class Arm extends SubsystemBase {
     }
 
     boolean tele_softLimit = false;
+    double  tele_soft = 0;
     public void resetTeleSoftLimit() {
         if (!tele_softLimit) {
-            var tele_soft = m_tele.getSelectedSensorPosition();
+            tele_soft = m_tele.getSelectedSensorPosition();
             m_tele.configForwardSoftLimitThreshold(91000 - tele_soft);
             m_tele.configReverseSoftLimitThreshold(tele_soft);
             m_tele.configForwardSoftLimitEnable(true);
@@ -145,6 +150,7 @@ public class Arm extends SubsystemBase {
         }
 
         // double x = Math.cos(Math.toRadians(degrees));
+        SmartDashboard.putNumber("arm length", getArmLength());
     }
 
     public void killSoftLimits() {
