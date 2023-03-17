@@ -92,21 +92,18 @@ public class RobotContainer {
     private ConditionalCommand alignToPole = new ConditionalCommand(
         new SequentialCommandGroup(
             new RotateToAngle(m_robotSwerveDrive, 0.0),
-            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight),
-            new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30)
+            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getLowestTape().getYaw()),
+            new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30, () -> m_robotLimeLight.getDistanceToTape())
         ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = true)),
         emptyCommand.asProxy(),
-        () -> m_robotLimeLight.numTargets() <= 2
+        () -> m_robotLimeLight.getNumTapes() <= 2
     );
 
-    // TODO: make
-    private ConditionalCommand alignToShelf = new ConditionalCommand(
-        new SequentialCommandGroup(
-
-        ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false)),
-        emptyCommand.asProxy(),
-        () -> true
-    );
+    private SequentialCommandGroup alignToShelf = new SequentialCommandGroup(
+        new RotateToAngle(m_robotSwerveDrive, 0.0),
+        new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw()),
+        new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30, () -> m_robotLimeLight.getDistanceToApril()) // TODO: find distance
+    ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
 
     public SequentialCommandGroup place = null;
 

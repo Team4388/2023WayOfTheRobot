@@ -4,6 +4,8 @@
 
 package frc4388.robot.commands.Placement;
 
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.RobotContainer;
@@ -17,21 +19,23 @@ public class DriveToLimeDistance extends PelvicInflammatoryDisease {
   Limelight lime;
 
   double targetDistance;
+  DoubleSupplier ds;
 
   /** Creates a new DriveToLimeDistance. */
-  public DriveToLimeDistance(SwerveDrive drive, Limelight lime, double targetDistance) {
+  public DriveToLimeDistance(SwerveDrive drive, Limelight lime, double targetDistance, DoubleSupplier ds) {
     super(0.2, 0.0, 0.0, 0.0, 1);
 
     this.drive = drive;
     this.lime = lime;
     this.targetDistance = targetDistance;
+    this.ds = ds;
 
     addRequirements(drive, lime);
   }
 
   @Override
   public double getError() {
-    return lime.getHorizontalDistanceToTarget(false) - targetDistance;
+    return ds.getAsDouble() - targetDistance;
   }
 
   @Override

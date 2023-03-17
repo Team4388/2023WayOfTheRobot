@@ -168,5 +168,7 @@ public final class Constants {
     
     // public static final double MID_TARGET_HEIGHT = 34.0;
     public static final double MID_TAPE_HEIGHT = 24.0;
+
+    public static final double APRIL_HEIGHT = -1.0; // TODO: find actual value
   }
 }
