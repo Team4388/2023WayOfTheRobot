@@ -4,8 +4,6 @@
 
 package frc4388.robot.commands.Placement;
 
-import org.photonvision.targeting.PhotonTrackedTarget;
-
 import edu.wpi.first.math.geometry.Translation2d;
 import frc4388.robot.Constants.VisionConstants;
 import frc4388.robot.commands.PelvicInflammatoryDisease;
