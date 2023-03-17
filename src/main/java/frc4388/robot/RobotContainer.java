@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -21,6 +22,7 @@ import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.Autos.AutoBalance;
 import frc4388.robot.commands.Autos.PlaybackChooser;
+import frc4388.robot.commands.Placement.DriveToLimeDistance;
 import frc4388.robot.commands.Placement.LimeAlign;
 import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
@@ -69,12 +71,25 @@ public class RobotContainer {
     private ConditionalCommand alignToTarget = new ConditionalCommand(
         new SequentialCommandGroup(
             new RotateToAngle(m_robotSwerveDrive, 0.0),
-            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight)
+            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight),
+            new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30)
         ),
         noAuto,
         () -> m_robotLimeLight.numTargets() <= 2
     );
-    
+
+    public SequentialCommandGroup place = null;
+    private ConditionalCommand queuePlacement = new ConditionalCommand(
+        new InstantCommand(() -> {}),
+        noAuto,
+        () -> m_robotLimeLight.readyForPlacement
+    );
+
+    private SequentialCommandGroup placeConeHigh = null;
+    private SequentialCommandGroup placeConeMid = null;
+    private SequentialCommandGroup placeCubeHigh = null;
+    private SequentialCommandGroup placeCubeMid = null;
+    private SequentialCommandGroup placeLow = null;
 
     // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
     
@@ -138,14 +153,9 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToTurbo()))
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
-
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-        //     .whileTrue(new InstantCommand(() -> m_robotSwerveDrive.setToTurbo()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
-
-        //     // .onFalse()
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
@@ -178,7 +188,9 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
             
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));
+            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));      
+
+        
     }
 
     /**

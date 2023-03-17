@@ -4,29 +4,44 @@
 
 package frc4388.robot.commands.Placement;
 
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc4388.robot.RobotContainer;
+import frc4388.robot.commands.PelvicInflammatoryDisease;
+import frc4388.robot.subsystems.Limelight;
+import frc4388.robot.subsystems.SwerveDrive;
 
-public class DriveToLimeDistance extends CommandBase {
+public class DriveToLimeDistance extends PelvicInflammatoryDisease {
+
+  SwerveDrive drive;
+  Limelight lime;
+
+  double targetDistance;
+
   /** Creates a new DriveToLimeDistance. */
-  public DriveToLimeDistance() {
-    // Use addRequirements() here to declare subsystem dependencies.
+  public DriveToLimeDistance(SwerveDrive drive, Limelight lime, double targetDistance) {
+    super(0.2, 0.0, 0.0, 0.0, 1);
+
+    this.drive = drive;
+    this.lime = lime;
+    this.targetDistance = targetDistance;
+
+    addRequirements(drive, lime);
   }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    lime.readyForPlacement = true;
+  }
 
-  // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    return false;
+  public double getError() {
+    return lime.getHorizontalDistanceToTarget(false) - targetDistance;
+  }
+
+  @Override
+  public void runWithOutput(double output) {
+    drive.driveWithInput(new Translation2d(0.0, output / Math.abs(getError())), new Translation2d(0.0, 0.0), true);    
   }
 }
