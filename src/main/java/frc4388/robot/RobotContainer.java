@@ -7,6 +7,9 @@
 
 package frc4388.robot;
 
+import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
+
 import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,11 +18,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.Claw;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
+import frc4388.robot.commands.Arm.PivotCommand;
+import frc4388.robot.commands.Arm.TeleCommand;
 import frc4388.robot.commands.Autos.AutoBalance;
 import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Placement.DriveToLimeDistance;
@@ -60,36 +66,6 @@ public class RobotContainer {
 
     /* Autos */
     public SendableChooser<Command> chooser = new SendableChooser<>();
-    
-    private Command noAuto = new InstantCommand();
-
-    // private SequentialCommandGroup alignToTarget = new SequentialCommandGroup(
-    //     new RotateToAngle(m_robotSwerveDrive, m_robotLimeLight, 0.0, true),
-    //     new LimeAlign(m_robotSwerveDrive, m_robotLimeLight)
-    // );
-
-    private ConditionalCommand alignToTarget = new ConditionalCommand(
-        new SequentialCommandGroup(
-            new RotateToAngle(m_robotSwerveDrive, 0.0),
-            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight),
-            new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30)
-        ),
-        noAuto,
-        () -> m_robotLimeLight.numTargets() <= 2
-    );
-
-    public SequentialCommandGroup place = null;
-    private ConditionalCommand queuePlacement = new ConditionalCommand(
-        new InstantCommand(() -> {}),
-        noAuto,
-        () -> m_robotLimeLight.readyForPlacement
-    );
-
-    private SequentialCommandGroup placeConeHigh = null;
-    private SequentialCommandGroup placeConeMid = null;
-    private SequentialCommandGroup placeCubeHigh = null;
-    private SequentialCommandGroup placeCubeMid = null;
-    private SequentialCommandGroup placeLow = null;
 
     // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
     
@@ -102,6 +78,49 @@ public class RobotContainer {
     // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
     private PlaybackChooser playbackChooser;
+
+    /* Commands */
+    private Command emptyCommand = new InstantCommand();
+
+    private Boolean isPole = null;
+
+    private ConditionalCommand alignToPole = new ConditionalCommand(
+        new SequentialCommandGroup(
+            new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight),
+            new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 30)
+        ).andThen(new InstantCommand(() -> isPole = true)),
+        emptyCommand.asProxy(),
+        () -> m_robotLimeLight.numTargets() <= 2
+    );
+
+    // TODO: make
+    private ConditionalCommand alignToShelf = new ConditionalCommand(
+        new SequentialCommandGroup(
+
+        ).andThen(new InstantCommand(() -> isPole = false)),
+        emptyCommand.asProxy(),
+        () -> true
+    );
+
+    public SequentialCommandGroup place = null;
+
+    private Consumer<SequentialCommandGroup> queuePlacement = (scg) -> {
+        place = scg.andThen(new InstantCommand(() -> m_robotLimeLight.readyForPlacement = false), new InstantCommand(() -> isPole = null));
+    };
+
+    // TODO: find actual values
+    private SequentialCommandGroup placeConeHigh = new SequentialCommandGroup(new PivotCommand(m_robotArm, 0), new TeleCommand(m_robotArm, 0));
+
+    private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(new PivotCommand(m_robotArm, 0), new TeleCommand(m_robotArm, 0));
+
+    private SequentialCommandGroup placeCubeHigh = new SequentialCommandGroup(new PivotCommand(m_robotArm, 0), new TeleCommand(m_robotArm, 0));
+
+    private SequentialCommandGroup placeCubeMid = new SequentialCommandGroup(new PivotCommand(m_robotArm, 0), new TeleCommand(m_robotArm, 0));
+
+    private SequentialCommandGroup placeLow = new SequentialCommandGroup(new PivotCommand(m_robotArm, 0), new TeleCommand(m_robotArm, 0));
+
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -175,22 +194,55 @@ public class RobotContainer {
 
         // * Operator Buttons
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotLimeLight.toggleLEDs(), m_robotLimeLight));
         
+        // align (pole)
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .onTrue(alignToTarget);
+            .onTrue(alignToPole);
         
+        // align (shelf)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(alignToPole);
+
+        // toggle claw
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
-        
+
+        // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
-            
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));      
-
         
+        // toggle limelight
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotLimeLight.toggleLEDs(), m_robotLimeLight));
+        
+        // interrupt button
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw, m_robotLimeLight));
+
+        // place high
+        new POVButton(getDeadbandedOperatorController(), 0)
+            .onTrue(new ConditionalCommand(
+                new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeHigh)), new InstantCommand(() -> queuePlacement.accept(placeCubeHigh)), () -> isPole == true),
+                emptyCommand.asProxy(),
+                () -> m_robotLimeLight.readyForPlacement == true)
+            );
+
+        // place mid
+        new POVButton(getDeadbandedOperatorController(), 270)
+            .onTrue(new ConditionalCommand(
+                new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeMid)), new InstantCommand(() -> queuePlacement.accept(placeCubeMid)), () -> isPole == true),
+                emptyCommand.asProxy(),
+                () -> m_robotLimeLight.readyForPlacement == true)
+            );
+            
+        // place low
+        new POVButton(getDeadbandedOperatorController(), 180)
+            .onTrue(new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeLow)), emptyCommand.asProxy(), () -> m_robotLimeLight.readyForPlacement == true));
+
+        // confirm
+        new POVButton(getDeadbandedOperatorController(), 90)
+            .onTrue(new ConditionalCommand(place, emptyCommand.asProxy(), () -> place != null));
+
     }
 
     /**
