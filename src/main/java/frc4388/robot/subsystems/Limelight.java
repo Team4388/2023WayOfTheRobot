@@ -5,19 +5,15 @@
 package frc4388.robot.subsystems;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.opencv.core.Point;
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.VisionConstants;
-import frc4388.utility.AbhiIsADumbass;
 
 public class Limelight extends SubsystemBase {
   private PhotonCamera cam;

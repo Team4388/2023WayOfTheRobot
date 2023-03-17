@@ -7,8 +7,6 @@
 
 package frc4388.robot;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import frc4388.utility.Gains;
 import frc4388.utility.LEDPatterns;
