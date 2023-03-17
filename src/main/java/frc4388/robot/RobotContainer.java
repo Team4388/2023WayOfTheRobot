@@ -8,9 +8,7 @@
 package frc4388.robot;
 
 import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
 
-import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -30,8 +28,6 @@ import frc4388.robot.commands.Autos.AutoBalance;
 import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Placement.DriveToLimeDistance;
 import frc4388.robot.commands.Placement.LimeAlign;
-import frc4388.robot.commands.Swerve.JoystickPlayback;
-import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.commands.Swerve.RotateToAngle;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 

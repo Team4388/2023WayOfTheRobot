@@ -1,28 +1,20 @@
 package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import frc4388.robot.Constants.ArmConstants;
-import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.DeferredBlock;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
     private WPI_TalonFX m_tele;
     public WPI_TalonFX  m_pivot;
     private CANCoder    m_pivotEncoder;
-    private boolean     m_debug;
 
     // Moves arm to distance [dist] then returns new ang
     public Arm(WPI_TalonFX pivot, WPI_TalonFX tele, CANCoder encoder, boolean debug) {
@@ -140,7 +132,6 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double degrees = Math.abs(m_pivotEncoder.getAbsolutePosition() - 135);
 
         if (m_tele.isFwdLimitSwitchClosed() == 1 && tele_reset) {
             var tele_soft = m_tele.getSelectedSensorPosition();
