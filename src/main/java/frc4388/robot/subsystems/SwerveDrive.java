@@ -101,6 +101,19 @@ public class SwerveDrive extends SubsystemBase {
     }
   }
 
+  public boolean rotateToTarget(double angle) {
+    double currentAngle = getGyroAngle();
+    double error = angle - currentAngle;
+
+    driveWithInput(new Translation2d(0, 0), new Translation2d(error / Math.abs(error) * 0.3, 0), true);
+
+    if (Math.abs(angle - getGyroAngle()) < 5.0) {
+      return true;
+    }
+
+    return false;
+  }
+
   public double getGyroAngle() {
     return gyro.getAngle();
   }
@@ -122,7 +135,8 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // This method will be called once per scheduler run\
+    SmartDashboard.putNumber("Gyro", getGyroAngle());
   }
 
   public void shiftDown() {

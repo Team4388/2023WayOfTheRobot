@@ -95,8 +95,29 @@ public class Limelight extends SubsystemBase {
     return result.getBestTarget();
   }
 
-  private double getPointAngle(Point point) {
-    return (VisionConstants.LIME_VIXELS - point.y) * (VisionConstants.V_FOV / VisionConstants.LIME_VIXELS);
+  public PhotonTrackedTarget getLowestTargetPoint() {
+    if (!cam.isConnected()) return null;
+
+    PhotonPipelineResult result = cam.getLatestResult();
+
+    if (!result.hasTargets()) return null;
+
+    ArrayList<PhotonTrackedTarget> points = (ArrayList<PhotonTrackedTarget>) result.getTargets();
+
+    PhotonTrackedTarget lowest = points.get(0);
+    for (PhotonTrackedTarget point : points) {
+      if (point.getPitch() < lowest.getPitch()) {
+        lowest = point;
+      }
+    }
+
+    return lowest;
+  }
+
+  public int numTargets() {
+    PhotonPipelineResult result = cam.getLatestResult();
+
+    return result.getTargets().size();
   }
 
   public double getHorizontalDistanceToTarget(boolean high) {

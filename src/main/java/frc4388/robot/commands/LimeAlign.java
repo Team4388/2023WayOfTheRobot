@@ -17,7 +17,7 @@ public class LimeAlign extends PelvicInflammatoryDisease {
   Limelight lime;
 
   public LimeAlign(SwerveDrive drive, Limelight lime) {
-    super(0.7, 0.1, 0.0, 0.0, 0);
+    super(0.7, 0.4, 0.0, 0.0, 0.04);
 
     this.drive = drive;
     this.lime = lime;
@@ -27,10 +27,15 @@ public class LimeAlign extends PelvicInflammatoryDisease {
 
   @Override
   public double getError() {
+
+    if (lime.numTargets() > 2) {
+      return 0.0;
+    }
+
     double err = 0.0;
 
     try {
-      err = lime.getFirstTargetPoint().getYaw() / (VisionConstants.H_FOV / 2); 
+      err = lime.getLowestTargetPoint().getYaw() / (VisionConstants.H_FOV / 2); 
     } catch (NullPointerException ex) {}
     
     return err;

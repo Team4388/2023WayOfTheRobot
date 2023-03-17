@@ -9,8 +9,10 @@ package frc4388.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.*;
 import frc4388.robot.commands.AutoBalance;
@@ -22,6 +24,7 @@ import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.commands.JoystickRecorder;
 import frc4388.robot.commands.LimeAlign;
 import frc4388.robot.commands.PlaybackChooser;
+import frc4388.robot.commands.RotateToAngle;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 
 
@@ -47,7 +50,7 @@ public class RobotContainer {
 
     public final Claw m_robotClaw = new Claw(m_robotMap.servo);
 
-    public final Limelight m_limeLight = new Limelight();
+    public final Limelight m_robotLimeLight = new Limelight();
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
@@ -57,7 +60,22 @@ public class RobotContainer {
     public SendableChooser<Command> chooser = new SendableChooser<>();
     
     private Command noAuto = new InstantCommand();
+
+    // private SequentialCommandGroup alignToTarget = new SequentialCommandGroup(
+    //     new RotateToAngle(m_robotSwerveDrive, m_robotLimeLight, 0.0, true),
+    //     new LimeAlign(m_robotSwerveDrive, m_robotLimeLight)
+    // );
+
+    private ConditionalCommand alignToTarget = new ConditionalCommand(
+        new SequentialCommandGroup(
+            new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight)
+        ),
+        noAuto,
+        () -> m_robotLimeLight.numTargets() <= 2
+    );
     
+
     // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
     
     // private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
@@ -146,31 +164,21 @@ public class RobotContainer {
         //     .onFalse(new InstantCommand());
 
         // * Operator Buttons
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-        //     // .onTrue(new InstantCommand(() -> System.out.println("Claw Button")));
-        //     .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
-
-        
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> m_limeLight.toggleLEDs(), m_limeLight));
-
-        
+            .onTrue(new InstantCommand(() -> m_robotLimeLight.toggleLEDs(), m_robotLimeLight));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .whileTrue(new LimeAlign(m_robotSwerveDrive, m_limeLight));
+            .onTrue(alignToTarget);
         
-            new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
-        
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));
-
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));
+            
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw));
     }
 
     /**

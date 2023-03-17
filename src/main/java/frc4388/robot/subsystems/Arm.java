@@ -156,15 +156,7 @@ public class Arm extends SubsystemBase {
         // double x = Math.cos(Math.toRadians(degrees));
     }
 
-    boolean soft_limits = true;
     public void killSoftLimits() {
         resetTeleSoftLimit();
-        var pivot_soft = m_pivot.getSelectedSensorPosition();
-        var tele_soft  = m_tele.getSelectedSensorPosition();
-        
-        m_pivot.configForwardSoftLimitEnable(!soft_limits);
-        m_pivot.configReverseSoftLimitEnable(!soft_limits);
-
-        soft_limits = !soft_limits;
     }
 }
