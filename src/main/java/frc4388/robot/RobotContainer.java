@@ -123,7 +123,7 @@ public class RobotContainer {
     };
 
     // TODO: find actual values
-    private SequentialCommandGroup placeConeHigh =
+    private SequentialCommandGroup placeCubeHigh =
         new SequentialCommandGroup(
             // new InstantCommand(() -> System.out.println("Placing cone high")),
             new PivotCommand(m_robotArm, 64 + 135),
@@ -133,21 +133,21 @@ public class RobotContainer {
             armToHome.asProxy()
         );
 
-    private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
+    private SequentialCommandGroup placeCubeMid = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 70 + 135),
         new TeleCommand(m_robotArm, 32866),
         toggleClaw.asProxy(),
         armToHome.asProxy()
     );
 
-    private SequentialCommandGroup placeCubeHigh = new SequentialCommandGroup(
+    private SequentialCommandGroup placeConeHigh = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 0),
         new TeleCommand(m_robotArm, 0),
         toggleClaw.asProxy(),
         armToHome.asProxy()
     );
 
-    private SequentialCommandGroup placeCubeMid = new SequentialCommandGroup(
+    private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 0),
         new TeleCommand(m_robotArm, 0),
         toggleClaw.asProxy(),
