@@ -5,11 +5,13 @@
 package frc4388.robot.subsystems;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.common.hardware.VisionLEDMode;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
+import org.photonvision.targeting.TargetCorner;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -50,7 +52,6 @@ public class Limelight extends SubsystemBase {
     setLEDs(false);
   }
 
-  // ! might need to find midpoint instead of entire target
   public PhotonTrackedTarget getAprilPoint() {
     if (!cam.isConnected()) return null;
 
@@ -59,6 +60,51 @@ public class Limelight extends SubsystemBase {
     if (!result.hasTargets()) return null;
 
     return result.getBestTarget();
+  }
+
+  private List<TargetCorner> getAprilCorners() {
+    if (!cam.isConnected()) return null;
+
+    PhotonPipelineResult result = cam.getLatestResult();
+
+    if (!result.hasTargets()) return null;
+
+    return result.getBestTarget().getDetectedCorners();
+  }
+
+  public double getAprilSkew() {
+    List<TargetCorner> corners = getAprilCorners();
+    ArrayList<TargetCorner> bottomSide = getAprilBottomSide(corners);
+
+    if (bottomSide == null) return 0;
+
+    TargetCorner bottomRight = bottomSide.get(0).x > bottomSide.get(1).x ? bottomSide.get(0) : bottomSide.get(1);
+    TargetCorner bottomLeft = bottomRight.x == bottomSide.get(0).x ? bottomSide.get(1) : bottomSide.get(0);
+
+    return bottomLeft.y - bottomRight.y;
+  }
+
+  private ArrayList<TargetCorner> getAprilBottomSide(List<TargetCorner> box) {
+    if (box == null) return null;
+
+    ArrayList<TargetCorner> bottomSide = new ArrayList<>();
+
+    TargetCorner l1 = new TargetCorner(-1, -1);
+    TargetCorner l2 = new TargetCorner(-1, -1);
+    
+    for (TargetCorner c : box) {
+      if (c.y > l1.y) l1 = c;
+    }
+
+    for (TargetCorner c : box) {
+      if (c.y == l1.y) continue;
+      if (c.y > l2.y) l2 = c;
+    }
+
+    bottomSide.add(l1);
+    bottomSide.add(l2);
+
+    return bottomSide;
   }
 
   public double getDistanceToApril() {    
@@ -102,17 +148,8 @@ public class Limelight extends SubsystemBase {
     return distanceToTape;
   }
 
-  int ctr = 0;
-
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    
-    if (ctr % 50 == 0) {
-      SmartDashboard.putNumber("Horizontal Distance", getDistanceToTape());
-    }
-
-    ctr++;
-
+    SmartDashboard.putNumber("April Skew", getAprilSkew());
   }
 }

@@ -7,7 +7,6 @@
 
 package frc4388.robot;
 
-import java.lang.StackWalker.Option;
 import java.util.function.Consumer;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -29,7 +28,7 @@ import frc4388.robot.commands.Arm.PivotCommand;
 import frc4388.robot.commands.Arm.TeleCommand;
 import frc4388.robot.commands.Autos.AutoBalance;
 import frc4388.robot.commands.Autos.PlaybackChooser;
-import frc4388.robot.commands.Placement.DriveToLimeDistance;
+import frc4388.robot.commands.Placement.AprilRotAlign;
 import frc4388.robot.commands.Placement.LimeAlign;
 import frc4388.robot.commands.Swerve.RotateToAngle;
 import frc4388.utility.controller.DeadbandedXboxController;
@@ -263,8 +262,10 @@ public class RobotContainer {
             .onFalse(interruptCommand.asProxy());
 
         // toggle claw
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
+        //     .onTrue(toggleClaw.asProxy());
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-            .onTrue(toggleClaw.asProxy());
+            .whileTrue(new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight));
 
         // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON) // final
