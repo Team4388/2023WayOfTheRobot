@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import java.lang.StackWalker.Option;
 import java.util.function.Consumer;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -189,6 +190,11 @@ public class RobotContainer {
             .buildDisplay();
     }
 
+    // here be dragons - enter if you dare
+    private static class TapState {
+        public boolean gearTapped = true;
+        public long    gearTime   = 0;
+    }
 
     /**
      * Use this method to define your button->command mappings. Buttons can be
@@ -199,18 +205,38 @@ public class RobotContainer {
     private void configureButtonBindings() {
         // * Driver Buttons
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive)); // final
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToTurbo()))
+        // because closure reasons - ask Daniel Thomas
+        // final TapState tap = new TapState();
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()))
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+            // .onTrue(new InstantCommand(() -> {
+            //     tap.gearTapped = true;
+            //     tap.gearTime   = System.currentTimeMillis();
+            // }))
+            // .whileTrue(new RunCommand(() -> {
+            //     if (tap.gearTapped && System.currentTimeMillis() - tap.gearTime > 200) {
+            //         m_robotSwerveDrive.setToTurbo();
+            //         tap.gearTapped = false;
+            //     }
+            // }))
+            // .onFalse(new InstantCommand(() -> {
+            //     if (tap.gearTapped)
+            //         m_robotSwerveDrive.setToFast();
+            //     else
+            //         m_robotSwerveDrive.setToSlow();
+            // }));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-            .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+            .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive)); // final
 
+        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .onTrue(interruptCommand.asProxy()); // final
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
         //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
         //                                     () -> getDeadbandedDriverController().getLeftX(),
@@ -222,36 +248,36 @@ public class RobotContainer {
 
         // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
         //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
-        //     .onFalse(new InstantCommand());
+        //     .onFalse(new InstantCommand()); 
 
         // * Operator Buttons
         
         // align (pole)
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(alignToPole)
             .onFalse(interruptCommand.asProxy());
         
         // align (shelf)
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
             .onTrue(alignToShelf)
             .onFalse(interruptCommand.asProxy());
 
         // toggle claw
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
             .onTrue(toggleClaw.asProxy());
 
         // kill soft limits
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
         
         // toggle limelight
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotLimeLight.toggleLEDs(), m_robotLimeLight));
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotLimeLight.toggleLEDs(), m_robotLimeLight)); // final?
         
         // interrupt button
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(placeConeHigh.asProxy());
-            // .onTrue(interruptCommand.asProxy());
+        //new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+        //   .onTrue(placeConeHigh.asProxy());  
+        // .onTrue(interruptCommand.asProxy()); 
 
         // place high
         new POVButton(getDeadbandedOperatorController(), 0)
