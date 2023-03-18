@@ -183,15 +183,21 @@ public class RobotContainer {
         .withName("Arm DefaultCommand"));
         
         // * Auto Commands
-        // chooser.setDefaultOption("NoAuto", noAuto);
+        chooser.setDefaultOption("NoAuto", emptyCommand);
+        chooser.addOption("alignToPole", alignToPole);
+        chooser.addOption("alignToShelf", alignToShelf);
+
+        chooser.addOption("placeConeHigh", placeConeHigh);
+        chooser.addOption("placeConeMid", placeConeMid);
+        chooser.addOption("placeCubeHigh", placeCubeHigh);
+        chooser.addOption("placeCubeMid", placeCubeMid);
+        chooser.addOption("placeLow", placeLow);
 
         // chooser.addOption("Blue1Path", blue1Path);
         // chooser.addOption("Blue1PathWithBalance", blue1PathWithBalance);
 
         // chooser.addOption("Red1Path", red1Path);
         // chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
-        
-        // chooser.addOption("Taxi", taxi);
 
         playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
             .addOption("Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive))
