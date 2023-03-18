@@ -98,12 +98,21 @@ public class RobotContainer {
             // new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 37, () -> m_robotLimeLight.getDistanceToTape())
         ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = true));
 
+    // private SequentialCommandGroup alignToShelf = 
+    //     new SequentialCommandGroup(
+    //         new RotateToAngle(m_robotSwerveDrive, 0.0),
+    //         new InstantCommand(() -> m_robotLimeLight.setToAprilPipeline(), m_robotLimeLight),
+    //         new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw(), 0.04),
+    //         new RotateToAngle(m_robotSwerveDrive, 0.0),
+    //         new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
+    //     ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
+    
     private SequentialCommandGroup alignToShelf = 
         new SequentialCommandGroup(
-            new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
             new InstantCommand(() -> m_robotLimeLight.setToAprilPipeline(), m_robotLimeLight),
             new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw(), 0.04),
-            new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
             new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
         ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
 
