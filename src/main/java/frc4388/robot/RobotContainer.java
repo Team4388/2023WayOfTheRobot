@@ -7,7 +7,12 @@
 
 package frc4388.robot;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
+import com.revrobotics.CANSparkMax.FaultID;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -45,7 +50,7 @@ public class RobotContainer {
     
     public final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
 
-    public final Claw m_robotClaw = new Claw(m_robotMap.servo);
+    public final Claw m_robotClaw = new Claw(m_robotMap.leftClaw, m_robotMap.rightClaw, m_robotMap.spinnyspin);
 
     public final Limelight m_limeLight = new Limelight();
 
@@ -154,17 +159,21 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> m_limeLight.toggleLEDs(), m_limeLight));
-
-        
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .whileTrue(new LimeAlign(m_robotSwerveDrive, m_limeLight));
         
-            new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotClaw.toggle()));
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
+
+        // SmartDashboard.putBoolean("isn't SparkMAX", );
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .onTrue  (new InstantCommand(() -> m_robotClaw.yesspinnyspin()))
+            .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
         //     .onTrue(new InstantCommand(() -> m_robotArm.resetTeleSoftLimit(), m_robotArm));

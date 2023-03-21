@@ -11,8 +11,11 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
@@ -168,6 +171,7 @@ public class RobotMap {
   }
 
   // claw stuff (WHAT IS A SOAP ENGINEER)
-  PWM servo = new PWM(0);
-
+  PWM leftClaw           = new PWM(0);
+  PWM rightClaw          = new PWM(1);
+  CANSparkMax spinnyspin = new CANSparkMax(18, MotorType.kBrushless);
 }
