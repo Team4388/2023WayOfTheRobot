@@ -81,7 +81,7 @@ public class RobotContainer {
     private Command emptyCommand = new InstantCommand();
     private Command interruptCommand = new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw, m_robotLimeLight);
 
-    private SequentialCommandGroup armToHome = new SequentialCommandGroup(new TeleCommand(m_robotArm, 0), new PivotCommand(m_robotArm, 0));
+    private SequentialCommandGroup armToHome = new SequentialCommandGroup(new TeleCommand(m_robotArm, 0), new PivotCommand(m_robotArm, 135));
 
     private Command toggleClaw = new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw);
 
@@ -267,33 +267,31 @@ public class RobotContainer {
         // * Operator Buttons
         
         // align (pole)
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON) // final
             .onTrue(alignToPole)
             .onFalse(interruptCommand.asProxy());
         
         // align (shelf)
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON) // final
             .onTrue(alignToShelf)
             .onFalse(interruptCommand.asProxy());
 
         // toggle claw
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-        //     .onTrue(toggleClaw.asProxy());
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-            .whileTrue(new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight));
-
+            .onTrue(toggleClaw.asProxy());
+        
         // kill soft limits
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON) // final
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
         
-        // toggle limelight
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotLimeLight.toggleLEDs(), m_robotLimeLight)); // final?
-        
-        // interrupt button
-        //new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-        //   .onTrue(placeConeHigh.asProxy());  
-        // .onTrue(interruptCommand.asProxy()); 
+        //Arm to Home
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
+            .onTrue(armToHome.asProxy());
+
+        //Interupt Button
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+            .onTrue(interruptCommand.asProxy());
+
 
         // place high
         new POVButton(getDeadbandedOperatorController(), 0)
