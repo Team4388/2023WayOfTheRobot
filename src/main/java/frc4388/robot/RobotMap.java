@@ -15,6 +15,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PWM;
+import edu.wpi.first.wpilibj.Servo;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.subsystems.SwerveModule;
@@ -170,7 +171,9 @@ public class RobotMap {
   }
 
   // claw stuff (WHAT IS A SOAP ENGINEER)
-  PWM leftClaw           = new PWM(0);
-  PWM rightClaw          = new PWM(1);
+  // PWM leftClaw           = new PWM(0);
+  // PWM rightClaw          = new PWM(1);
+  Servo leftClaw           = new Servo(0);
+  Servo rightClaw          = new Servo(1);
   CANSparkMax spinnyspin = new CANSparkMax(18, MotorType.kBrushless);
 }

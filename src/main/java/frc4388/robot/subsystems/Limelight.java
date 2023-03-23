@@ -28,6 +28,10 @@ public class Limelight extends SubsystemBase {
     cam.setDriverMode(true);
   }
 
+  public PhotonCamera getCamera() {
+    return cam;
+  }
+
   public void setLEDs(boolean on) {
     lightOn = on;
     cam.setLED(lightOn ? VisionLEDMode.kOn : VisionLEDMode.kOff);
@@ -44,12 +48,14 @@ public class Limelight extends SubsystemBase {
 
   public void setToLimePipeline() {
     cam.setPipelineIndex(1);
-    setLEDs(true);
+    // setLEDs(true);
+    cam.setLED(VisionLEDMode.kOn);
   }
 
   public void setToAprilPipeline() {
     cam.setPipelineIndex(0);
-    setLEDs(false);
+    // setLEDs(false);
+    cam.setLED(VisionLEDMode.kOff);
   }
 
   public PhotonTrackedTarget getAprilPoint() {
@@ -63,11 +69,17 @@ public class Limelight extends SubsystemBase {
   }
 
   private List<TargetCorner> getAprilCorners() {
-    if (!cam.isConnected()) return null;
+    if (!cam.isConnected()) {
+      System.out.println("Camera is not connected");
+      return null;
+    }
 
     PhotonPipelineResult result = cam.getLatestResult();
 
-    if (!result.hasTargets()) return null;
+    if (!result.hasTargets()) {
+      System.out.println("Camera does not have targets");
+      return null;
+    }
 
     return result.getBestTarget().getDetectedCorners();
   }
@@ -76,7 +88,10 @@ public class Limelight extends SubsystemBase {
     List<TargetCorner> corners = getAprilCorners();
     ArrayList<TargetCorner> bottomSide = getAprilBottomSide(corners);
 
-    if (bottomSide == null) return 0;
+    if (bottomSide == null) {
+      // System.out.println("CANT SEE APRIL TAG");
+      return 0;
+    }
 
     TargetCorner bottomRight = bottomSide.get(0).x > bottomSide.get(1).x ? bottomSide.get(0) : bottomSide.get(1);
     TargetCorner bottomLeft = bottomRight.x == bottomSide.get(0).x ? bottomSide.get(1) : bottomSide.get(0);
