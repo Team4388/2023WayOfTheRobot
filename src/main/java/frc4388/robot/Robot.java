@@ -120,7 +120,10 @@ public class Robot extends TimedRobot {
    * This function is called periodically during operator control.
    */
   @Override
-  public void teleopPeriodic() {}
+  public void teleopPeriodic() {
+    SmartDashboard.putBoolean("READY", m_robotContainer.readyForPlacement);
+    SmartDashboard.putNumber("GYRO", m_robotContainer.m_robotSwerveDrive.getGyroAngle());
+  }
 
   /**
    * This function is called periodically during test mode.

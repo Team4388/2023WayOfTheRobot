@@ -88,7 +88,7 @@ public class RobotContainer {
 
     private Command toggleClaw = new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw);
 
-    private boolean readyForPlacement = false;
+    public boolean readyForPlacement = false;
     private Boolean isPole = null;
 
     private SequentialCommandGroup alignToPole =
