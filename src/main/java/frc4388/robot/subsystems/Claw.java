@@ -58,4 +58,9 @@ public class Claw extends SubsystemBase {
 	public void nospinnyspin() {
 		m_spinnyspin.set(0);
 	}
+
+	public void reversespinnyspin() {
+		m_spinnyspin.set(-0.2);
+	}
+
 }

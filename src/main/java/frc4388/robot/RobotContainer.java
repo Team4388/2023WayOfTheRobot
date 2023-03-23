@@ -288,7 +288,11 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_TRIGGER_AXIS) // final
+            .onTrue  (new InstantCommand(() -> m_robotClaw.reversespinnyspin()))
+            .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
+        
+            new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_TRIGGER_AXIS) // final
             .onTrue  (new InstantCommand(() -> m_robotClaw.yesspinnyspin()))
             .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
