@@ -8,7 +8,6 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.utility.DeferredBlock;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
@@ -43,8 +42,6 @@ public class Arm extends SubsystemBase {
         if (vel > 1) vel = 1;
 
         var degrees = Math.abs(getArmRotation()) - 135;
-        SmartDashboard.putNumber("arm degrees", degrees);
-        SmartDashboard.putNumber("arm rot vel", vel);
 
         if ((degrees < 2 && vel < 0) || (degrees > 110 && vel > 0)) {
             m_pivot.set(ControlMode.PercentOutput, 0);
@@ -150,7 +147,6 @@ public class Arm extends SubsystemBase {
         }
 
         // double x = Math.cos(Math.toRadians(degrees));
-        SmartDashboard.putNumber("arm length", getArmLength());
     }
 
     public void killSoftLimits() {

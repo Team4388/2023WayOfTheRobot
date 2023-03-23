@@ -12,7 +12,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.RobotGyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SwerveDrive extends SubsystemBase {
   
@@ -58,7 +57,6 @@ public class SwerveDrive extends SubsystemBase {
       if (rightStick.getNorm() > 0.05) {
         rotTarget = gyro.getAngle();
         rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
-        SmartDashboard.putBoolean("drift correction", false);
         stopped = false;
       } else if(leftStick.getNorm() > 0.05) {
         if (!stopped) {
@@ -66,7 +64,6 @@ public class SwerveDrive extends SubsystemBase {
           stopped = true;
         }
 
-        SmartDashboard.putBoolean("drift correction", true);
         rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
 
       }
@@ -131,8 +128,7 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run\
-    SmartDashboard.putNumber("Gyro", getGyroAngle());
+    // This method will be called once per scheduler run
   }
 
   public void shiftDown() {

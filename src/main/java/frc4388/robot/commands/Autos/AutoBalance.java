@@ -6,7 +6,6 @@ package frc4388.robot.commands.Autos;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc4388.robot.commands.PelvicInflammatoryDisease;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.RobotGyro;
@@ -28,7 +27,6 @@ public class AutoBalance extends PelvicInflammatoryDisease {
 	@Override
 	public double getError() {
 		var pitch = gyro.getRoll();
-		SmartDashboard.putNumber("pitch", pitch);
 		return pitch;
 	}
 

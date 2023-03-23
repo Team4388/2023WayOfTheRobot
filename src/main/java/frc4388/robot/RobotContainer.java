@@ -14,7 +14,6 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax.FaultID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -287,8 +286,6 @@ public class RobotContainer {
         // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
-
-        // SmartDashboard.putBoolean("isn't SparkMAX", );
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
             .onTrue  (new InstantCommand(() -> m_robotClaw.yesspinnyspin()))
