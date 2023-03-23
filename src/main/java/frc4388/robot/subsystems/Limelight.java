@@ -25,7 +25,7 @@ public class Limelight extends SubsystemBase {
   /** Creates a new Limelight. */
   public Limelight() {
     cam = new PhotonCamera(VisionConstants.NAME);
-    cam.setDriverMode(false);
+    cam.setDriverMode(true);
   }
 
   public void setLEDs(boolean on) {

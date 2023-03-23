@@ -94,6 +94,7 @@ public class RobotContainer {
     private SequentialCommandGroup alignToPole =
         new SequentialCommandGroup(
             new RotateToAngle(m_robotSwerveDrive, 0.0),
+            new InstantCommand(() -> m_robotLimeLight.setDriverMode(false), m_robotLimeLight),
             new InstantCommand(() -> m_robotLimeLight.setToLimePipeline(), m_robotLimeLight),
             new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getLowestTape().getYaw(), 0.04),
             new RotateToAngle(m_robotSwerveDrive, 0.0),
@@ -113,6 +114,7 @@ public class RobotContainer {
     private SequentialCommandGroup alignToShelf = 
         new SequentialCommandGroup(
             new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
+            new InstantCommand(() -> m_robotLimeLight.setDriverMode(false), m_robotLimeLight),
             new InstantCommand(() -> m_robotLimeLight.setToAprilPipeline(), m_robotLimeLight),
             new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw(), 0.04),
             new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
@@ -122,7 +124,7 @@ public class RobotContainer {
     public SequentialCommandGroup place = null;
 
     private Consumer<SequentialCommandGroup> queuePlacement = (scg) -> {
-        place = scg.andThen(new InstantCommand(() -> readyForPlacement = false), new InstantCommand(() -> isPole = null), new InstantCommand(() -> place = null));
+        place = scg.andThen(new InstantCommand(() -> m_robotLimeLight.setDriverMode(true), m_robotLimeLight), new InstantCommand(() -> readyForPlacement = false), new InstantCommand(() -> isPole = null), new InstantCommand(() -> place = null));
     };
 
     // TODO: find actual values
