@@ -38,7 +38,6 @@ public class DriveToLimeDistance extends PelvicInflammatoryDisease {
 
   @Override
   public void runWithOutput(double output) {
-    System.out.println(output / Math.abs(getError()));
     drive.driveWithInput(new Translation2d(0.0, output / Math.abs(getError())), new Translation2d(0.0, 0.0), true);    
   }
 }

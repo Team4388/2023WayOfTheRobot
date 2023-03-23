@@ -60,7 +60,6 @@ public class JoystickPlayback extends CommandBase {
         }
       
         String[] values = line.split(",");
-        System.out.println("values: " + values[0] + " " + values[1] + " " + values[2] + " " + values[3]);
 
         var out = new TimedOutput();
         out.leftX  = Double.parseDouble(values[0]) * mult;

@@ -128,7 +128,6 @@ public class RobotContainer {
     // TODO: find actual values
     private SequentialCommandGroup placeCubeHigh =
         new SequentialCommandGroup(
-            // new InstantCommand(() -> System.out.println("Placing cone high")),
             new PivotCommand(m_robotArm, 64 + 135),
             new InstantCommand(() -> m_robotArm.setRotVel(0)),
             new TeleCommand(m_robotArm, 95642),

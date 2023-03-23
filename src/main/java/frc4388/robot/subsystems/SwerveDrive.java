@@ -143,29 +143,14 @@ public class SwerveDrive extends SubsystemBase {
 
   public void setToSlow() {
     this.speedAdjust = SwerveDriveConstants.SLOW_SPEED;
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
   }
 
   public void setToFast() {
     this.speedAdjust = SwerveDriveConstants.FAST_SPEED;
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
   }
 
   public void setToTurbo() {
     this.speedAdjust = SwerveDriveConstants.TURBO_SPEED;
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
   }
 
   public void shiftUp() {

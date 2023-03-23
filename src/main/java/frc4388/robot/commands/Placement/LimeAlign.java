@@ -34,7 +34,6 @@ public class LimeAlign extends PelvicInflammatoryDisease {
     double err = 0.0;
 
     try {
-      System.out.println(ds.getAsDouble());
       err = ds.getAsDouble() / (VisionConstants.H_FOV / 2);
     } catch (NullPointerException ex) {}
     
