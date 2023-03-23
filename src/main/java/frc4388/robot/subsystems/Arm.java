@@ -1,28 +1,20 @@
 package frc4388.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
-import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import frc4388.robot.Constants.ArmConstants;
-import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.DeferredBlock;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
     private WPI_TalonFX m_tele;
     public WPI_TalonFX  m_pivot;
     private CANCoder    m_pivotEncoder;
-    private boolean     m_debug;
 
     // Moves arm to distance [dist] then returns new ang
     public Arm(WPI_TalonFX pivot, WPI_TalonFX tele, CANCoder encoder, boolean debug) {
@@ -48,6 +40,8 @@ public class Arm extends SubsystemBase {
     }
 
     public void setRotVel(double vel) {
+        if (vel > 1) vel = 1;
+
         var degrees = Math.abs(getArmRotation()) - 135;
         SmartDashboard.putNumber("arm degrees", degrees);
         SmartDashboard.putNumber("arm rot vel", vel);
@@ -55,6 +49,8 @@ public class Arm extends SubsystemBase {
         if ((degrees < 2 && vel < 0) || (degrees > 110 && vel > 0)) {
             m_pivot.set(ControlMode.PercentOutput, 0);
         } else if (degrees > 90 && vel > 0) {
+            m_pivot.set(ControlMode.PercentOutput, .15 * vel);
+        } else if (degrees < 25 && vel < 0) {
             m_pivot.set(ControlMode.PercentOutput, .15 * vel);
         } else {
             m_pivot.set(ControlMode.PercentOutput, .3 * vel);
@@ -86,7 +82,7 @@ public class Arm extends SubsystemBase {
     }
 
     public double getArmLength() {
-        return m_tele.getSelectedSensorPosition();
+        return m_tele.getSelectedSensorPosition() - tele_soft;
     }
 
     public double getArmRotation() {
@@ -120,9 +116,10 @@ public class Arm extends SubsystemBase {
     }
 
     boolean tele_softLimit = false;
+    double  tele_soft = 0;
     public void resetTeleSoftLimit() {
         if (!tele_softLimit) {
-            var tele_soft = m_tele.getSelectedSensorPosition();
+            tele_soft = m_tele.getSelectedSensorPosition();
             m_tele.configForwardSoftLimitThreshold(91000 - tele_soft);
             m_tele.configReverseSoftLimitThreshold(tele_soft);
             m_tele.configForwardSoftLimitEnable(true);
@@ -140,7 +137,6 @@ public class Arm extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double degrees = Math.abs(m_pivotEncoder.getAbsolutePosition() - 135);
 
         if (m_tele.isFwdLimitSwitchClosed() == 1 && tele_reset) {
             var tele_soft = m_tele.getSelectedSensorPosition();
@@ -154,17 +150,10 @@ public class Arm extends SubsystemBase {
         }
 
         // double x = Math.cos(Math.toRadians(degrees));
+        SmartDashboard.putNumber("arm length", getArmLength());
     }
 
-    boolean soft_limits = true;
     public void killSoftLimits() {
         resetTeleSoftLimit();
-        var pivot_soft = m_pivot.getSelectedSensorPosition();
-        var tele_soft  = m_tele.getSelectedSensorPosition();
-        
-        m_pivot.configForwardSoftLimitEnable(!soft_limits);
-        m_pivot.configReverseSoftLimitEnable(!soft_limits);
-
-        soft_limits = !soft_limits;
     }
 }

@@ -1,4 +1,5 @@
 package frc4388.robot.subsystems;
+
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -8,6 +9,7 @@ import edu.wpi.first.wpilibj.PWM;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Claw extends SubsystemBase {
+
 	private final PWM         m_leftMotor;
 	private final PWM         m_rightMotor;
 	private final CANSparkMax m_spinnyspin;

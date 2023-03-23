@@ -4,16 +4,12 @@
 
 package frc4388.robot.subsystems;
 
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.RobotGyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -77,10 +73,10 @@ public class SwerveDrive extends SubsystemBase {
 
       // Use the left joystick to set speed. Apply a cubic curve and the set max speed.
       Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
-      Translation2d cubedSpeed = new Translation2d(Math.pow(speed.getX(), 3.00), Math.pow(speed.getY(), 3.00));
+      // Translation2d cubedSpeed = new Translation2d(Math.pow(speed.getX(), 3.00), Math.pow(speed.getY(), 3.00));
 
       // Convert field-relative speeds to robot-relative speeds.
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * cubedSpeed.getX(), cubedSpeed.getY(), rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d().times(-1));
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), speed.getY(), rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d().times(-1));
     } else {
       // Create robot-relative speeds.
       chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), leftStick.getY(), rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
@@ -99,6 +95,19 @@ public class SwerveDrive extends SubsystemBase {
       SwerveModuleState state = desiredStates[i];
       module.setDesiredState(state);
     }
+  }
+
+  public boolean rotateToTarget(double angle) {
+    double currentAngle = getGyroAngle();
+    double error = angle - currentAngle;
+
+    driveWithInput(new Translation2d(0, 0), new Translation2d(error / Math.abs(error) * 0.3, 0), true);
+
+    if (Math.abs(angle - getGyroAngle()) < 5.0) {
+      return true;
+    }
+
+    return false;
   }
 
   public double getGyroAngle() {
@@ -122,7 +131,8 @@ public class SwerveDrive extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    // This method will be called once per scheduler run\
+    SmartDashboard.putNumber("Gyro", getGyroAngle());
   }
 
   public void shiftDown() {
