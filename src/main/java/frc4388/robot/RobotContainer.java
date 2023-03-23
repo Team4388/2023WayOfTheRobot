@@ -10,7 +10,11 @@ package frc4388.robot;
 import java.util.function.Consumer;
 
 import edu.wpi.first.math.geometry.Translation2d;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
+import com.revrobotics.CANSparkMax.FaultID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -54,7 +58,7 @@ public class RobotContainer {
     
     public final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
 
-    public final Claw m_robotClaw = new Claw(m_robotMap.servo);
+    public final Claw m_robotClaw = new Claw(m_robotMap.leftClaw, m_robotMap.rightClaw, m_robotMap.spinnyspin);
 
     public final Limelight m_robotLimeLight = new Limelight();
 
@@ -283,6 +287,12 @@ public class RobotContainer {
         // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
+
+        // SmartDashboard.putBoolean("isn't SparkMAX", );
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .onTrue  (new InstantCommand(() -> m_robotClaw.yesspinnyspin()))
+            .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
         //Arm to Home
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
