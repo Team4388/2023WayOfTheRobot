@@ -273,14 +273,14 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
             .onTrue(interruptCommand.asProxy()); // final
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_TRIGGER_AXIS)
-            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-                                            () -> getDeadbandedDriverController().getLeftX(),
-                                            () -> getDeadbandedDriverController().getLeftY(),
-                                            () -> getDeadbandedDriverController().getRightX(),
-                                            () -> getDeadbandedDriverController().getRightY(),
-                                            "Blue1Path.txt"))
-            .onFalse(new InstantCommand());
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_TRIGGER_AXIS)
+        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                     () -> getDeadbandedDriverController().getLeftX(),
+        //                                     () -> getDeadbandedDriverController().getLeftY(),
+        //                                     () -> getDeadbandedDriverController().getRightX(),
+        //                                     () -> getDeadbandedDriverController().getRightY(),
+        //                                     "Blue1Path.txt"))
+        //     .onFalse(new InstantCommand());
 
         // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
         //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
