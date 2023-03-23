@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -60,6 +61,7 @@ public class RobotContainer {
     public final Arm m_robotArm = new Arm(m_robotMap.pivot, m_robotMap.tele, m_robotMap.pivotEncoder);
 
     public final Claw m_robotClaw = new Claw(m_robotMap.leftClaw, m_robotMap.rightClaw, m_robotMap.spinnyspin);
+    private boolean isClawOpen = false;
 
     public final Limelight m_robotLimeLight = new Limelight();
 
@@ -89,6 +91,18 @@ public class RobotContainer {
     private SequentialCommandGroup armToHome = new SequentialCommandGroup(new TeleCommand(m_robotArm, 0), new PivotCommand(m_robotArm, 135));
 
     private Command toggleClaw = new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw);
+        
+    private ConditionalCommand toggleClawCube = new ConditionalCommand(
+            new ParallelCommandGroup(new InstantCommand(() -> m_robotClaw.pickupCube()), new RunCommand(() -> m_robotClaw.intake())),
+            new ParallelCommandGroup(new InstantCommand(() -> m_robotClaw.openClaw()), new RunCommand(() -> m_robotClaw.outtake())),
+            () -> isClawOpen
+        );
+
+    private ConditionalCommand toggleClawCone = new ConditionalCommand(
+            new ParallelCommandGroup(new InstantCommand(() -> m_robotClaw.pickupCone()), new RunCommand(() -> m_robotClaw.intake())),
+            new ParallelCommandGroup(new InstantCommand(() -> m_robotClaw.openClaw()), new RunCommand(() -> m_robotClaw.outtake())),
+            () -> isClawOpen
+        );
 
     public boolean readyForPlacement = true;
     private Boolean isPole = null;
@@ -299,26 +313,38 @@ public class RobotContainer {
             .onFalse(interruptCommand.asProxy());
 
         // toggle claw
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
+        //     .onTrue(toggleClaw.asProxy());
+
+        // toggle claw cube
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-            .onTrue(toggleClaw.asProxy());
+            .whileTrue  (toggleClawCube.asProxy())
+            .onFalse    (new InstantCommand(() -> m_robotClaw.nospinnyspin()))
+            .onFalse    (new InstantCommand(() -> isClawOpen = !isClawOpen));
+
+        // toggle claw cone
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
+            .onTrue     (toggleClawCone.asProxy())
+            .onFalse    (new InstantCommand(() -> m_robotClaw.nospinnyspin()))
+            .onFalse    (new InstantCommand(() -> isClawOpen = !isClawOpen));
         
         // kill soft limits
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
 
         // outtake
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_TRIGGER_AXIS) // final
-            .onTrue  (new InstantCommand(() -> m_robotClaw.reversespinnyspin()))
+            .onTrue  (new InstantCommand(() -> m_robotClaw.intake()))
             .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
         // intake    
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_TRIGGER_AXIS) // final
-            .onTrue  (new InstantCommand(() -> m_robotClaw.yesspinnyspin()))
+            .onTrue  (new InstantCommand(() -> m_robotClaw.outtake()))
             .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
-        // arm to Home
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .onTrue(armToHome.asProxy());
+        // arm to home
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
+        //     .onTrue(armToHome.asProxy());
 
         // interupt
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
