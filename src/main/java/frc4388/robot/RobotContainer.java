@@ -88,7 +88,7 @@ public class RobotContainer {
 
     private Command toggleClaw = new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw);
 
-    public boolean readyForPlacement = false;
+    public boolean readyForPlacement = true;
     private Boolean isPole = null;
 
     private SequentialCommandGroup alignToPole =
@@ -124,22 +124,22 @@ public class RobotContainer {
     public SequentialCommandGroup place = null;
 
     private Consumer<SequentialCommandGroup> queuePlacement = (scg) -> {
-        place = scg.andThen(new InstantCommand(() -> m_robotLimeLight.setDriverMode(true), m_robotLimeLight), new InstantCommand(() -> readyForPlacement = false), new InstantCommand(() -> isPole = null), new InstantCommand(() -> place = null));
+        place = scg.asProxy().andThen(new InstantCommand(() -> m_robotLimeLight.setDriverMode(true), m_robotLimeLight), new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = null), new InstantCommand(() -> place = null));
     };
 
-    // TODO: find actual values
     private SequentialCommandGroup placeCubeHigh =
         new SequentialCommandGroup(
-            new PivotCommand(m_robotArm, 64 + 135),
+            new PivotCommand(m_robotArm, 60 + 135),
             new InstantCommand(() -> m_robotArm.setRotVel(0)),
-            new TeleCommand(m_robotArm, 95642),
+            new TeleCommand(m_robotArm, 90000),
             toggleClaw.asProxy(),
             armToHome.asProxy()
         );
 
     private SequentialCommandGroup placeCubeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 70 + 135),
-        new TeleCommand(m_robotArm, 32866),
+        new PivotCommand(m_robotArm, 55 + 135),
+        new InstantCommand(() -> m_robotArm.setRotVel(0)),
+        new TeleCommand(m_robotArm, 28000),
         toggleClaw.asProxy(),
         armToHome.asProxy()
     );
@@ -305,10 +305,18 @@ public class RobotContainer {
             .onTrue(interruptCommand.asProxy());
 
 
+        // // place high
+        // new POVButton(getDeadbandedOperatorController(), 0)
+        //     .onTrue(new ConditionalCommand(
+        //         new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeHigh)), new InstantCommand(() -> queuePlacement.accept(placeCubeHigh)), () -> isPole == true),
+        //         emptyCommand.asProxy(),
+        //         () -> readyForPlacement == true)
+            // );
+        
         // place high
         new POVButton(getDeadbandedOperatorController(), 0)
             .onTrue(new ConditionalCommand(
-                new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeHigh)), new InstantCommand(() -> queuePlacement.accept(placeCubeHigh)), () -> isPole == true),
+                new InstantCommand(() -> queuePlacement.accept(placeCubeHigh)),
                 emptyCommand.asProxy(),
                 () -> readyForPlacement == true)
             );
@@ -316,10 +324,18 @@ public class RobotContainer {
         // place mid
         new POVButton(getDeadbandedOperatorController(), 270)
             .onTrue(new ConditionalCommand(
-                new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeMid)), new InstantCommand(() -> queuePlacement.accept(placeCubeMid)), () -> isPole == true),
+                new InstantCommand(() -> queuePlacement.accept(placeCubeMid)),
                 emptyCommand.asProxy(),
                 () -> readyForPlacement == true)
             );
+
+        // // place mid
+        // new POVButton(getDeadbandedOperatorController(), 270)
+        //     .onTrue(new ConditionalCommand(
+        //         new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeMid)), new InstantCommand(() -> queuePlacement.accept(placeCubeMid)), () -> isPole == true),
+        //         emptyCommand.asProxy(),
+        //         () -> readyForPlacement == true)
+        //     );
 
         // place low
         new POVButton(getDeadbandedOperatorController(), 180)
