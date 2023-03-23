@@ -7,14 +7,9 @@
 
 package frc4388.robot;
 
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.math.util.Units;
 import frc4388.utility.Gains;
 import frc4388.utility.LEDPatterns;
-import frc4388.utility.RobotUnits;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
