@@ -51,18 +51,27 @@ public class Claw extends SubsystemBase {
 		// ! THIS IS FOR CUBE
 		// m_leftMotor.setAngle(m_open ? 90 : 180);
 		// m_rightMotor.setAngle(m_open ? 90 : 0);
-
-		// if (m_open)
-		// 	m_spinnyspin.set(0.2);
-		// else
-		// 	m_spinnyspin.set(-0.2);	
-		// new Timer().schedule(new TimerTask() {
-		// 	@Override
-		// 	public void run() {
-		// 		nospinnyspin();
-		// 	}
-		// }, 750);
     }
+
+	public void setClawCones(boolean open) {
+		m_open = open;
+		m_leftMotor.setAngle(m_open ? 0 : 180);
+		m_rightMotor.setAngle(m_open ? 180 : 0);
+	}
+
+	public void setClawCubes(boolean open) {
+		m_open = open;
+		m_leftMotor.setAngle(m_open ? 90 : 180);
+		m_rightMotor.setAngle(m_open ? 90 : 0);
+	}
+
+	public void toggleCones() {
+		setClawCones(!m_open);
+	}
+
+	public void toggleCubes() {
+		setClawCubes(!m_open);
+	}
 
 	public void toggle() {
 		setClaw(!m_open);

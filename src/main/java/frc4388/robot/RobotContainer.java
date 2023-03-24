@@ -14,6 +14,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.REVLibError;
 import com.revrobotics.CANSparkMax.FaultID;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -80,6 +81,9 @@ public class RobotContainer {
 
     private Command toggleClaw = new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw);
 
+    private Command toggleClawCones = new InstantCommand(() -> m_robotClaw.toggleCones(), m_robotClaw);
+    private Command toggleClawCubes = new InstantCommand(() -> m_robotClaw.toggleCubes(), m_robotClaw);
+
     public boolean readyForPlacement = true;
     private Boolean isPole = null;
 
@@ -91,17 +95,7 @@ public class RobotContainer {
             new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getLowestTape().getYaw(), 0.04),
             new RotateToAngle(m_robotSwerveDrive, 0.0),
             new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
-            // new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 37, () -> m_robotLimeLight.getDistanceToTape())
         ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = true));
-
-    // private SequentialCommandGroup alignToShelf = 
-    //     new SequentialCommandGroup(
-    //         new RotateToAngle(m_robotSwerveDrive, 0.0),
-    //         new InstantCommand(() -> m_robotLimeLight.setToAprilPipeline(), m_robotLimeLight),
-    //         new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw(), 0.04),
-    //         new RotateToAngle(m_robotSwerveDrive, 0.0),
-    //         new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
-    //     ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
     
     private SequentialCommandGroup alignToShelf = 
         new SequentialCommandGroup(
@@ -155,7 +149,7 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 188),
+        new PivotCommand(m_robotArm, 185),
         new WaitCommand(0.3),
         new TeleCommand(m_robotArm, 29500)
         // toggleClaw.asProxy(),
@@ -171,14 +165,6 @@ public class RobotContainer {
 
     /* Autos */
     public SendableChooser<Command> chooser = new SendableChooser<>();
-
-    // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
-    
-    // private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
-    // private Command blue1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt").andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
-    
-    // private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1);
-    // private Command red1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1).andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
 
     // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
@@ -230,26 +216,13 @@ public class RobotContainer {
         chooser.addOption("placeCubeMid", placeCubeMid);
         chooser.addOption("placeLow", placeLow);
 
-        // chooser.addOption("Blue1Path", blue1Path);
-        // chooser.addOption("Blue1PathWithBalance", blue1PathWithBalance);
-
-        // chooser.addOption("Red1Path", red1Path);
-        // chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
-
         playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
             .addOption("PlaceRed1Balance", placeRed1Balance)
             .addOption("Wait3", wait3.asProxy())
             .addOption("Wait5", wait5.asProxy())
             .addOption("TaxiFar", taxiFar.asProxy())
-            // .addOption("Red1Balance", new JoystickPlayback(m_robotSwerveDrive, "idk", 1))
             .addOption("Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive))
             .buildDisplay();
-    }
-
-    // here be dragons - enter if you dare
-    private static class TapState {
-        public boolean gearTapped = true;
-        public long    gearTime   = 0;
     }
 
     /**
@@ -261,38 +234,17 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         // * TEST BUTTONS
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive)); // final
-
 
         // * Driver Buttons
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive)); // final
         
-        // because closure reasons - ask Daniel Thomas
-        // final TapState tap = new TapState();
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()))
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
-            // .onTrue(new InstantCommand(() -> {
-            //     tap.gearTapped = true;
-            //     tap.gearTime   = System.currentTimeMillis();
-            // }))
-            // .whileTrue(new RunCommand(() -> {
-            //     if (tap.gearTapped && System.currentTimeMillis() - tap.gearTime > 200) {
-            //         m_robotSwerveDrive.setToTurbo();
-            //         tap.gearTapped = false;
-            //     }
-            // }))
-            // .onFalse(new InstantCommand(() -> {
-            //     if (tap.gearTapped)
-            //         m_robotSwerveDrive.setToFast();
-            //     else
-            //         m_robotSwerveDrive.setToSlow();
-            // }));
         
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive)); // final
@@ -300,18 +252,18 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
             .onTrue(interruptCommand.asProxy()); // final
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_TRIGGER_AXIS)
-            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-                                            () -> getDeadbandedDriverController().getLeftX(),
-                                            () -> getDeadbandedDriverController().getLeftY(),
-                                            () -> getDeadbandedDriverController().getRightX(),
-                                            () -> getDeadbandedDriverController().getRightY(),
-                                            "Red1Balance.txt"))
-            .onFalse(new InstantCommand());
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_TRIGGER_AXIS)
+        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                     () -> getDeadbandedDriverController().getLeftX(),
+        //                                     () -> getDeadbandedDriverController().getLeftY(),
+        //                                     () -> getDeadbandedDriverController().getRightX(),
+        //                                     () -> getDeadbandedDriverController().getRightY(),
+        //                                     "Red1Balance.txt"))
+        //     .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Red1Balance.txt"))
-            .onFalse(new InstantCommand()); 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Red1Balance.txt"))
+        //     .onFalse(new InstantCommand()); 
 
         // * Operator Buttons
         
@@ -328,8 +280,9 @@ public class RobotContainer {
         // toggle claw
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
             .onTrue(toggleClaw.asProxy());
+
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-        //     .onTrue(new InstantCommand(() -> m_robotClaw.setAngle(45), m_robotClaw));
+        //     .onTrue(new ConditionalCommand(toggleClawCones.asProxy(), toggleClawCubes.asProxy(), () -> SmartDashboard.getBoolean("Cones?", true)));
         
         // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
