@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc4388.robot.Constants.*;
@@ -165,9 +166,10 @@ public class RobotContainer {
 
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 189),
-        new TeleCommand(m_robotArm, 34500),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
+        new WaitCommand(0.3),
+        new TeleCommand(m_robotArm, 34000)
+        // toggleClaw.asProxy(),
+        // armToHome.asProxy()
     );
 
     private SequentialCommandGroup placeLow = new SequentialCommandGroup(
