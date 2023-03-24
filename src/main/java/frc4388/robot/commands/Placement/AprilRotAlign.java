@@ -26,13 +26,13 @@ public class AprilRotAlign extends PelvicInflammatoryDisease {
 
   @Override
   public double getError() {
-    System.out.println("Pipeline: " + lime.getCamera().getPipelineIndex());
+    // System.out.println("Pipeline: " + lime.getCamera().getPipelineIndex());
     double err = 0.0;
 
     try {
       err = lime.getAprilSkew();
     } catch (NullPointerException ex) {
-      System.out.println("CANT SEE APRIL POINT");
+      // System.out.println("CANT SEE APRIL POINT");
     }
     
     return err;

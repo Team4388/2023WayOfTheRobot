@@ -135,34 +135,34 @@ public class RobotContainer {
     private SequentialCommandGroup placeCubeHigh =
         new SequentialCommandGroup(
             new PivotCommand(m_robotArm, 60 + 135),
-            new InstantCommand(() -> m_robotArm.setRotVel(0)),
-            new TeleCommand(m_robotArm, 90000),
-            toggleClaw.asProxy(),
-            armToHome.asProxy()
+            new WaitCommand(0.3),
+            new TeleCommand(m_robotArm, 90000)
+            // toggleClaw.asProxy(),
+            // armToHome.asProxy()
         );
 
     private SequentialCommandGroup placeCubeMid = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 55 + 135),
-        new InstantCommand(() -> m_robotArm.setRotVel(0)),
-        new TeleCommand(m_robotArm, 28000),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
+        new WaitCommand(0.3),
+        new TeleCommand(m_robotArm, 28000)
+        // toggleClaw.asProxy(),
+        // armToHome.asProxy()
     );
 
     private SequentialCommandGroup placeCubeLow = new SequentialCommandGroup(
         new TimedCommand(() -> new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.2), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive), 0.7),
         new PivotCommand(m_robotArm, 70 + 135),
-        new InstantCommand(() -> m_robotArm.setRotVel(0)),
-        new TeleCommand(m_robotArm, 28000),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
+        new WaitCommand(0.3),
+        new TeleCommand(m_robotArm, 28000)
+        // toggleClaw.asProxy(),
+        // armToHome.asProxy()
     );
 
     private SequentialCommandGroup placeConeHigh = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 178),
         new WaitCommand(0.3),
-        new TeleCommand(m_robotArm, 56000),
-        new ParallelRaceGroup(new InstantCommand(() -> m_robotClaw.toggle()), new RunCommand(() -> m_robotClaw.outtake()))
+        new TeleCommand(m_robotArm, 56000)
+        // new ParallelRaceGroup(new InstantCommand(() -> m_robotClaw.toggle()), new RunCommand(() -> m_robotClaw.outtake()))
         // toggleClaw.asProxy(),
         // armToHome.asProxy()
     );
@@ -304,10 +304,10 @@ public class RobotContainer {
             .onFalse(interruptCommand.asProxy());
 
         // toggle claw
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-            .onTrue(toggleClaw.asProxy());
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-        //     .onTrue(new InstantCommand(() -> m_robotClaw.setAngle(45), m_robotClaw));
+        //     .onTrue(toggleClaw.asProxy());
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
+            .onTrue(new InstantCommand(() -> m_robotClaw.setAngle(45), m_robotClaw));
         
         // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final

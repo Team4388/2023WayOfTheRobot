@@ -147,8 +147,8 @@ public class Arm extends SubsystemBase {
             tele_reset = true;
         }
 
-        SmartDashboard.putNumber("Pivot CANCoder", getArmRotation());
-        SmartDashboard.putNumber("Tele Encoder", getArmLength());
+        // SmartDashboard.putNumber("Pivot CANCoder", getArmRotation());
+        // SmartDashboard.putNumber("Tele Encoder", getArmLength());
 
         // double x = Math.cos(Math.toRadians(degrees));
     }
