@@ -337,7 +337,7 @@ public class RobotContainer {
         // place high
         new POVButton(getDeadbandedOperatorController(), 0)
             .onTrue(new ConditionalCommand(
-                new InstantCommand(() -> queuePlacement.accept(placeCubeHigh)),
+                new InstantCommand(() -> queuePlacement.accept(placeConeHigh)),
                 emptyCommand.asProxy(),
                 () -> readyForPlacement == true)
             );
@@ -345,7 +345,7 @@ public class RobotContainer {
         // place mid
         new POVButton(getDeadbandedOperatorController(), 270)
             .onTrue(new ConditionalCommand(
-                new InstantCommand(() -> queuePlacement.accept(placeCubeMid)),
+                new InstantCommand(() -> queuePlacement.accept(placeConeMid)),
                 emptyCommand.asProxy(),
                 () -> readyForPlacement == true)
             );
