@@ -150,7 +150,7 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 185),
+        new PivotCommand(m_robotArm, 135 + 47),
         new WaitCommand(0.3),
         new TeleCommand(m_robotArm, 29500)
         // toggleClaw.asProxy(),

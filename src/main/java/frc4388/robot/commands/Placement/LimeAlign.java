@@ -20,7 +20,7 @@ public class LimeAlign extends PelvicInflammatoryDisease {
   DoubleSupplier ds;
 
   public LimeAlign(SwerveDrive drive, Limelight lime, DoubleSupplier ds, double tolerance) {
-    super(0.4, 0.4, 0.0, 0.0, tolerance);
+    super(1, 0.4, 0.0, 0.0, tolerance);
 
     this.drive = drive;
     this.lime = lime;
