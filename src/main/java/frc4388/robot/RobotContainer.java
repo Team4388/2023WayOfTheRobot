@@ -34,6 +34,7 @@ import frc4388.robot.commands.Autos.AutoBalance;
 import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Placement.AprilRotAlign;
 import frc4388.robot.commands.Placement.LimeAlign;
+import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.commands.Swerve.RotateToAngle;
 import frc4388.utility.controller.DeadbandedXboxController;
@@ -163,8 +164,8 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 0),
-        new TeleCommand(m_robotArm, 0),
+        new PivotCommand(m_robotArm, 189),
+        new TeleCommand(m_robotArm, 34500),
         toggleClaw.asProxy(),
         armToHome.asProxy()
     );
@@ -264,8 +265,8 @@ public class RobotContainer {
             //         m_robotSwerveDrive.setToSlow();
             // }));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .onTrue(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive)); // final
@@ -279,11 +280,11 @@ public class RobotContainer {
         //                                     () -> getDeadbandedDriverController().getLeftY(),
         //                                     () -> getDeadbandedDriverController().getRightX(),
         //                                     () -> getDeadbandedDriverController().getRightY(),
-        //                                     "Blue1Path.txt"))
+        //                                     "Red1Balance.txt"))
         //     .onFalse(new InstantCommand());
 
         // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
+        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Red1Balance.txt"))
         //     .onFalse(new InstantCommand()); 
 
         // * Operator Buttons
@@ -307,22 +308,22 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotArm.killSoftLimits()));
 
         // outtake
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_TRIGGER_AXIS) // final
-            .onTrue  (new InstantCommand(() -> m_robotClaw.reversespinnyspin()))
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
+            .whileTrue  (new RunCommand(() -> m_robotClaw.reversespinnyspin()))
             .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
         // intake    
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_TRIGGER_AXIS) // final
-            .onTrue  (new InstantCommand(() -> m_robotClaw.yesspinnyspin()))
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+            .whileTrue  (new RunCommand(() -> m_robotClaw.yesspinnyspin()))
             .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
         // arm to Home
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .onTrue(armToHome.asProxy());
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
+        //     .onTrue(armToHome.asProxy());
 
         // interupt
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .onTrue(interruptCommand.asProxy());
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+        //     .onTrue(interruptCommand.asProxy());
 
 
         // // place high

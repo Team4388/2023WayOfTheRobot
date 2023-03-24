@@ -32,7 +32,7 @@ public class Claw extends SubsystemBase {
 		m_rightMotor = rightMotor;
 		m_spinnyspin = spinnyspin;
 		
-		setClaw(false);
+		// setClaw(false);
 	}
 
     public void setClaw(boolean open) {
@@ -52,16 +52,16 @@ public class Claw extends SubsystemBase {
 		// m_leftMotor.setRaw(m_open ? 1500 : 2000);
 		// m_rightMotor.setRaw(m_open ? 1500 : 1000);
 
-		if (m_open)
-			m_spinnyspin.set(0.2);
-		else
-			m_spinnyspin.set(-0.2);	
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				nospinnyspin();
-			}
-		}, 750);
+		// if (m_open)
+		// 	m_spinnyspin.set(0.2);
+		// else
+		// 	m_spinnyspin.set(-0.2);	
+		// new Timer().schedule(new TimerTask() {
+		// 	@Override
+		// 	public void run() {
+		// 		nospinnyspin();
+		// 	}
+		// }, 750);
     }
 
 	public void toggle() {

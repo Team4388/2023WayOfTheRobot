@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import frc4388.robot.Constants.ArmConstants;
 import frc4388.utility.DeferredBlock;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Arm extends SubsystemBase {
@@ -145,6 +146,9 @@ public class Arm extends SubsystemBase {
         } else if (m_tele.isFwdLimitSwitchClosed() == 0) {
             tele_reset = true;
         }
+
+        SmartDashboard.putNumber("Pivot CANCoder", getArmRotation());
+        SmartDashboard.putNumber("Tele Encoder", getArmLength());
 
         // double x = Math.cos(Math.toRadians(degrees));
     }
