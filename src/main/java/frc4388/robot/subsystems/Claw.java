@@ -79,7 +79,7 @@ public class Claw extends SubsystemBase {
 		return m_open;
 	}
 
-	public void yesspinnyspin() {
+	public void intake() {
 		m_spinnyspin.set(0.2);
 	}
 
@@ -87,7 +87,7 @@ public class Claw extends SubsystemBase {
 		m_spinnyspin.set(0);
 	}
 
-	public void reversespinnyspin() {
+	public void outtake() {
 		m_spinnyspin.set(-0.2);
 	}
 

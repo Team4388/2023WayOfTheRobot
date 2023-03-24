@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -160,7 +161,8 @@ public class RobotContainer {
     private SequentialCommandGroup placeConeHigh = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 178),
         new WaitCommand(0.3),
-        new TeleCommand(m_robotArm, 56000)
+        new TeleCommand(m_robotArm, 56000),
+        new ParallelRaceGroup(new InstantCommand(() -> m_robotClaw.toggle()), new RunCommand(() -> m_robotClaw.outtake()))
         // toggleClaw.asProxy(),
         // armToHome.asProxy()
     );
@@ -313,12 +315,12 @@ public class RobotContainer {
 
         // outtake
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .whileTrue  (new RunCommand(() -> m_robotClaw.reversespinnyspin()))
+            .whileTrue  (new RunCommand(() -> m_robotClaw.outtake()))
             .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
         // intake    
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .whileTrue  (new RunCommand(() -> m_robotClaw.yesspinnyspin()))
+            .whileTrue  (new RunCommand(() -> m_robotClaw.intake()))
             .onFalse (new InstantCommand(() -> m_robotClaw.nospinnyspin()));
         
         // arm to Home

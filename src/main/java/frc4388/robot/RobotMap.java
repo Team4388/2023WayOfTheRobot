@@ -40,6 +40,7 @@ public class RobotMap {
     configureLEDMotorControllers();
     configureDriveMotors();
     configArmMotors();
+    configIntake();
   }
 
   /* LED Subsystem */
@@ -177,5 +178,10 @@ public class RobotMap {
   Servo leftClaw           = new Servo(0);
   Servo rightClaw          = new Servo(1);
   CANSparkMax spinnyspin = new CANSparkMax(18, MotorType.kBrushless);
-  spinnyspin.setIdleMode(IdleMode.kBrake);
+
+  public void configIntake() {
+    spinnyspin.setIdleMode(IdleMode.kBrake);
+  }
+
+  // spinnyspin.setIdleMode(IdleMode.kBrake);
 }
