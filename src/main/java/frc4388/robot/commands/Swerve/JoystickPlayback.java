@@ -629,7 +629,7 @@ public class JoystickPlayback extends CommandBase {
         String[] values = line.split(",");
 
         var out = new TimedOutput();
-        out.leftX  = Double.parseDouble(values[0]) * mult / -1.68;
+        out.leftX  = Double.parseDouble(values[0]) * mult / 1.68; // ! positive means back and to the right
         out.leftY  = Double.parseDouble(values[1]) / -1.68;
         out.rightX = Double.parseDouble(values[2]);
         out.rightY = Double.parseDouble(values[3]);
