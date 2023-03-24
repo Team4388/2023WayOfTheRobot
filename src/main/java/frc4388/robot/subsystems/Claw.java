@@ -43,21 +43,14 @@ public class Claw extends SubsystemBase {
     public void setClaw(boolean open) {
         // Open claw
 		m_open = open;
-		// m_leftMotor.setRaw(m_open ? 1000 : 2000);
-		// m_rightMotor.setRaw(m_open ? 2000 : 1000);
 
-		// m_leftMotor.setBounds(4000, 20000, 2000, 0, 0);
-
+		// ! THIS IS FOR CONE
 		// m_leftMotor.setAngle(m_open ? 0 : 180);
 		// m_rightMotor.setAngle(m_open ? 180 : 0);
+
+		// ! THIS IS FOR CUBE
 		m_leftMotor.setAngle(m_open ? 90 : 180);
 		m_rightMotor.setAngle(m_open ? 90 : 0);
-
-		// m_leftMotor.setRaw(m_open ? 0 : 4000);
-		// m_rightMotor.setRaw(m_open ? 4000 : 0);
-
-		// m_leftMotor.setRaw(m_open ? 1500 : 2000);
-		// m_rightMotor.setRaw(m_open ? 1500 : 1000);
 
 		// if (m_open)
 		// 	m_spinnyspin.set(0.2);

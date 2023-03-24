@@ -304,10 +304,10 @@ public class RobotContainer {
             .onFalse(interruptCommand.asProxy());
 
         // toggle claw
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-        //     .onTrue(toggleClaw.asProxy());
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
-            .onTrue(new InstantCommand(() -> m_robotClaw.setAngle(45), m_robotClaw));
+            .onTrue(toggleClaw.asProxy());
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
+        //     .onTrue(new InstantCommand(() -> m_robotClaw.setAngle(45), m_robotClaw));
         
         // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
