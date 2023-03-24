@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -77,7 +78,7 @@ public class RobotContainer {
     private Command emptyCommand = new InstantCommand();
     private Command interruptCommand = new InstantCommand(() -> {}, m_robotArm, m_robotSwerveDrive, m_robotClaw, m_robotLimeLight);
 
-    private SequentialCommandGroup armToHome = new SequentialCommandGroup(new TeleCommand(m_robotArm, 0), new PivotCommand(m_robotArm, 135));
+    private SequentialCommandGroup armToHome = new SequentialCommandGroup(new TeleCommand(m_robotArm, 1000), new PivotCommand(m_robotArm, 145));
 
     private Command toggleClaw = new InstantCommand(() -> m_robotClaw.toggle(), m_robotClaw);
 
@@ -180,8 +181,10 @@ public class RobotContainer {
         new WaitCommand(0.3),
         toggleClaw.asProxy(),
         new WaitCommand(0.3),
-        armToHome.asProxy(),
-        new JoystickPlayback(m_robotSwerveDrive, "idk", 1),
+        new ParallelCommandGroup(
+            armToHome.asProxy(),
+            new JoystickPlayback(m_robotSwerveDrive, "idk", 1)
+        ),
         new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive)
     );
 
