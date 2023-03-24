@@ -13,19 +13,19 @@ import frc4388.utility.RobotTime;
 
 public class TimedCommand extends CommandBase {
 
-  Supplier<Command> cs;
+  Command command;
   double duration;
 
   long startTime;
   long deltaTime;
 
   /** Creates a new TimedCommand. Duration is in seconds. */
-  public TimedCommand(Supplier<Command> cs, double duration) {
-    this.cs = cs;
+  public TimedCommand(Command command, double duration) {
+    this.command = command;
     this.duration = duration;
 
 
-    Object[] reqs_obj = cs.get().getRequirements().toArray();
+    Object[] reqs_obj = command.getRequirements().toArray();
     Subsystem[] reqs = new Subsystem[reqs_obj.length];
     for (int i = 0; i < reqs.length; i++)
       reqs[i] = (Subsystem) reqs_obj[i];
@@ -36,7 +36,7 @@ public class TimedCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    cs.get().initialize();
+    command.initialize();
 
     startTime = System.currentTimeMillis();
   }
@@ -44,7 +44,7 @@ public class TimedCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    cs.get().execute();
+    command.execute();
 
     deltaTime = System.currentTimeMillis() - startTime;
   }

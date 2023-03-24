@@ -70,19 +70,6 @@ public class RobotContainer {
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
-    /* Autos */
-    public SendableChooser<Command> chooser = new SendableChooser<>();
-
-    // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
-    
-    // private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
-    // private Command blue1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt").andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
-    
-    // private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1);
-    // private Command red1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1).andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
-
-    // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
-
     private PlaybackChooser playbackChooser;
 
     /* Commands */
@@ -136,7 +123,7 @@ public class RobotContainer {
         new SequentialCommandGroup(
             new PivotCommand(m_robotArm, 60 + 135),
             new WaitCommand(0.3),
-            new TeleCommand(m_robotArm, 90000)
+            new TeleCommand(m_robotArm, 95000)
             // toggleClaw.asProxy(),
             // armToHome.asProxy()
         );
@@ -150,7 +137,7 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup placeCubeLow = new SequentialCommandGroup(
-        new TimedCommand(() -> new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.2), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive), 0.7),
+        new TimedCommand(new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.2), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive), 0.7),
         new PivotCommand(m_robotArm, 70 + 135),
         new WaitCommand(0.3),
         new TeleCommand(m_robotArm, 28000)
@@ -180,6 +167,36 @@ public class RobotContainer {
         new TeleCommand(m_robotArm, 0),
         toggleClaw.asProxy(),
         armToHome.asProxy()
+    );
+
+    /* Autos */
+    public SendableChooser<Command> chooser = new SendableChooser<>();
+
+    // private Command balance = new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive);
+    
+    // private Command blue1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt");
+    // private Command blue1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt").andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+    
+    // private Command red1Path = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1);
+    // private Command red1PathWithBalance = new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt", -1).andThen(new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive));
+
+    // private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
+
+    private Command wait3 = new WaitCommand(3);
+    private Command wait5 = new WaitCommand(5);
+
+    private SequentialCommandGroup taxiFar = new SequentialCommandGroup(
+        new TimedCommand(new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.6), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive), 4.75)
+    );
+
+    private SequentialCommandGroup placeRed1Balance = new SequentialCommandGroup(
+        placeConeMid.asProxy(),
+        new WaitCommand(0.3),
+        toggleClaw.asProxy(),
+        new WaitCommand(0.3),
+        armToHome.asProxy(),
+        new JoystickPlayback(m_robotSwerveDrive, "idk", 1),
+        new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive)
     );
 
     /**
@@ -220,6 +237,11 @@ public class RobotContainer {
         // chooser.addOption("Red1PathWithBalance", red1PathWithBalance);
 
         playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
+            .addOption("PlaceRed1Balance", placeRed1Balance)
+            .addOption("Wait3", wait3.asProxy())
+            .addOption("Wait5", wait5.asProxy())
+            .addOption("TaxiFar", taxiFar.asProxy())
+            // .addOption("Red1Balance", new JoystickPlayback(m_robotSwerveDrive, "idk", 1))
             .addOption("Balance", new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive))
             .buildDisplay();
     }
@@ -278,18 +300,18 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
             .onTrue(interruptCommand.asProxy()); // final
 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_TRIGGER_AXIS)
-        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-        //                                     () -> getDeadbandedDriverController().getLeftX(),
-        //                                     () -> getDeadbandedDriverController().getLeftY(),
-        //                                     () -> getDeadbandedDriverController().getRightX(),
-        //                                     () -> getDeadbandedDriverController().getRightY(),
-        //                                     "Red1Balance.txt"))
-        //     .onFalse(new InstantCommand());
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_TRIGGER_AXIS)
+            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+                                            () -> getDeadbandedDriverController().getLeftX(),
+                                            () -> getDeadbandedDriverController().getLeftY(),
+                                            () -> getDeadbandedDriverController().getRightX(),
+                                            () -> getDeadbandedDriverController().getRightY(),
+                                            "Red1Balance.txt"))
+            .onFalse(new InstantCommand());
 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Red1Balance.txt"))
-        //     .onFalse(new InstantCommand()); 
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Red1Balance.txt"))
+            .onFalse(new InstantCommand()); 
 
         // * Operator Buttons
         
