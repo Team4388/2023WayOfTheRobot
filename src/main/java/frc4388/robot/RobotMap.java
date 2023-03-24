@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.PWM;
@@ -176,4 +177,5 @@ public class RobotMap {
   Servo leftClaw           = new Servo(0);
   Servo rightClaw          = new Servo(1);
   CANSparkMax spinnyspin = new CANSparkMax(18, MotorType.kBrushless);
+  spinnyspin.setIdleMode(IdleMode.kBrake);
 }

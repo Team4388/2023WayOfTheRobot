@@ -35,6 +35,11 @@ public class Claw extends SubsystemBase {
 		// setClaw(false);
 	}
 
+	public void setAngle(double angle) {
+		m_leftMotor.setAngle(angle);
+		m_leftMotor.setAngle(180 - angle);
+	}
+
     public void setClaw(boolean open) {
         // Open claw
 		m_open = open;
@@ -43,8 +48,10 @@ public class Claw extends SubsystemBase {
 
 		// m_leftMotor.setBounds(4000, 20000, 2000, 0, 0);
 
-		m_leftMotor.setAngle(m_open ? 0 : 180);
-		m_rightMotor.setAngle(m_open ? 180 : 0);
+		// m_leftMotor.setAngle(m_open ? 0 : 180);
+		// m_rightMotor.setAngle(m_open ? 180 : 0);
+		m_leftMotor.setAngle(m_open ? 90 : 180);
+		m_rightMotor.setAngle(m_open ? 90 : 0);
 
 		// m_leftMotor.setRaw(m_open ? 0 : 4000);
 		// m_rightMotor.setRaw(m_open ? 4000 : 0);

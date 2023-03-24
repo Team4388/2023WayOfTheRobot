@@ -158,16 +158,17 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup placeConeHigh = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 0),
-        new TeleCommand(m_robotArm, 0),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
+        new PivotCommand(m_robotArm, 178),
+        new WaitCommand(0.3),
+        new TeleCommand(m_robotArm, 56000)
+        // toggleClaw.asProxy(),
+        // armToHome.asProxy()
     );
 
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 189),
+        new PivotCommand(m_robotArm, 188),
         new WaitCommand(0.3),
-        new TeleCommand(m_robotArm, 34000)
+        new TeleCommand(m_robotArm, 29500)
         // toggleClaw.asProxy(),
         // armToHome.asProxy()
     );
@@ -178,7 +179,6 @@ public class RobotContainer {
         toggleClaw.asProxy(),
         armToHome.asProxy()
     );
-
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -304,6 +304,8 @@ public class RobotContainer {
         // toggle claw
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
             .onTrue(toggleClaw.asProxy());
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON) // final
+        //     .onTrue(new InstantCommand(() -> m_robotClaw.setAngle(45), m_robotClaw));
         
         // kill soft limits
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON) // final
