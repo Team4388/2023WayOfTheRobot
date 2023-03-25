@@ -56,7 +56,16 @@ public class Arm extends SubsystemBase {
     }
 
     public void setTeleVel(double vel) {
-        m_tele.set(ControlMode.PercentOutput, -0.5 * vel);
+        var armPos = getArmLength();
+
+        if (tele_softLimit && armPos > 0 && vel > 0)
+            m_tele.set(ControlMode.PercentOutput, -0.5 * vel);
+        else if (tele_softLimit && armPos < 90000 && vel < 0)
+            m_tele.set(ControlMode.PercentOutput, -0.5 * vel);
+        else if (!tele_softLimit)
+            m_tele.set(ControlMode.PercentOutput, -0.5 * vel);
+        else
+            m_tele.set(ControlMode.PercentOutput, 0);
     }
 
     public void armSetRotation(double rot) {
@@ -115,10 +124,26 @@ public class Arm extends SubsystemBase {
 
     boolean tele_softLimit = false;
     double  tele_soft = 0;
+
+    public void setSoftLimit(boolean lim) {
+        if (lim) {
+            tele_soft = m_tele.getSelectedSensorPosition();
+            m_tele.configForwardSoftLimitThreshold(90000 - tele_soft); // 96937
+            m_tele.configReverseSoftLimitThreshold(tele_soft);
+            // m_tele.configForwardSoftLimitEnable(true);
+            // m_tele.configReverseSoftLimitEnable(true);
+        } else {
+            m_tele.configForwardSoftLimitEnable(false);
+            m_tele.configReverseSoftLimitEnable(false);
+        }
+
+        tele_softLimit = lim;
+    }
+
     public void resetTeleSoftLimit() {
         if (!tele_softLimit) {
             tele_soft = m_tele.getSelectedSensorPosition();
-            m_tele.configForwardSoftLimitThreshold(91000 - tele_soft);
+            m_tele.configForwardSoftLimitThreshold(90000 - tele_soft); // 96937
             m_tele.configReverseSoftLimitThreshold(tele_soft);
             m_tele.configForwardSoftLimitEnable(true);
             m_tele.configReverseSoftLimitEnable(true);
@@ -148,7 +173,7 @@ public class Arm extends SubsystemBase {
         }
 
         // SmartDashboard.putNumber("Pivot CANCoder", getArmRotation());
-        // SmartDashboard.putNumber("Tele Encoder", getArmLength());
+        SmartDashboard.putNumber("Tele Encoder", getArmLength());
 
         // double x = Math.cos(Math.toRadians(degrees));
     }

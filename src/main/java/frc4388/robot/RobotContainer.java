@@ -152,7 +152,7 @@ public class RobotContainer {
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
         new PivotCommand(m_robotArm, 135 + 47),
         new WaitCommand(0.3),
-        new TeleCommand(m_robotArm, 29500)
+        new TeleCommand(m_robotArm, 30000)
         // toggleClaw.asProxy(),
         // armToHome.asProxy()
     );
@@ -172,8 +172,18 @@ public class RobotContainer {
     private Command wait3 = new WaitCommand(3);
     private Command wait5 = new WaitCommand(5);
 
+
     private SequentialCommandGroup taxiFar = new SequentialCommandGroup(
-        new TimedCommand(new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.6), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive), 4.75)
+        placeConeMid.asProxy(),
+        new WaitCommand(0.3),
+        toggleClaw.asProxy(),
+        new WaitCommand(0.2),
+        toggleClaw.asProxy(),
+        new WaitCommand(0.3),
+        // new ParallelCommandGroup(
+            armToHome.asProxy()
+            // new TimedCommand(new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, 0.6), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive), 1.0)
+        // )
     );
 
     private SequentialCommandGroup placeRed1Balance = new SequentialCommandGroup(
@@ -186,6 +196,20 @@ public class RobotContainer {
             new JoystickPlayback(m_robotSwerveDrive, "idk", 1)
         ),
         new AutoBalance(m_robotMap.gyro, m_robotSwerveDrive)
+    );
+
+    private SequentialCommandGroup placeTaxi = new SequentialCommandGroup(
+        placeConeMid.asProxy(),
+        new WaitCommand(0.3),
+        // new InstantCommand(() -> m_robotClaw.setClaw(true), m_robotClaw),
+        toggleClaw.asProxy(),
+        new WaitCommand(0.2),
+        toggleClaw.asProxy(),
+        new WaitCommand(0.3),
+        new ParallelCommandGroup(
+            armToHome.asProxy(),
+            new TimedCommand(new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, 0.6), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive), 4.9)
+        )
     );
 
     /**
@@ -220,6 +244,7 @@ public class RobotContainer {
         chooser.addOption("placeLow", placeLow);
 
         playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
+            .addOption("PlaceTaxi", placeTaxi)
             .addOption("PlaceRed1Balance", placeRed1Balance)
             .addOption("Wait3", wait3.asProxy())
             .addOption("Wait5", wait5.asProxy())
