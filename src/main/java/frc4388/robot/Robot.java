@@ -114,6 +114,8 @@ public class Robot extends TimedRobot {
     }
     m_robotContainer.m_robotSwerveDrive.resetGyro();
     m_robotTime.startMatchTime();
+
+    m_robotContainer.m_robotMap.restart_motor_tests();
   }
 
   /**
@@ -126,5 +128,7 @@ public class Robot extends TimedRobot {
    * This function is called periodically during test mode.
    */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    m_robotContainer.m_robotMap.run_periodic_tests();
+  }
 }
