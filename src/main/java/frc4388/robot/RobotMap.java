@@ -7,6 +7,10 @@
 
 package frc4388.robot;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -39,6 +43,13 @@ public class RobotMap {
     configureLEDMotorControllers();
     configureDriveMotors();
     configArmMotors();
+
+    try {
+      setup_motor_tests();
+    } catch (IllegalArgumentException | IllegalAccessException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }
   }
 
   /* LED Subsystem */
@@ -171,7 +182,98 @@ public class RobotMap {
   }
 
   // claw stuff (WHAT IS A SOAP ENGINEER)
-  PWM leftClaw           = new PWM(0);
-  PWM rightClaw          = new PWM(1);
+  PWM         leftClaw   = new PWM(0);
+  PWM         rightClaw  = new PWM(1);
   CANSparkMax spinnyspin = new CANSparkMax(18, MotorType.kBrushless);
+
+  // ============================================
+  // =============== AUTO TESTING ===============
+  // ============================================
+
+  static class MotorTest {
+    boolean result;
+    String  name;
+
+    enum MotorType {FALCON, NEO}
+
+    // why no union :(
+    MotorType   motor_type;
+    WPI_TalonFX as_falcon;
+    CANSparkMax as_neo;
+  }
+
+  private static final long TEST_TIME = 500;
+
+  public ArrayList<MotorTest> motor_tests = new ArrayList<>();
+  private int    test_count = 0;
+  private long   test_time  = 0;
+  private double motor_position = 0;
+
+  public void restart_motor_tests() {
+    for (MotorTest test : motor_tests) {
+      test.result = false;
+    }
+
+    test_time      = 0;
+    test_count     = 0;
+    motor_position = 0;
+  }
+
+  public boolean run_periodic_tests() {
+    if (test_count >= motor_tests.size()) return true;
+
+    MotorTest current_test = motor_tests.get(test_count);
+
+    if (test_time == 0) {
+      test_time = System.currentTimeMillis();
+
+      switch (current_test.motor_type) {
+        case FALCON:
+          motor_position = current_test.as_falcon.getSelectedSensorPosition();
+          current_test.as_falcon.set(.1);
+          break;
+
+        case NEO:
+          // TODO: destroy robot
+          break;
+      }
+    }
+
+    if (System.currentTimeMillis() - test_time >= TEST_TIME) {
+      switch (current_test.motor_type) {
+        case FALCON:
+        {
+          double new_pos = current_test.as_falcon.getSelectedSensorPosition();
+          if (Math.abs(new_pos - motor_position) > .1) {
+            current_test.result = true;
+          } else {
+            System.out.printf("[DISCONNECTED] %s\n", current_test.name);
+          }
+
+          break;
+        }
+
+        case NEO: break;
+      }
+
+      test_time = 0;
+      test_count++;
+    }
+
+    return false;
+  }
+
+  private void setup_motor_tests() throws IllegalArgumentException, IllegalAccessException {
+    Class map_clazz = this.getClass();
+    
+    for (Field field : map_clazz.getFields()) {
+      if (field.getType().equals(WPI_TalonFX.class)) {
+        MotorTest test  = new MotorTest();
+        test.result     = false;
+        test.name       = field.getName();
+        test.motor_type = MotorTest.MotorType.FALCON;
+        test.as_falcon  = (WPI_TalonFX) field.get(this);
+      }
+    }
+  }
 }
