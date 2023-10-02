@@ -186,9 +186,9 @@ public class RobotMap {
   PWM         rightClaw  = new PWM(1);
   CANSparkMax spinnyspin = new CANSparkMax(18, MotorType.kBrushless);
 
-  // ============================================
-  // =============== AUTO TESTING ===============
-  // ============================================
+  // * ============================================
+  // * =============== AUTO TESTING ===============
+  // * ============================================
 
   static class MotorTest {
     boolean result;
@@ -205,8 +205,8 @@ public class RobotMap {
   private static final long TEST_TIME = 500;
 
   public ArrayList<MotorTest> motor_tests = new ArrayList<>();
-  private int    test_count = 0;
-  private long   test_time  = 0;
+  private int    test_count     = 0;
+  private long   test_time      = 0;
   private double motor_position = 0;
 
   public void restart_motor_tests() {
@@ -222,22 +222,8 @@ public class RobotMap {
   public boolean run_periodic_tests() {
     if (test_count >= motor_tests.size()) return true;
 
+    // fine
     MotorTest current_test = motor_tests.get(test_count);
-
-    if (test_time == 0) {
-      test_time = System.currentTimeMillis();
-
-      switch (current_test.motor_type) {
-        case FALCON:
-          motor_position = current_test.as_falcon.getSelectedSensorPosition();
-          current_test.as_falcon.set(.1);
-          break;
-
-        case NEO:
-          // TODO: destroy robot
-          break;
-      }
-    }
 
     if (System.currentTimeMillis() - test_time >= TEST_TIME) {
       switch (current_test.motor_type) {
@@ -247,24 +233,40 @@ public class RobotMap {
           if (Math.abs(new_pos - motor_position) > .1) {
             current_test.result = true;
           } else {
-            System.out.printf("[DISCONNECTED] %s\n", current_test.name);
+            System.err.printf("[DISCONNECTED] %s\n", current_test.name);
           }
 
+          current_test.as_falcon.stopMotor();
           break;
         }
 
-        case NEO: break;
+        case NEO:
+        {
+          double new_pos = current_test.as_neo.get();
+          break;
+        }
       }
 
-      test_time = 0;
-      test_count++;
+      test_time    = System.currentTimeMillis();
+      current_test = motor_tests.get(test_count++);
+
+      switch (current_test.motor_type) {
+        case FALCON:
+          motor_position = current_test.as_falcon.getSelectedSensorPosition();
+          current_test.as_falcon.set(.1);
+          break;
+
+        case NEO:
+          current_test.as_neo.set(.1);
+          break;
+      }
     }
 
     return false;
   }
 
   private void setup_motor_tests() throws IllegalArgumentException, IllegalAccessException {
-    Class map_clazz = this.getClass();
+    Class<? extends RobotMap> map_clazz = this.getClass();
     
     for (Field field : map_clazz.getFields()) {
       if (field.getType().equals(WPI_TalonFX.class)) {
@@ -273,6 +275,17 @@ public class RobotMap {
         test.name       = field.getName();
         test.motor_type = MotorTest.MotorType.FALCON;
         test.as_falcon  = (WPI_TalonFX) field.get(this);
+
+        motor_tests.add(test);
+      }
+      else if (field.getType().equals(CANSparkMax.class)) {
+        MotorTest test  = new MotorTest();
+        test.result     = false;
+        test.name       = field.getName();
+        test.motor_type = MotorTest.MotorType.NEO;
+        test.as_neo     = (CANSparkMax) field.get(this);
+
+        motor_tests.add(test);
       }
     }
   }

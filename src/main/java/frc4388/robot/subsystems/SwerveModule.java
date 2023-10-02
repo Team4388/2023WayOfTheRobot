@@ -81,7 +81,9 @@ public class SwerveModule extends SubsystemBase {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
     }
-    
+    public double getBusVoltage() {
+        return this.driveMotor.getBusVoltage();
+    }
     public double getAngularVel() {
         return this.angleMotor.getSelectedSensorVelocity();
     }

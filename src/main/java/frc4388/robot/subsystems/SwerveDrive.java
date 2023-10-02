@@ -84,6 +84,7 @@ public class SwerveDrive extends SubsystemBase {
     setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
   }
 
+ 
   /**
    * Set each module of the swerve drive to the corresponding desired state.
    * @param desiredStates Array of module states to set.
@@ -93,6 +94,8 @@ public class SwerveDrive extends SubsystemBase {
     for (int i = 0; i < desiredStates.length; i++) {
       SwerveModule module = modules[i];
       SwerveModuleState state = desiredStates[i];
+      SmartDashboard.putNumber("test motor" + i, module.getBusVoltage());
+     
       module.setDesiredState(state);
     }
   }
