@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------*/
+x/*----------------------------------------------------------------------------*/
 /* Copyright (c) 2018-2019 FIRST. All Rights Reserved.                        */
 /* Open Source Software - may be modified and shared by FRC teams. The code   */
 /* must be accompanied by the FIRST BSD license file in the root directory of */
@@ -94,13 +94,13 @@ public class RobotContainer {
 
     private SequentialCommandGroup alignToPole =
         new SequentialCommandGroup(
-            new RotateToAngle(m_robotSwerveDrive, 0.0),
-            new InstantCommand(() -> m_robotLimeLight.setToLimePipeline(), m_robotLimeLight),
-            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getLowestTape().getYaw(), 0.04),
-            new RotateToAngle(m_robotSwerveDrive, 0.0),
-            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
-            // new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 37, () -> m_robotLimeLight.getDistanceToTape())
-        ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = true));
+				   new RotateToAngle(m_robotSwerveDrive, 0.0),
+				   new InstantCommand(() -> m_robotLimeLight.setToLimePipeline(), m_robotLimeLight),
+				   new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getLowestTape().getYaw(), 0.04),
+				   new RotateToAngle(m_robotSwerveDrive, 0.0),
+				   new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
+				   // new DriveToLimeDistance(m_robotSwerveDrive, m_robotLimeLight, 37, () -> m_robotLimeLight.getDistanceToTape())
+				   ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = true));
 
     // private SequentialCommandGroup alignToShelf = 
     //     new SequentialCommandGroup(
@@ -113,12 +113,12 @@ public class RobotContainer {
     
     private SequentialCommandGroup alignToShelf = 
         new SequentialCommandGroup(
-            new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
-            new InstantCommand(() -> m_robotLimeLight.setToAprilPipeline(), m_robotLimeLight),
-            new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw(), 0.04),
-            new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
-            new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
-        ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
+				   new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
+				   new InstantCommand(() -> m_robotLimeLight.setToAprilPipeline(), m_robotLimeLight),
+				   new LimeAlign(m_robotSwerveDrive, m_robotLimeLight, () -> m_robotLimeLight.getAprilPoint().getYaw(), 0.04),
+				   new AprilRotAlign(m_robotSwerveDrive, m_robotLimeLight),
+				   new RunCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0.0, -0.4), new Translation2d(0.0, 0.0), true), m_robotSwerveDrive)
+				   ).andThen(new InstantCommand(() -> readyForPlacement = true), new InstantCommand(() -> isPole = false));
 
     public SequentialCommandGroup place = null;
 
@@ -129,41 +129,41 @@ public class RobotContainer {
     // TODO: find actual values
     private SequentialCommandGroup placeCubeHigh =
         new SequentialCommandGroup(
-            // new InstantCommand(() -> System.out.println("Placing cone high")),
-            new PivotCommand(m_robotArm, 64 + 135),
-            new InstantCommand(() -> m_robotArm.setRotVel(0)),
-            new TeleCommand(m_robotArm, 95642),
-            toggleClaw.asProxy(),
-            armToHome.asProxy()
-        );
+				   // new InstantCommand(() -> System.out.println("Placing cone high")),
+				   new PivotCommand(m_robotArm, 64 + 135),
+				   new InstantCommand(() -> m_robotArm.setRotVel(0)),
+				   new TeleCommand(m_robotArm, 95642),
+				   toggleClaw.asProxy(),
+				   armToHome.asProxy()
+				   );
 
     private SequentialCommandGroup placeCubeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 70 + 135),
-        new TeleCommand(m_robotArm, 32866),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
-    );
+									     new PivotCommand(m_robotArm, 70 + 135),
+									     new TeleCommand(m_robotArm, 32866),
+									     toggleClaw.asProxy(),
+									     armToHome.asProxy()
+									     );
 
     private SequentialCommandGroup placeConeHigh = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 0),
-        new TeleCommand(m_robotArm, 0),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
-    );
+									      new PivotCommand(m_robotArm, 0),
+									      new TeleCommand(m_robotArm, 0),
+									      toggleClaw.asProxy(),
+									      armToHome.asProxy()
+									      );
 
     private SequentialCommandGroup placeConeMid = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 0),
-        new TeleCommand(m_robotArm, 0),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
-    );
+									     new PivotCommand(m_robotArm, 0),
+									     new TeleCommand(m_robotArm, 0),
+									     toggleClaw.asProxy(),
+									     armToHome.asProxy()
+									     );
 
     private SequentialCommandGroup placeLow = new SequentialCommandGroup(
-        new PivotCommand(m_robotArm, 0),
-        new TeleCommand(m_robotArm, 0),
-        toggleClaw.asProxy(),
-        armToHome.asProxy()
-    );
+									 new PivotCommand(m_robotArm, 0),
+									 new TeleCommand(m_robotArm, 0),
+									 toggleClaw.asProxy(),
+									 armToHome.asProxy()
+									 );
 
 
     /**
@@ -174,17 +174,17 @@ public class RobotContainer {
 
         // * Default Commands
         m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-                m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
-                                                  getDeadbandedDriverController().getRight(),
-                                                  true);
-            }, m_robotSwerveDrive)
+		    m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
+						      getDeadbandedDriverController().getRight(),
+						      true);
+	}, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
 
         m_robotArm.setDefaultCommand(new RunCommand(() -> {
-            m_robotArm.setRotVel(getDeadbandedOperatorController().getLeftY());
-            m_robotArm.setTeleVel(getDeadbandedOperatorController().getRightY());
+		    m_robotArm.setRotVel(getDeadbandedOperatorController().getLeftY());
+		    m_robotArm.setTeleVel(getDeadbandedOperatorController().getRightY());
         }, m_robotArm)
-        .withName("Arm DefaultCommand"));
+	    .withName("Arm DefaultCommand"));
         
         // * Auto Commands
         chooser.setDefaultOption("NoAuto", emptyCommand);
@@ -230,22 +230,22 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()))
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
-            // .onTrue(new InstantCommand(() -> {
-            //     tap.gearTapped = true;
-            //     tap.gearTime   = System.currentTimeMillis();
-            // }))
-            // .whileTrue(new RunCommand(() -> {
-            //     if (tap.gearTapped && System.currentTimeMillis() - tap.gearTime > 200) {
-            //         m_robotSwerveDrive.setToTurbo();
-            //         tap.gearTapped = false;
-            //     }
-            // }))
-            // .onFalse(new InstantCommand(() -> {
-            //     if (tap.gearTapped)
-            //         m_robotSwerveDrive.setToFast();
-            //     else
-            //         m_robotSwerveDrive.setToSlow();
-            // }));
+	// .onTrue(new InstantCommand(() -> {
+	//     tap.gearTapped = true;
+	//     tap.gearTime   = System.currentTimeMillis();
+	// }))
+	// .whileTrue(new RunCommand(() -> {
+	//     if (tap.gearTapped && System.currentTimeMillis() - tap.gearTime > 200) {
+	//         m_robotSwerveDrive.setToTurbo();
+	//         tap.gearTapped = false;
+	//     }
+	// }))
+	// .onFalse(new InstantCommand(() -> {
+	//     if (tap.gearTapped)
+	//         m_robotSwerveDrive.setToFast();
+	//     else
+	//         m_robotSwerveDrive.setToSlow();
+	// }));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
@@ -306,18 +306,18 @@ public class RobotContainer {
         // place high
         new POVButton(getDeadbandedOperatorController(), 0)
             .onTrue(new ConditionalCommand(
-                new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeHigh)), new InstantCommand(() -> queuePlacement.accept(placeCubeHigh)), () -> isPole == true),
-                emptyCommand.asProxy(),
-                () -> readyForPlacement == true)
-            );
+					   new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeHigh)), new InstantCommand(() -> queuePlacement.accept(placeCubeHigh)), () -> isPole == true),
+					   emptyCommand.asProxy(),
+					   () -> readyForPlacement == true)
+		    );
 
         // place mid
         new POVButton(getDeadbandedOperatorController(), 270)
             .onTrue(new ConditionalCommand(
-                new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeMid)), new InstantCommand(() -> queuePlacement.accept(placeCubeMid)), () -> isPole == true),
-                emptyCommand.asProxy(),
-                () -> readyForPlacement == true)
-            );
+					   new ConditionalCommand(new InstantCommand(() -> queuePlacement.accept(placeConeMid)), new InstantCommand(() -> queuePlacement.accept(placeCubeMid)), () -> isPole == true),
+					   emptyCommand.asProxy(),
+					   () -> readyForPlacement == true)
+		    );
 
         // place low
         new POVButton(getDeadbandedOperatorController(), 180)
