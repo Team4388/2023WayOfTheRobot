@@ -15,25 +15,28 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.UtilityStructs.TimedOutput;
 import frc4388.utility.controller.XboxController;
+import frc4388.robot.subsystems.Arm;
 
 public class JoystickRecorder extends CommandBase {
   public final SwerveDrive            swerve;
   public final XboxController         driveXbox;
   public final XboxController         operatorXbox;
-  
+  public final Arm                    arm;
   private       String                 filename;
   public  final ArrayList<TimedOutput> outputs = new ArrayList<>();
   private       long                   startTime = -1;
 
   /** Creates a new JoystickRecorder. */
   public JoystickRecorder(SwerveDrive swerve, XboxController driveXbox, 
-  XboxController operatorXbox, String filename) {
+  XboxController operatorXbox, Arm arm, String filename) {
     this.swerve = swerve;
-    this.driveXbox  = driveXbox;
-    this.operatorXbox  = operatorXbox;
+    this.driveXbox = driveXbox;
+    this.operatorXbox = operatorXbox;
+    this.arm = arm;
     this.filename = filename;
 
     addRequirements(this.swerve);
+    addRequirements(this.arm);
   }
 
   // Called when the command is initially scheduled.
