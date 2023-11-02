@@ -70,6 +70,8 @@ public class JoystickRecorder extends CommandBase {
     swerve.driveWithInput(new Translation2d(inputs.driverLeftX,  inputs.driverLeftX),
                           new Translation2d(inputs.driverRightX, inputs.driverRightY),
                           true);
+    arm.setRotVel(inputs.operatorLeftY);
+    arm.setTeleVel(inputs.operatorRightY);
     
     System.out.println("RECORDING");
   }
