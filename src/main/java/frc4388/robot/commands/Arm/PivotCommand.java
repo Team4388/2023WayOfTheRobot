@@ -9,25 +9,25 @@ import frc4388.robot.commands.PelvicInflammatoryDisease;
 import frc4388.robot.subsystems.Arm;
 
 public class PivotCommand extends PelvicInflammatoryDisease {
-  private final Arm     arm;
-  private final double  target;
+    private final Arm     arm;
+    private final double  target;
   
-  /** Creates a new ArmCommand. */
-  public PivotCommand(Arm arm, double target) {
-    super(6, 1.5, 0, 0, 0.015);
-    this.arm    = arm;
-    this.target = target;
-    addRequirements(arm);
-  }
+    /** Creates a new ArmCommand. */
+    public PivotCommand(Arm arm, double target) {
+	super(6, 1.5, 0, 0, 0.015);
+	this.arm    = arm;
+	this.target = target;
+	addRequirements(arm);
+    }
 
-  @Override
-  public double getError() {
-    return (target - arm.getArmRotation()) / 360;
-  }
+    @Override
+    public double getError() {
+	return (target - arm.getArmRotation()) / 360;
+    }
 
-  @Override
-  public void runWithOutput(double output) {
-    SmartDashboard.putNumber("pivot output", output);
-    arm.setRotVel(output);
-  }
+    @Override
+    public void runWithOutput(double output) {
+	SmartDashboard.putNumber("pivot output", output);
+	arm.setRotVel(output);
+    }
 }

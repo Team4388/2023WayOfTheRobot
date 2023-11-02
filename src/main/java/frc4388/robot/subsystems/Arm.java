@@ -65,14 +65,14 @@ public class Arm extends SubsystemBase {
         if (rot > 1 || rot < 0) return;
         // Move arm code
         m_pivot.set(ControlMode.Position, rot * Math.abs(ArmConstants.PIVOT_REVERSE_SOFT_LIMIT - ArmConstants.PIVOT_FORWARD_SOFT_LIMIT) +
-            ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
+		    ArmConstants.PIVOT_FORWARD_SOFT_LIMIT);
     }
 
     public void armSetLength(double len) {
         if (len > 1 || len < 0) return;
         // Move arm code
         m_tele.set(ControlMode.Position, len * Math.abs(ArmConstants.TELE_REVERSE_SOFT_LIMIT - ArmConstants.TELE_FORWARD_SOFT_LIMIT) +
-            ArmConstants.TELE_FORWARD_SOFT_LIMIT);
+		   ArmConstants.TELE_FORWARD_SOFT_LIMIT);
 
         if (m_tele.isRevLimitSwitchClosed() == 1) {
             m_tele.setSelectedSensorPosition(ArmConstants.TELE_REVERSE_SOFT_LIMIT);
@@ -92,7 +92,7 @@ public class Arm extends SubsystemBase {
     public void runPivotTele(double pivot, double tele) {
         double abs_pivot = Math.toRadians(getArmRotation() - 135);
         double abs_tele  = (getArmLength() - ArmConstants.TELE_REVERSE_SOFT_LIMIT) /
-                           (ArmConstants.TELE_FORWARD_SOFT_LIMIT - ArmConstants.TELE_REVERSE_SOFT_LIMIT);
+	    (ArmConstants.TELE_FORWARD_SOFT_LIMIT - ArmConstants.TELE_REVERSE_SOFT_LIMIT);
 
         if (pivot > 0 || tele < 0 || checkLimits(abs_tele, abs_pivot)) {
             setRotVel(pivot);

@@ -11,32 +11,32 @@ import frc4388.robot.subsystems.SwerveDrive;
 
 public class AprilRotAlign extends PelvicInflammatoryDisease {
   
-  SwerveDrive drive;
-  Limelight lime;
+    SwerveDrive drive;
+    Limelight lime;
   
-  /** Creates a new AprilRotAlign. */
-  public AprilRotAlign(SwerveDrive drive, Limelight lime) {
-    super(0.1, 0.2, 0.0, 0.0, 0.0);
+    /** Creates a new AprilRotAlign. */
+    public AprilRotAlign(SwerveDrive drive, Limelight lime) {
+	super(0.1, 0.2, 0.0, 0.0, 0.0);
   
-    this.drive = drive;
-    this.lime = lime;
+	this.drive = drive;
+	this.lime = lime;
 
-    addRequirements(drive, lime);
-  }
+	addRequirements(drive, lime);
+    }
 
-  @Override
-  public double getError() {
-    double err = 0.0;
+    @Override
+    public double getError() {
+	double err = 0.0;
 
-    try {
-      err = lime.getAprilSkew();
-    } catch (NullPointerException ex) {}
+	try {
+	    err = lime.getAprilSkew();
+	} catch (NullPointerException ex) {}
     
-    return err;
-  }
+	return err;
+    }
 
-  @Override
-  public void runWithOutput(double output) {
-    drive.driveWithInput(new Translation2d(0.0, 0.0), new Translation2d(-output, 0.0), true);
-  }
+    @Override
+    public void runWithOutput(double output) {
+	drive.driveWithInput(new Translation2d(0.0, 0.0), new Translation2d(-output, 0.0), true);
+    }
 }

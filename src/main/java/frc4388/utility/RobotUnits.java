@@ -8,20 +8,20 @@ package frc4388.utility;
  * @author Aarav Shah */
 
 public class RobotUnits {
-  // constants
+    // constants
 
-  // angle conversions
-  public static double degreesToRadians(final double degrees) {return degrees * Math.PI / 180;}
+    // angle conversions
+    public static double degreesToRadians(final double degrees) {return degrees * Math.PI / 180;}
 
-  public static double radiansToDegrees(final double radians) {return radians / Math.PI * 180;}
+    public static double radiansToDegrees(final double radians) {return radians / Math.PI * 180;}
 
-  // falcon conversions
-  public static double falconTicksToRotations(final double ticks) {return ticks / 2048;}
+    // falcon conversions
+    public static double falconTicksToRotations(final double ticks) {return ticks / 2048;}
 
-  public static double falconRotationsToTicks(final double rotations) {return rotations * 2048;}
+    public static double falconRotationsToTicks(final double rotations) {return rotations * 2048;}
 
-  // distance conversions
-  public static double metersToFeet(final double meters) {return meters * 3.28084;}
+    // distance conversions
+    public static double metersToFeet(final double meters) {return meters * 3.28084;}
 
-  public static double feetToMeters(final double feet) {return feet / 3.28084;}
+    public static double feetToMeters(final double feet) {return feet / 3.28084;}
 }

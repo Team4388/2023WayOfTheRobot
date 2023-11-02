@@ -105,12 +105,12 @@ public class RobotGyro implements Gyro {
     }
 
     /**
-	 * Get Yaw, Pitch, and Roll data.
-	 *
-	 * @return ypr_deg Array with yaw[0], pitch[1], and roll[2] data.
-	 *					Yaw is within [-368,640, +368,640] degrees.
-	 *					Pitch is within [-90,+90] degrees.
-	 *					Roll is within [-90,+90] degrees.
+     * Get Yaw, Pitch, and Roll data.
+     *
+     * @return ypr_deg Array with yaw[0], pitch[1], and roll[2] data.
+     *					Yaw is within [-368,640, +368,640] degrees.
+     *					Pitch is within [-90,+90] degrees.
+     *					Roll is within [-90,+90] degrees.
      */
     private double[] getPigeonAngles() {
         double[] ypr = new double[3];
@@ -129,7 +129,7 @@ public class RobotGyro implements Gyro {
     }
 
     public double getYaw() {
-       return this.getAngle();
+	return this.getAngle();
     }
 
     /**

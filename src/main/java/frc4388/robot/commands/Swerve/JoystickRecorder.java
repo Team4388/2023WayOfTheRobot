@@ -14,32 +14,29 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.UtilityStructs.TimedOutput;
+import frc4388.utility.controller.XboxController;
+import frc4388.robot.subsystems.Arm;
 
 public class JoystickRecorder extends CommandBase {
-  public  final SwerveDrive            swerve;
-
-  public  final Supplier<Double>       leftX;
-  public  final Supplier<Double>       leftY;
-  public  final Supplier<Double>       rightX;
-  public  final Supplier<Double>       rightY;
+  public final SwerveDrive            swerve;
+  public final XboxController         driveXbox;
+  public final XboxController         operatorXbox;
+  public final Arm                    arm;
   private       String                 filename;
-  public  final ArrayList<TimedOutput> outputs   = new ArrayList<>();
+  public  final ArrayList<TimedOutput> outputs = new ArrayList<>();
   private       long                   startTime = -1;
 
-
   /** Creates a new JoystickRecorder. */
-  public JoystickRecorder(SwerveDrive swerve, Supplier<Double> leftX,  Supplier<Double> leftY,
-                                              Supplier<Double> rightX, Supplier<Double> rightY,
-                                              String filename)
-  {
+  public JoystickRecorder(SwerveDrive swerve, XboxController driveXbox, 
+  XboxController operatorXbox, Arm arm, String filename) {
     this.swerve = swerve;
-    this.leftX  = leftX;
-    this.leftY  = leftY;
-    this.rightX = rightX;
-    this.rightY = rightY;
+    this.driveXbox = driveXbox;
+    this.operatorXbox = operatorXbox;
+    this.arm = arm;
     this.filename = filename;
 
     addRequirements(this.swerve);
+    addRequirements(this.arm);
   }
 
   // Called when the command is initially scheduled.
@@ -56,17 +53,25 @@ public class JoystickRecorder extends CommandBase {
   @Override
   public void execute() {
     var inputs = new TimedOutput();
-    inputs.leftX       = leftX.get();
-    inputs.leftY       = leftY.get();
-    inputs.rightX      = rightX.get();
-    inputs.rightY      = rightY.get();
+    inputs.driverLeftX  = driveXbox.getLeftXAxis();
+    inputs.driverLeftY  = driveXbox.getLeftYAxis();
+    inputs.driverRightX = driveXbox.getRightXAxis();
+    inputs.driverRightY = driveXbox.getRightYAxis();
+
+    inputs.operatorLeftX  = driveXbox.getLeftXAxis();
+    inputs.operatorLeftY  = driveXbox.getLeftYAxis();
+    inputs.operatorRightX = driveXbox.getRightXAxis();
+    inputs.operatorRightY = driveXbox.getRightYAxis();
+
     inputs.timedOffset = System.currentTimeMillis() - startTime;
 
     outputs.add(inputs);
 
-    swerve.driveWithInput(new Translation2d(inputs.leftX,  inputs.leftY),
-                          new Translation2d(inputs.rightX, inputs.rightY),
+    swerve.driveWithInput(new Translation2d(inputs.driverLeftX,  inputs.driverLeftX),
+                          new Translation2d(inputs.driverRightX, inputs.driverRightY),
                           true);
+    arm.setRotVel(inputs.operatorLeftY);
+    arm.setTeleVel(inputs.operatorRightY);
     
     System.out.println("RECORDING");
   }
@@ -78,8 +83,10 @@ public class JoystickRecorder extends CommandBase {
 
     try (PrintWriter writer = new PrintWriter(output)) {
       for (var input : outputs) {
-        writer.println( input.leftX  + "," + input.leftY  + "," +
-                        input.rightX + "," + input.rightY + "," +
+        writer.println( input.driverLeftX  + "," + input.driverLeftX  + "," +
+                        input.driverRightX + "," + input.driverRightY + "," +
+                        input.operatorLeftX  + "," + input.operatorLeftX  + "," +
+                        input.operatorRightX + "," + input.operatorRightY + "," +
                         input.timedOffset);
       }
 

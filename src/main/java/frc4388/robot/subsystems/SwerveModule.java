@@ -109,9 +109,9 @@ public class SwerveModule extends SubsystemBase {
      */
     public SwerveModuleState getState() {
         return new SwerveModuleState(
-            Units.inchesToMeters(driveMotor.getSelectedSensorVelocity() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS, 
-            getAngle()
-        );
+				     Units.inchesToMeters(driveMotor.getSelectedSensorVelocity() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS, 
+				     getAngle()
+				     );
     }
 
     /**

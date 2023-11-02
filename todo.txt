@@ -1,7 +1,7 @@
 Revised Autosystem:
  - Autoplayback
-   - Fix Arm Respool
-   - Via Commands
+   \ Fix Arm Respool
+   x Via Commands
    - Arm
  - Sequential Command System
  - Manual Auto Creation
