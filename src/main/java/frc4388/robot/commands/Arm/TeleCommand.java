@@ -13,6 +13,7 @@ public class TeleCommand extends CommandBase {
   private final Arm     arm;
   private final double  target;
   private       boolean goIn;
+  public        float Connorsux;
   
   /** Creates a new ArmCommand. */
   public TeleCommand(Arm arm, double target) {
