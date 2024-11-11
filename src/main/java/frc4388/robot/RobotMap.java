@@ -30,6 +30,7 @@ import frc4388.utility.RobotGyro;
  * testing and modularization.
  */
 public class RobotMap {
+<<<<<<< Updated upstream
   private WPI_Pigeon2 m_pigeon2 = new WPI_Pigeon2(14);
   public RobotGyro gyro = new RobotGyro(m_pigeon2);
 
@@ -49,6 +50,26 @@ public class RobotMap {
     } catch (IllegalArgumentException | IllegalAccessException e) {
       // TODO Auto-generated catch block
       e.printStackTrace();
+=======
+
+    public TalonSRX frontLeft = new TalonSRX(20);
+    public TalonSRX backLeft = new TalonSRX(21);
+    public TalonSRX backRight = new TalonSRX(23);
+    public TalonSRX frontRight = new TalonSRX(22);
+
+    
+    public RobotMap() {
+        configureLEDMotorControllers();
+        configureDriveMotorControllers();
+
+        frontRight.configFactoryDefault();
+        frontLeft.configFactoryDefault();
+        backLeft.configFactoryDefault();
+        backRight.configFactoryDefault();
+      
+        frontLeft.setInverted(true);
+        backLeft.setInverted(true);
+>>>>>>> Stashed changes
     }
   }
 

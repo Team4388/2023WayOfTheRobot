@@ -11,7 +11,12 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+<<<<<<< Updated upstream
 import frc4388.utility.DeferredBlock;
+=======
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.utility.RobotGyro;
+>>>>>>> Stashed changes
 import frc4388.utility.RobotTime;
 
 /**
@@ -36,8 +41,11 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+<<<<<<< Updated upstream
 
     SmartDashboard.putData("AutoPlayback Chooser", m_robotContainer.chooser);
+=======
+>>>>>>> Stashed changes
   }
 
   /**
@@ -115,14 +123,23 @@ public class Robot extends TimedRobot {
     m_robotContainer.m_robotSwerveDrive.resetGyro();
     m_robotTime.startMatchTime();
 
+<<<<<<< Updated upstream
     m_robotContainer.m_robotMap.restart_motor_tests();
+=======
+>>>>>>> Stashed changes
   }
 
   /**
    * This function is called periodically during operator control.
    */
   @Override
+<<<<<<< Updated upstream
   public void teleopPeriodic() {}
+=======
+  public void teleopPeriodic() {
+
+  }
+>>>>>>> Stashed changes
 
   /**
    * This function is called periodically during test mode.

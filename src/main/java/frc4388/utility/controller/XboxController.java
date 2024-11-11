@@ -13,8 +13,8 @@ public class XboxController implements IHandController
 	public static final int LEFT_Y_AXIS = 1;
 	public static final int LEFT_TRIGGER_AXIS = 2;
 	public static final int RIGHT_TRIGGER_AXIS = 3;
-	public static final int RIGHT_X_AXIS = 4;
-	public static final int RIGHT_Y_AXIS = 5;
+	public static final int RIGHT_X_AXIS = 2;
+	public static final int RIGHT_Y_AXIS = 3;
 	public static final int LEFT_RIGHT_DPAD_AXIS = 6;
 	public static final int TOP_BOTTOM_DPAD_AXIS = 6;
 

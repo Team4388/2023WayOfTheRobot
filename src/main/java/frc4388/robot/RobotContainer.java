@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc4388.robot.Constants.*;
+<<<<<<< Updated upstream
 import frc4388.robot.subsystems.Arm;
 import frc4388.robot.subsystems.Claw;
 import frc4388.robot.subsystems.Limelight;
@@ -37,6 +38,14 @@ import frc4388.robot.commands.Placement.LimeAlign;
 import frc4388.robot.commands.Swerve.RotateToAngle;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.XboxController; 
+=======
+import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.Microbot;
+import frc4388.utility.LEDPatterns;
+import frc4388.utility.RobotGyro;
+import frc4388.utility.controller.IHandController;
+import frc4388.utility.controller.XboxController;
+>>>>>>> Stashed changes
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -50,6 +59,7 @@ public class RobotContainer {
     public final RobotMap m_robotMap = new RobotMap();
 
     /* Subsystems */
+<<<<<<< Updated upstream
     public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront,
                                                                   m_robotMap.rightFront,
                                                                   m_robotMap.leftBack,
@@ -61,6 +71,10 @@ public class RobotContainer {
     public final Claw m_robotClaw = new Claw(m_robotMap.leftClaw, m_robotMap.rightClaw, m_robotMap.spinnyspin);
 
     public final Limelight m_robotLimeLight = new Limelight();
+=======
+    private final LED m_robotLED = new LED(m_robotMap.LEDController);
+    private final Microbot microbot = new Microbot(m_robotMap.frontLeft, m_robotMap.backLeft, m_robotMap.frontRight, m_robotMap.backRight);
+>>>>>>> Stashed changes
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
@@ -165,13 +179,17 @@ public class RobotContainer {
         armToHome.asProxy()
     );
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
         configureButtonBindings();
 
+<<<<<<< Updated upstream
         // * Default Commands
         m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
                 m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
@@ -212,6 +230,14 @@ public class RobotContainer {
     private static class TapState {
         public boolean gearTapped = true;
         public long    gearTime   = 0;
+=======
+        /* Default Commands */
+        // drives the robot with a two-axis input from the driver controller
+        // continually sends updates to the Blinkin LED controller to keep the lights on
+        m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+
+        microbot.setDefaultCommand(new RunCommand(() -> microbot.drive(m_driverXbox.getLeftYAxis(), m_driverXbox.getRightYAxis())));
+>>>>>>> Stashed changes
     }
 
     /**
